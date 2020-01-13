@@ -6,7 +6,7 @@ metadata:
   labels:
     team: {{team}}
 spec:
-  image: {{version}}
+  image: {{ image }}:{{ tag }}
   port: 8080
   liveness:
     path: isalive
@@ -36,7 +36,14 @@ spec:
     path: /metrics
   vault:
     enabled: true
-  webproxy: true
+    paths:  # Optional. If specified, will override default values with custom Vault configuration.
+      - mountPath: /var/run/secrets/nais.io/vault  # Filesystem path inside the pod where secrets will appear.
+        kvPath: /kv/preprod/fss/omsorgspenger-prosessering/default  # Vault KV path to fetch secrets from.
+      - mountPath: /var/run/secrets/nais.io/azuread
+        kvPath: /azuread/data/dev/creds/omsorgspenger-prosessering
+      - mountPath: /var/run/secrets/nais.io/serviceuser
+        kvPath: /serviceuser/data/dev/srvomsorgspeng-prs
+webproxy: true
   env:
     - name: OMSORGSPENGER_OPPGAVE_BASE_URL
       value: https://omsorgspenger-oppgave.nais.preprod.local
