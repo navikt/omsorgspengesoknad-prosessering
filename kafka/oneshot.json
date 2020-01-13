@@ -6,11 +6,11 @@
       },
       "members": [
         {
-          "member": "srvpps-mottak",
+          "member": "srvomsorgspeng-mtk",
           "role": "PRODUCER"
         },
         {
-          "member": "srvpps-prosessering",
+          "member": "srvomsorgspeng-prs",
           "role": "CONSUMER"
         }
       ],
@@ -23,11 +23,11 @@
       },
       "members": [
         {
-          "member": "srvpps-prosessering",
+          "member": "srvomsorgspeng-prs",
           "role": "PRODUCER"
         },
         {
-          "member": "srvpps-prosessering",
+          "member": "srvomsorgspeng-prs",
           "role": "CONSUMER"
         }
       ],
@@ -40,11 +40,15 @@
       },
       "members": [
         {
-          "member": "srvpps-prosessering",
+          "member": "srvomsorgspeng-prs",
           "role": "PRODUCER"
         },
         {
-          "member": "srvpps-prosessering",
+          "member": "srvomsorgspeng-prs",
+          "role": "CONSUMER"
+        },
+        {
+          "member": "k9-fordel",
           "role": "CONSUMER"
         }
       ],
@@ -57,11 +61,11 @@
       },
       "members": [
         {
-          "member": "srvpps-prosessering",
+          "member": "srvomsorgspeng-prs",
           "role": "PRODUCER"
         },
         {
-          "member": "srvpps-prosessering",
+          "member": "srvomsorgspeng-prs",
           "role": "CONSUMER"
         }
       ],
