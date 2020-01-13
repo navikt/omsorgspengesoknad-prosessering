@@ -1,0 +1,10 @@
+/.gradle
+/.idea
+/out
+/build
+*.iml
+*.ipr
+*.iws
+.DS_Store
+/travis/helseci.key
+generated-pdf-*.pdf
