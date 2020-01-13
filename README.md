@@ -1,4 +1,4 @@
-# omsorgspenger-prosessering
+# omsorgspengesoknad-prosessering
 
 Tjeneste som prosesserer søknader om omsorgspenger.
 Leser søknader fra Kafka topic `privat-omsorgspenger-mottatt` som legges der av [omsorgspenger-mottak](https://github.com/navikt/omsorgspenger-mottak)
