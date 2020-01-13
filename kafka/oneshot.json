@@ -48,7 +48,7 @@
           "role": "CONSUMER"
         },
         {
-          "member": "k9-fordel",
+          "member": "srvk9-fordel",
           "role": "CONSUMER"
         }
       ],
