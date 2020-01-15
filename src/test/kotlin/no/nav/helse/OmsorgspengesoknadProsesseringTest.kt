@@ -138,7 +138,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        kafkaTestConsumer.hentOpprettetOppgave(melding.soknadId)
+        kafkaTestConsumer.hentJournalført(melding.soknadId)
     }
 
     @Test
@@ -159,7 +159,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        val oppgaveOpprettet = kafkaTestConsumer.hentOpprettetOppgave(melding.soknadId).data
+        val oppgaveOpprettet = kafkaTestConsumer.hentJournalført(melding.soknadId).data
         assertEquals(sprak, oppgaveOpprettet.melding.sprak)
         assertEquals(2, oppgaveOpprettet.melding.arbeidsgivere.organisasjoner.size)
         val jobb1 = oppgaveOpprettet.melding.arbeidsgivere.organisasjoner.firstOrNull { it.navn == "Jobb1" }
@@ -185,7 +185,7 @@ class OmsorgspengesoknadProsesseringTest {
 
         wireMockServer.stubJournalfor(201) // Simulerer journalføring fungerer igjen
         restartEngine()
-        kafkaTestConsumer.hentOpprettetOppgave(melding.soknadId)
+        kafkaTestConsumer.hentJournalført(melding.soknadId)
     }
 
     private fun readyGir200HealthGir503() {
@@ -207,7 +207,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        kafkaTestConsumer.hentOpprettetOppgave(melding.soknadId)
+        kafkaTestConsumer.hentJournalført(melding.soknadId)
     }
 
     @Test
@@ -220,7 +220,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        kafkaTestConsumer.hentOpprettetOppgave(melding.soknadId)
+        kafkaTestConsumer.hentJournalført(melding.soknadId)
     }
 
     @Test
@@ -233,7 +233,7 @@ class OmsorgspengesoknadProsesseringTest {
         wireMockServer.stubAktoerRegisterGetAktoerIdNotFound(gyldigFodselsnummerC)
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        kafkaTestConsumer.hentOpprettetOppgave(melding.soknadId)
+        kafkaTestConsumer.hentJournalført(melding.soknadId)
     }
 
     @Test
@@ -246,7 +246,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentOpprettetOppgave(melding.soknadId)
+        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.soknadId)
         assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", hentOpprettetOppgave.data.melding.barn.navn)
     }
 
@@ -263,7 +263,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentOpprettetOppgave(melding.soknadId)
+        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.soknadId)
         assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", hentOpprettetOppgave.data.melding.barn.navn)
     }
 
@@ -280,7 +280,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentOpprettetOppgave(melding.soknadId)
+        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.soknadId)
         assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", hentOpprettetOppgave.data.melding.barn.navn)
     }
 
@@ -298,7 +298,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentOpprettetOppgave(melding.soknadId)
+        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.soknadId)
         assertEquals(forventetFodselsNummer, hentOpprettetOppgave.data.melding.barn.fodselsnummer)
     }
 
@@ -315,7 +315,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentOpprettetOppgave(melding.soknadId)
+        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.soknadId)
         assertEquals(forventetFodselsNummer, hentOpprettetOppgave.data.melding.barn.fodselsnummer)
     }
 

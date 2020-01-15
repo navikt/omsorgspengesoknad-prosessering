@@ -78,7 +78,7 @@ fun KafkaEnvironment.testProducer() = KafkaProducer<String, TopicEntry<MeldingV1
     MOTTATT.serDes
 )
 
-fun KafkaConsumer<String, TopicEntry<Journalfort>>.hentOpprettetOppgave(
+fun KafkaConsumer<String, TopicEntry<Journalfort>>.hentJournalført(
     soknadId: String,
     maxWaitInSeconds: Long = 20
 ) : TopicEntry<Journalfort> {
