@@ -13,8 +13,7 @@ import org.apache.kafka.common.serialization.Serializer
 import org.apache.kafka.common.serialization.StringSerializer
 
 data class TopicEntry<V>(val metadata: Metadata, val data: V)
-internal data class Journalfort(val journalPostId: String, val melding: PreprossesertMeldingV1)
-data class OppgaveOpprettet(val journalPostId: String, val oppgaveId: String, val melding: PreprossesertMeldingV1)
+data class Journalfort(val journalPostId: String, val melding: PreprossesertMeldingV1)
 
 internal data class Topic<V>(
     val name: String,
@@ -68,13 +67,6 @@ private class PreprossesertSerDes: SerDes<TopicEntry<PreprossesertMeldingV1>>() 
 }
 private class JournalfortSerDes: SerDes<TopicEntry<Journalfort>>() {
     override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<Journalfort>? {
-        return data?.let {
-            objectMapper.readValue(it)
-        }
-    }
-}
-private class OppgaveOpprettetSerDes: SerDes<TopicEntry<OppgaveOpprettet>>() {
-    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<OppgaveOpprettet>? {
         return data?.let {
             objectMapper.readValue(it)
         }
