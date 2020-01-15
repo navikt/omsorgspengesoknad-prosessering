@@ -38,10 +38,6 @@ internal object Topics {
         name = "privat-omsorgspengesoknad-journalfort",
         serDes = JournalfortSerDes()
     )
-    val OPPGAVE_OPPRETTET = Topic(
-        name = "privat-omsorgspengesoknad-oppgaveOpprettet",
-        serDes = OppgaveOpprettetSerDes()
-    )
 }
 
 internal abstract class SerDes<V> : Serializer<V>, Deserializer<V> {

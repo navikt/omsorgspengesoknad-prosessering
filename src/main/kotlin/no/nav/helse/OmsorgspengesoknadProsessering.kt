@@ -102,7 +102,6 @@ fun Application.omsorgspengesoknadProsessering() {
         kafkaConfig = configuration.getKafkaConfig(),
         preprosseseringV1Service = preprosseseringV1Service,
         joarkGateway = joarkGateway,
-        oppgaveGateway = oppgaveGateway,
         dokumentService = dokumentService
     )
 

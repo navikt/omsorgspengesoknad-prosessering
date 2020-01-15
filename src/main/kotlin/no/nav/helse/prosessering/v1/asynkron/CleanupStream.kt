@@ -32,10 +32,10 @@ internal class CleanupStream(
 
         private fun topology(dokumentService: DokumentService) : Topology {
             val builder = StreamsBuilder()
-            val fromTopic = Topics.OPPGAVE_OPPRETTET
+            val fromTopic = Topics.JOURNALFORT
 
             builder
-                .stream<String, TopicEntry<OppgaveOpprettet>>(fromTopic.name, Consumed.with(fromTopic.keySerde, fromTopic.valueSerde))
+                .stream<String, TopicEntry<Journalfort>>(fromTopic.name, Consumed.with(fromTopic.keySerde, fromTopic.valueSerde))
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .foreach { soknadId, entry  -> try {
                     process(NAME, soknadId, entry) {
