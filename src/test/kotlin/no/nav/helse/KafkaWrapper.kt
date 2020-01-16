@@ -4,12 +4,10 @@ import no.nav.common.JAASCredential
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.MeldingV1
-import no.nav.helse.prosessering.v1.asynkron.OppgaveOpprettet
+import no.nav.helse.prosessering.v1.asynkron.Journalfort
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
-import no.nav.helse.prosessering.v1.asynkron.Topics
 import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT
 import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT
-import no.nav.helse.prosessering.v1.asynkron.Topics.OPPGAVE_OPPRETTET
 import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSSESERT
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -36,8 +34,7 @@ object KafkaWrapper {
             topicNames= listOf(
                 MOTTATT.name,
                 PREPROSSESERT.name,
-                JOURNALFORT.name,
-                OPPGAVE_OPPRETTET.name
+                JOURNALFORT.name
             )
         )
         return kafkaEnvironment
@@ -65,31 +62,31 @@ private fun KafkaEnvironment.testProducerProperties() : MutableMap<String, Any>?
 }
 
 
-fun KafkaEnvironment.testConsumer() : KafkaConsumer<String, TopicEntry<OppgaveOpprettet>> {
-    val consumer = KafkaConsumer<String, TopicEntry<OppgaveOpprettet>>(
+fun KafkaEnvironment.testConsumer() : KafkaConsumer<String, TopicEntry<Journalfort>> {
+    val consumer = KafkaConsumer<String, TopicEntry<Journalfort>>(
         testConsumerProperties(),
         StringDeserializer(),
-        OPPGAVE_OPPRETTET.serDes
+        JOURNALFORT.serDes
     )
-    consumer.subscribe(listOf(OPPGAVE_OPPRETTET.name))
+    consumer.subscribe(listOf(JOURNALFORT.name))
     return consumer
 }
 
 fun KafkaEnvironment.testProducer() = KafkaProducer<String, TopicEntry<MeldingV1>>(
     testProducerProperties(),
-    Topics.MOTTATT.keySerializer,
-    Topics.MOTTATT.serDes
+    MOTTATT.keySerializer,
+    MOTTATT.serDes
 )
 
-fun KafkaConsumer<String, TopicEntry<OppgaveOpprettet>>.hentOpprettetOppgave(
+fun KafkaConsumer<String, TopicEntry<Journalfort>>.hentJournalført(
     soknadId: String,
     maxWaitInSeconds: Long = 20
-) : TopicEntry<OppgaveOpprettet> {
+) : TopicEntry<Journalfort> {
     val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
     while (System.currentTimeMillis() < end) {
         seekToBeginning(assignment())
         val entries = poll(Duration.ofSeconds(1))
-            .records(OPPGAVE_OPPRETTET.name)
+            .records(JOURNALFORT.name)
             .filter { it.key() == soknadId }
 
         if (entries.isNotEmpty()) {
@@ -103,7 +100,7 @@ fun KafkaConsumer<String, TopicEntry<OppgaveOpprettet>>.hentOpprettetOppgave(
 fun KafkaProducer<String, TopicEntry<MeldingV1>>.leggSoknadTilProsessering(soknad: MeldingV1) {
     send(
         ProducerRecord(
-            Topics.MOTTATT.name,
+            MOTTATT.name,
             soknad.soknadId,
             TopicEntry(
                 metadata = Metadata(
