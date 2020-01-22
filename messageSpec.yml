@@ -14,16 +14,18 @@ info:
     url: "https://github.com/navikt/omsorgspengesoknad-prosessering/blob/master/LICENSE"
 
 tags:
-  - name: "MeldingV1"
-    description: "Innkommende melding fra omsorgspengesoknad-mottak"
-  - name: "PreprossesertMeldingV1"
-    description: "Preprossesert melding for brukt internt i tjenesten. Denne meldingen er også videresendt til privat-omsorgspengesoknad-journalfort."
+  - name: "Innkommende Meldinger"
+    description: "Innkommende søknader fra omsorgspengesoknad-mottak"
+  - name: "Interne Meldinger"
+    description: "Intern prossesering av søknader"
+  - name: "Utgående Meldinger"
+    description: "Videresending av søknader for journalføring og opprettelse av oppgave."
 
 paths:
   privat-omsorgspengesoknad-mottatt:
-    post:
+    get:
       tags:
-        - "MeldingV1"
+        - "Innkommende Meldinger"
       summary: "Topic for mottak av omsorgspengesøknader"
       description: ""
       operationId: ""
@@ -31,9 +33,17 @@ paths:
         $ref: "#/components/requestBodies/MeldingV1Request"
   
   privat-omsorgspengesoknad-preprossesert:
+    get:
+      tags:
+        - "Interne Meldinger"
+      summary: "Topic for internprossesering av søknader."
+      description: ""
+      operationId: ""
+      requestBody:
+        $ref: "#/components/requestBodies/PreprossesertMeldingV1Request"
     post:
       tags:
-        - "PreprossesertMeldingV1"
+        - "Interne Meldinger"
       summary: "Topic for internprossesering av søknader."
       description: ""
       operationId: ""
@@ -43,10 +53,10 @@ paths:
   privat-omsorgspengesoknad-journalfort:
     post:
       tags:
-        - "PreprossesertMeldingV1"
-      summary: "Send inn en søknad."
+        - "Utgående Meldinger"
+      summary: "Videreprossesering og journalføring av søknad"
       description: ""
-      operationId: "sendSoknad"
+      operationId: ""
       requestBody:
         $ref: "#/components/requestBodies/PreprossesertMeldingV1Request"
 
