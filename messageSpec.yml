@@ -33,10 +33,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/MeldingV1"
-
-      responses:
-        204:
-          description: "No Content"
   
   privat-omsorgspengesoknad-preprossesert:
     post:
@@ -51,10 +47,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PreprossesertMeldingV1"
-
-      responses:
-        204:
-          description: "No Content"
   
   privat-omsorgspengesoknad-journalfort:
     post:
@@ -69,10 +61,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PreprossesertMeldingV1"
-
-      responses:
-        204:
-          description: "No Content"
 
 components:
   schemas:
