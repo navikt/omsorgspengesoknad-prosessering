@@ -1,0 +1,329 @@
+openapi: 3.0.0
+info:
+  description: |
+    Definerer topics and meldinger. For mer info om produsenter og konsumenter av en gitt topic, se ./kafka/oneshot.json
+    MERK!! Denne swagger-ui definisjonen er brukt for å definere topics og meldinger for kafka, og er ikke ment å brukes som et API spesifikasjon.
+
+  version: "1.0.0"
+  title: "Omsorgspengesoknad Prosessering"
+  contact:
+    name: "Arbeids- og velferdsdirektoratet"
+    url: "https://www.nav.no"
+  license:
+    name: "MIT"
+    url: "https://github.com/navikt/omsorgspengesoknad-prosessering/blob/master/LICENSE"
+
+tags:
+  - name: "MeldingV1"
+    description: "Innkommende melding fra omsorgspengesoknad-mottak"
+  - name: "PreprossesertMeldingV1"
+    description: "Preprossesert melding for brukt internt i tjenesten. Denne meldingen er også videresendt til privat-omsorgspengesoknad-journalfort."
+
+paths:
+  privat-omsorgspengesoknad-mottatt:
+    post:
+      tags:
+        - "MeldingV1"
+      summary: "Topic for mottak av omsorgspengesøknader"
+      description: ""
+      operationId: ""
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MeldingV1"
+
+      responses:
+        204:
+          description: "No Content"
+  
+  privat-omsorgspengesoknad-preprossesert:
+    post:
+      tags:
+        - "PreprossesertMeldingV1"
+      summary: "Topic for internprossesering av søknader."
+      description: ""
+      operationId: ""
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PreprossesertMeldingV1"
+
+      responses:
+        204:
+          description: "No Content"
+  
+  privat-omsorgspengesoknad-journalfort:
+    post:
+      tags:
+        - "PreprossesertMeldingV1"
+      summary: "Send inn en søknad."
+      description: ""
+      operationId: "sendSoknad"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PreprossesertMeldingV1"
+
+      responses:
+        204:
+          description: "No Content"
+
+components:
+  schemas:
+    MeldingV1:
+      type: object
+      properties:
+        nyVersjon:
+          type: "boolean"
+          default: "false"
+        søknadId:
+          type: string
+          format: uuid
+          example: "2e444590-0568-4c2b-b21b-24df58776118"
+        mottatt:
+          type: string
+          format: date-time
+          pattern: "YYYY-MM-ddTHH:mm:ss:Z"
+          example: "2020-01-22T08:38:27.628482+01:00"
+        språk:
+          type: "string"
+          example: "nb"
+        kroniskEllerFunksjonshemming:
+          type: "boolean"
+          example: false
+        erYrkesaktiv:
+          type: "boolean"
+          example: true
+        barn:
+          $ref: "#/components/schemas/Barn"
+        søker:
+          $ref: "#/components/schemas/Soker"
+        relasjonTilBarnet:
+          $ref: "#/components/schemas/BarnRelasjon"
+        delerOmsorg:
+          type: "boolean"
+          example: true
+        sammeAddresse:
+          type: "boolean"
+          example: false
+        medlemskap:
+          $ref: "#/components/schemas/Medlemskap"
+        utenlandsopphold:
+          type: array
+          items:
+            $ref: "#/components/schemas/Utenlandsopphold"
+        legeerklæring:
+          type: array
+          items:
+            type: "string"
+            format: "hostname"
+            example: "https://omsorgspenger-api/vedlegg/da61256a-51b1-41b7-b9b6-e5ce1705fae9"
+        samværsavtale:
+          type: array
+          items:
+            type: "string"
+            format: "hostname"
+            example: "https://omsorgspenger-api/vedlegg/da61256a-51b1-41b7-b9b6-e5ce1705fae9"
+        harBekreftetOpplysninger:
+          type: "boolean"
+          example: true
+        harForståttRettigheterOgPlikter:
+          type: "boolean"
+
+    Soker:
+      type: "object"
+      required:
+        - fornavn
+        - etternavn
+        - fødselsdato
+        - aktørId
+      properties:
+        fornavn:
+          type: "string"
+          example: "Ola"
+        mellomnavn:
+          type: "string"
+          example: "Mokk"
+        etternavn:
+          type: "string"
+          example: "Mokkesen"
+        fødselsdato:
+          type: "string"
+          format: "date"
+          pattern: "YYYY-MM-DD"
+          example: "1971-02-23"
+        aktørId:
+          type: "string"
+          example: "123456"
+
+    Barn:
+      type: "object"
+      properties:
+        navn:
+          type: "string"
+          example: "Ola Nordmann"
+          description: "Full navn"
+        fødselsdato:
+          type: "string"
+          format: "date"
+          pattern: "YYYY-MM-DD"
+          example: "2013-02-23"
+        fødselsnummer:
+          type: "string"
+          description: "Gyldig norsk fødselsnummer"
+        aktørId:
+          type: "string"
+          example: "123456"
+
+    Medlemskap:
+      type: "object"
+      properties:
+        harBoddIUtlandetSiste12Mnd:
+          type: "boolean"
+          example: false
+        utenlandsoppholdSiste12Mnd:
+          type: array
+          items:
+            $ref: "#/components/schemas/Utenlandsopphold"
+        skalBoIUtlandetNeste12Mnd:
+          type: "boolean"
+          example: false
+        utenlandsoppholdNeste12Mnd:
+          type: array
+          items:
+            $ref: "#/components/schemas/Utenlandsopphold"
+    
+    Utenlandsopphold:
+      type: object
+      properties:
+        fraOgMed:
+          type: string
+          format: date
+          pattern: "YYYY-MM-DD"
+          example: "2020-01-20"
+        tilOgMed:
+          type: string
+          format: date
+          pattern: "YYYY-MM-DD"
+          example: "2020-01-22"
+        landkode:
+          type: string
+          example: "NO"
+        landnavn:
+          type: string
+          example: "Norge"
+
+    BarnRelasjon:
+      type: string
+      enum:
+        - MOR
+        - FAR
+        - ADOPTIVFORELDER
+        - SAMVÆRSFORELDER
+        - STEFORELDER
+        - FOSTERFORELDER
+    
+    PreprossesertMeldingV1:
+      type: "object"
+      properties:
+        søknadId:
+          type: string
+          format: uuid
+          example: "2e444590-0568-4c2b-b21b-24df58776118"
+        mottatt:
+          type: string
+          format: date-time
+          pattern: "YYYY-MM-ddTHH:mm:ss:Z"
+          example: "2020-01-22T08:38:27.628482+01:00"
+        språk:
+          type: "string"
+          example: "nb"
+        kroniskEllerFunksjonshemming:
+          type: "boolean"
+          example: false
+        erYrkesaktiv:
+          type: "boolean"
+          example: true
+        barn:
+          $ref: "#/components/schemas/Barn"
+        søker:
+          $ref: "#/components/schemas/Soker"
+        relasjonTilBarnet:
+          $ref: "#/components/schemas/BarnRelasjon"
+        delerOmsorg:
+          type: "boolean"
+          example: true
+        sammeAddresse:
+          type: "boolean"
+          example: false
+        medlemskap:
+          $ref: "#/components/schemas/Medlemskap"
+        utenlandsopphold:
+          type: array
+          items:
+            $ref: "#/components/schemas/Utenlandsopphold"
+        dokumentUrler:
+          type: array
+          items:
+            type: array
+            items: 
+              type: string
+              format: uri
+              example: "https://omsorgspenger-api/vedlegg/da61256a-51b1-41b7-b9b6-e5ce1705fae9"
+
+        harBekreftetOpplysninger:
+          type: "boolean"
+          example: true
+        harForståttRettigheterOgPlikter:
+          type: "boolean"
+    
+    PreprossesertSoker:
+      type: "object"
+      required:
+        - fornavn
+        - etternavn
+        - fødselsdato
+        - aktørId
+      properties:
+        fornavn:
+          type: "string"
+          example: "Ola"
+        mellomnavn:
+          type: "string"
+          example: "Mokk"
+        etternavn:
+          type: "string"
+          example: "Mokkesen"
+        fødselsdato:
+          type: "string"
+          format: "date"
+          pattern: "YYYY-MM-DD"
+          example: "1971-02-23"
+        aktørId:
+          type: "string"
+          example: "123456"
+
+    PreprossesertBarn:
+      type: "object"
+      properties:
+        navn:
+          type: "string"
+          example: "Ola Nordmann"
+          description: "Full navn"
+        fødselsdato:
+          type: "string"
+          format: "date"
+          pattern: "YYYY-MM-DD"
+          example: "2013-02-23"
+        fødselsnummer:
+          type: "string"
+          description: "Gyldig norsk fødselsnummer"
+        aktørId:
+          type: "string"
+          example: "123456"
