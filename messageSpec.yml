@@ -28,11 +28,7 @@ paths:
       description: ""
       operationId: ""
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/MeldingV1"
+        $ref: "#/components/requestBodies/MeldingV1Request"
   
   privat-omsorgspengesoknad-preprossesert:
     post:
@@ -42,11 +38,7 @@ paths:
       description: ""
       operationId: ""
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PreprossesertMeldingV1"
+        $ref: "#/components/requestBodies/PreprossesertMeldingV1Request"
   
   privat-omsorgspengesoknad-journalfort:
     post:
@@ -56,14 +48,47 @@ paths:
       description: ""
       operationId: "sendSoknad"
       requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PreprossesertMeldingV1"
+        $ref: "#/components/requestBodies/PreprossesertMeldingV1Request"
 
 components:
+  requestBodies:
+    MeldingV1Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              metadata:
+                $ref: "#/components/schemas/Metadata"
+              data:
+                $ref: "#/components/schemas/MeldingV1"
+    PreprossesertMeldingV1Request:
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              metadata:
+                $ref: "#/components/schemas/Metadata"
+              data:
+                $ref: "#/components/schemas/PreprossesertMeldingV1"
+
   schemas:
+    Metadata:
+      type: object
+      properties:
+        version:
+          type: integer
+          example: 1
+        correlationId:
+          type: string
+          format: uuid
+          example: "f0e9bdcb-c978-420a-a05f-ce9499f2924a"
+        requestId:
+          type: string
+          format: uuid
+          example: "f0e9bdcb-c978-420a-a05f-ce9499f2924a"
+
     MeldingV1:
       type: object
       properties:
