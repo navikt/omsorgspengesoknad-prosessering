@@ -78,13 +78,17 @@ internal class PdfV1Generator  {
                 "soknad_mottatt" to DATE_TIME_FORMATTER.format(melding.mottatt),
                 "søker" to mapOf(
                     "navn" to melding.søker.formatertNavn(),
-                    "fodselsnummer" to melding.søker.fødselsnummer,
+                    "fødselsnummer" to melding.søker.fødselsnummer,
                     "relasjon_til_barnet" to melding.relasjonTilBarnet
                 ),
                 "barn" to mapOf(
                     "navn" to barnetsNavn,
                     "id" to barnetsIdent?.getValue()
                 ),
+                "kroniskEllerFunksjonshemming" to melding.kroniskEllerFunksjonshemming,
+                "erYrkesaktiv" to melding.erYrkesaktiv,
+                "delerOmsorg" to melding.delerOmsorg,
+                "sammeAddresse" to melding.sammeAddresse,
                 "medlemskap" to mapOf(
                     "har_bodd_i_utlandet_siste_12_mnd" to melding.medlemskap.harBoddIUtlandetSiste12Mnd,
                     "utenlandsopphold_siste_12_mnd" to melding.medlemskap.utenlandsoppholdSiste12Mnd.somMapUtenlandsopphold(),
@@ -96,7 +100,7 @@ internal class PdfV1Generator  {
                     "har_bekreftet_opplysninger" to melding.harBekreftetOpplysninger
                 ),
                 "hjelp" to mapOf(
-                    "sprak" to melding.språk?.sprakTilTekst()
+                    "språk" to melding.språk?.sprakTilTekst()
                 )
             ))
             .resolver(MapValueResolver.INSTANCE)
