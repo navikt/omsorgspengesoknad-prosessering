@@ -1,7 +1,7 @@
 package no.nav.helse.prosessering.v1.asynkron
 
 import no.nav.helse.CorrelationId
-import no.nav.helse.aktoer.AktoerId
+import no.nav.helse.aktoer.AktørId
 import no.nav.helse.joark.JoarkGateway
 import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
@@ -13,6 +13,7 @@ import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.slf4j.LoggerFactory
+import java.net.URI
 
 internal class JournalforingsStream(
     joarkGateway: JoarkGateway,
@@ -44,11 +45,19 @@ internal class JournalforingsStream(
                 .mapValues { soknadId, entry  ->
                     process(NAME, soknadId, entry) {
                         logger.info("Journalfører dokumenter.")
+                        val list = mutableListOf<URI>()
+                        if (entry.data.samværsavtale != null) {
+                            list += entry.data.samværsavtale!!
+                        }
+                        if (entry.data.legeerklæring != null) {
+                            list += entry.data.legeerklæring!!
+                        }
+
                         val journaPostId = joarkGateway.journalfoer(
                             mottatt = entry.data.mottatt,
-                            aktoerId = AktoerId(entry.data.soker.aktoerId),
+                            aktørId = AktørId(entry.data.søker.aktørId),
                             correlationId = CorrelationId(entry.metadata.correlationId),
-                            dokumenter = entry.data.dokumentUrls
+                            dokumenter = listOf(list)
                         )
                         logger.info("Dokumenter journalført med ID = ${journaPostId.journalPostId}.")
                         Journalfort(

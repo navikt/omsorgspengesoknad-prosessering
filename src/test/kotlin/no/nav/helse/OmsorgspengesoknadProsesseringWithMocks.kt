@@ -29,7 +29,7 @@ class OmsorgspengesoknadProsesseringWithMocks {
                 .stubLagreDokument()
                 .stubSlettDokument()
                 .stubTpsProxyGetNavn("Ole", "Dole", "Klok")
-                .stubAktoerRegister("29099012345", "123456")
+                .stubAktørRegister("29099012345", "123456")
 
             val kafkaEnvironment = KafkaWrapper.bootstrap()
 

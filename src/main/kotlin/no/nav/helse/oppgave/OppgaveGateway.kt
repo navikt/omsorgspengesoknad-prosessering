@@ -11,7 +11,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.Url
 import no.nav.helse.CorrelationId
 import no.nav.helse.HttpError
-import no.nav.helse.aktoer.AktoerId
+import no.nav.helse.aktoer.AktørId
 import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.helse.dusseldorf.ktor.health.HealthCheck
 import no.nav.helse.dusseldorf.ktor.health.Healthy
@@ -55,8 +55,8 @@ class OppgaveGateway(
     }
 
     suspend fun lagOppgave(
-        sokerAktoerId: AktoerId,
-        barnAktoerId: AktoerId?,
+        sokerAktørId: AktørId,
+        barnAktørId: AktørId?,
         journalPostId: JournalPostId,
         correlationId: CorrelationId
     ) : OppgaveId {
@@ -64,8 +64,8 @@ class OppgaveGateway(
         val authorizationHeader = cachedAccessTokenClient.getAccessToken(oppretteOppgaveScopes).asAuthoriationHeader()
 
         val oppgaveRequest = OppgaveRequest(
-            soker = Person(sokerAktoerId.id),
-            barn = Person(barnAktoerId?.id),
+            soker = Person(sokerAktørId.id),
+            barn = Person(barnAktørId?.id),
             journalPostId = journalPostId.journalPostId
         )
 

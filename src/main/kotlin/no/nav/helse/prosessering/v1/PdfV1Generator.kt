@@ -76,28 +76,14 @@ internal class PdfV1Generator  {
                 "soknad_id" to melding.soknadId,
                 "soknad_mottatt_dag" to melding.mottatt.withZoneSameInstant(ZONE_ID).norskDag(),
                 "soknad_mottatt" to DATE_TIME_FORMATTER.format(melding.mottatt),
-                "har_medsoker" to melding.harMedsoker,
-                "samtidig_hjemme" to melding.samtidigHjemme,
-                "grad" to melding.grad,
-                "dager_per_uke_borte_fra_jobb" to melding.dagerPerUkeBorteFraJobb?.avrundetMedEnDesimal()?.formatertMedEnDesimal(),
-                "soker" to mapOf(
-                    "navn" to melding.soker.formatertNavn(),
-                    "fodselsnummer" to melding.soker.fodselsnummer,
+                "søker" to mapOf(
+                    "navn" to melding.søker.formatertNavn(),
+                    "fodselsnummer" to melding.søker.fødselsnummer,
                     "relasjon_til_barnet" to melding.relasjonTilBarnet
                 ),
                 "barn" to mapOf(
                     "navn" to barnetsNavn,
                     "id" to barnetsIdent?.getValue()
-                ),
-                "periode" to mapOf(
-                    "fra_og_med" to DATE_FORMATTER.format(melding.fraOgMed),
-                    "til_og_med" to DATE_FORMATTER.format(melding.tilOgMed),
-                    "virkedager" to DateUtils.antallVirkedager(melding.fraOgMed, melding.tilOgMed)
-                ),
-                "arbeidsgivere" to mapOf(
-                    "har_arbeidsgivere" to melding.arbeidsgivere.organisasjoner.isNotEmpty(),
-                    "aktuelle_arbeidsgivere" to melding.arbeidsgivere.organisasjoner.erAktuelleArbeidsgivere(),
-                    "organisasjoner" to melding.arbeidsgivere.organisasjoner.somMap()
                 ),
                 "medlemskap" to mapOf(
                     "har_bodd_i_utlandet_siste_12_mnd" to melding.medlemskap.harBoddIUtlandetSiste12Mnd,
@@ -110,13 +96,8 @@ internal class PdfV1Generator  {
                     "har_bekreftet_opplysninger" to melding.harBekreftetOpplysninger
                 ),
                 "hjelp" to mapOf(
-                    "har_medsoker" to melding.harMedsoker,
-                    "ingen_arbeidsgivere" to melding.arbeidsgivere.organisasjoner.isEmpty(),
-                    "sprak" to melding.sprak?.sprakTilTekst()
-                ),
-                "tilsynsordning" to tilsynsordning(melding.tilsynsordning),
-                "nattevaak" to nattevåk(melding.nattevaak),
-                "beredskap" to beredskap(melding.beredskap)
+                    "sprak" to melding.språk?.sprakTilTekst()
+                )
             ))
             .resolver(MapValueResolver.INSTANCE)
             .build()).let { html ->
@@ -136,70 +117,11 @@ internal class PdfV1Generator  {
         }
     }
 
-    private fun nattevåk(nattevaak: Nattevaak?) = when {
-        nattevaak == null -> null
-        else -> {
-            mapOf(
-                "har_nattevaak" to nattevaak.harNattevaak,
-                "tilleggsinformasjon" to nattevaak.tilleggsinformasjon
-            )
-        }
-    }
-
-    private fun beredskap(beredskap: Beredskap?) = when {
-        beredskap == null -> null
-        else -> {
-            mapOf(
-                "i_beredskap" to beredskap.beredskap,
-                "tilleggsinformasjon" to beredskap.tilleggsinformasjon
-            )
-        }
-    }
-
-    private fun tilsynsordning(tilsynsordning: Tilsynsordning?) = when {
-        tilsynsordning == null -> null
-        "ja" == tilsynsordning.svar -> mapOf(
-            "tilsynsordning_svar" to "ja",
-            "mandag" to tilsynsordning.ja?.mandag?.somTekst(),
-            "tirsdag" to tilsynsordning.ja?.tirsdag?.somTekst(),
-            "onsdag" to tilsynsordning.ja?.onsdag?.somTekst(),
-            "torsdag" to tilsynsordning.ja?.torsdag?.somTekst(),
-            "fredag" to tilsynsordning.ja?.fredag?.somTekst(),
-            "tilleggsinformasjon" to tilsynsordning.ja?.tilleggsinformasjon,
-            "prosent_av_normal_arbeidsuke" to tilsynsordning.ja?.prosentAvNormalArbeidsuke()?.formatertMedEnDesimal()
-        )
-        "vet_ikke" == tilsynsordning.svar -> mapOf(
-            "tilsynsordning_svar" to "vet_ikke",
-            "svar" to tilsynsordning.vetIkke?.svar,
-            "annet" to tilsynsordning.vetIkke?.annet
-        )
-        "nei" == tilsynsordning.svar -> mapOf(
-            "tilsynsordning_svar" to "nei"
-        )
-        else -> null
-    }
 
     private fun PdfRendererBuilder.medFonter() =
         useFont({ ByteArrayInputStream(REGULAR_FONT) }, "Source Sans Pro", 400, BaseRendererBuilder.FontStyle.NORMAL, false)
         .useFont({ ByteArrayInputStream(BOLD_FONT) }, "Source Sans Pro", 700, BaseRendererBuilder.FontStyle.NORMAL, false)
         .useFont({ ByteArrayInputStream(ITALIC_FONT) }, "Source Sans Pro", 400, BaseRendererBuilder.FontStyle.ITALIC, false)
-}
-
-private fun List<Organisasjon>.somMap() = map {
-    val skalJobbeProsent = it.skalJobbeProsent?.avrundetMedEnDesimal()
-    val jobberNormaltimer = it.jobberNormaltTimer
-    val inntektstapProsent = skalJobbeProsent?.skalJobbeProsentTilInntektstap()
-    val vetIkkeEkstrainfo = it.vetIkkeEkstrainfo
-
-    mapOf<String,Any?>(
-        "navn" to it.navn,
-        "organisasjonsnummer" to it.formaterOrganisasjonsnummer(),
-        "skal_jobbe" to it.skalJobbe,
-        "skal_jobbe_prosent" to skalJobbeProsent?.formatertMedEnDesimal(),
-        "inntektstap_prosent" to inntektstapProsent?.formatertMedEnDesimal(),
-        "jobber_normaltimer" to jobberNormaltimer,
-        "vet_ikke_ekstra_info" to vetIkkeEkstrainfo
-    )
 }
 
 private fun List<Utenlandsopphold>.somMapUtenlandsopphold(): List<Map<String, Any?>> {
@@ -213,9 +135,8 @@ private fun List<Utenlandsopphold>.somMapUtenlandsopphold(): List<Map<String, An
     }
 }
 
-private fun List<Organisasjon>.erAktuelleArbeidsgivere() = any { it.skalJobbeProsent != null }
 
-private fun Soker.formatertNavn() = if (mellomnavn != null) "$fornavn $mellomnavn $etternavn" else "$fornavn $etternavn"
+private fun Søker.formatertNavn() = if (mellomnavn != null) "$fornavn $mellomnavn $etternavn" else "$fornavn $etternavn"
 private fun String.sprakTilTekst() = when (this.toLowerCase()) {
     "nb" -> "bokmål"
     "nn" -> "nynorsk"

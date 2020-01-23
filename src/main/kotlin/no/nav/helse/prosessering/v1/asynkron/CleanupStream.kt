@@ -1,7 +1,7 @@
 package no.nav.helse.prosessering.v1.asynkron
 
 import no.nav.helse.CorrelationId
-import no.nav.helse.aktoer.AktoerId
+import no.nav.helse.aktoer.AktørId
 import no.nav.helse.dokument.DokumentService
 import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
@@ -11,6 +11,7 @@ import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
 import org.slf4j.LoggerFactory
+import java.net.URI
 
 internal class CleanupStream(
     kafkaConfig: KafkaConfig,
@@ -40,9 +41,17 @@ internal class CleanupStream(
                 .foreach { soknadId, entry  -> try {
                     process(NAME, soknadId, entry) {
                         logger.info("Sletter dokumenter.")
+                        val list = mutableListOf<URI>()
+                        if (entry.data.melding.samværsavtale != null) {
+                            list += entry.data.melding.samværsavtale!!
+                        }
+                        if (entry.data.melding.legeerklæring != null) {
+                            list += entry.data.melding.legeerklæring!!
+                        }
+
                         dokumentService.slettDokumeter(
-                            urlBolks = entry.data.melding.dokumentUrls,
-                            aktoerId = AktoerId(entry.data.melding.soker.aktoerId),
+                            urlBolks = listOf(list),
+                            aktørId = AktørId(entry.data.melding.søker.aktørId),
                             correlationId = CorrelationId(entry.metadata.correlationId)
                         )
                         logger.info("Dokumenter slettet.")

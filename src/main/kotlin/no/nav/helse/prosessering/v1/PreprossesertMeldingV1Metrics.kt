@@ -61,11 +61,7 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
             barnetsAlderIUkerCounter.labels(barnetsFodselsdato.ukerSiden()).inc()
         }
     }
-    valgteArbeidsgivereHistogram.observe(arbeidsgivere.organisasjoner.size.toDouble())
     idTypePaaBarnCounter.labels(barn.idType()).inc()
-    periodeSoknadGjelderIUkerHistogram.observe(ChronoUnit.WEEKS.between(fraOgMed, tilOgMed).toDouble())
-    if (grad != null) gradHistogram.observe(grad.toDouble())
-    jaNeiCounter.labels("har_medsoker", harMedsoker.tilJaEllerNei()).inc()
     jaNeiCounter.labels("har_bodd_i_utlandet_siste_12_mnd", medlemskap.harBoddIUtlandetSiste12Mnd.tilJaEllerNei()).inc()
     jaNeiCounter.labels("skal_bo_i_utlandet_neste_12_mnd", medlemskap.skalBoIUtlandetNeste12Mnd.tilJaEllerNei()).inc()
 }
@@ -73,17 +69,16 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
 internal fun Double.erUnderEttAar() = 0.0 == this
 private fun PreprossesertBarn.idType(): String {
     return when {
-        fodselsnummer != null -> "fodselsnummer"
-        alternativId != null -> "alternativ_id"
+        fødselsnummer != null -> "fødselsnummer"
         else -> "ingen_id"
     }
 }
 internal fun PreprossesertBarn.fodseldato() : LocalDate? {
-    if (fodselsnummer == null) return null
+    if (fødselsnummer == null) return null
     return try {
-        val dag = fodselsnummer.substring(0,2).toInt()
-        val maned = fodselsnummer.substring(2,4).toInt()
-        val ar = "20${fodselsnummer.substring(4,6)}".toInt()
+        val dag = fødselsnummer.substring(0,2).toInt()
+        val maned = fødselsnummer.substring(2,4).toInt()
+        val ar = "20${fødselsnummer.substring(4,6)}".toInt()
         LocalDate.of(ar, maned, dag)
     } catch (cause: Throwable) {
         null

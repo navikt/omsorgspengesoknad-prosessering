@@ -1,7 +1,7 @@
 package no.nav.helse.dokument
 
 import no.nav.helse.CorrelationId
-import no.nav.helse.aktoer.AktoerId
+import no.nav.helse.aktoer.AktørId
 import no.nav.helse.prosessering.v1.MeldingV1
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -14,19 +14,19 @@ class DokumentService(
 ) {
     private suspend fun lagreDokument(
         dokument: DokumentGateway.Dokument,
-        aktoerId: AktoerId,
+        aktørId: AktørId,
         correlationId: CorrelationId
     ) : URI {
         return dokumentGateway.lagreDokmenter(
             dokumenter = setOf(dokument),
             correlationId = correlationId,
-            aktoerId = aktoerId
+            aktørId = aktørId
         ).first()
     }
 
     internal suspend fun lagreSoknadsOppsummeringPdf(
         pdf : ByteArray,
-        aktoerId: AktoerId,
+        aktørId: AktørId,
         correlationId: CorrelationId
     ) : URI {
         return lagreDokument(
@@ -35,14 +35,14 @@ class DokumentService(
                 contentType = "application/pdf",
                 title = "Søknad om omsorgspenger"
             ),
-            aktoerId = aktoerId,
+            aktørId = aktørId,
             correlationId = correlationId
         )
     }
 
     internal suspend fun lagreSoknadsMelding(
         melding: MeldingV1,
-        aktoerId: AktoerId,
+        aktørId: AktørId,
         correlationId: CorrelationId
     ) : URI {
         return lagreDokument(
@@ -51,14 +51,14 @@ class DokumentService(
                 contentType = "application/json",
                 title = "Søknad om omsorgspenger som JSON"
             ),
-            aktoerId = aktoerId,
+            aktørId = aktørId,
             correlationId = correlationId
         )
     }
 
     internal suspend fun slettDokumeter(
         urlBolks: List<List<URI>>,
-        aktoerId: AktoerId,
+        aktørId: AktørId,
         correlationId : CorrelationId
     ) {
         val urls = mutableListOf<URI>()
@@ -67,7 +67,7 @@ class DokumentService(
         logger.trace("Sletter ${urls.size} dokumenter")
         dokumentGateway.slettDokmenter(
             urls = urls,
-            aktoerId = aktoerId,
+            aktørId = aktørId,
             correlationId = correlationId
         )
     }

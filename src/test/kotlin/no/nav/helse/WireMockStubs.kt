@@ -45,7 +45,7 @@ internal fun WireMockServer.stubAktoerRegisterGetAktoerIdNotFound(
 }
 
 
-internal fun WireMockServer.stubAktoerRegister(
+internal fun WireMockServer.stubAktørRegister(
     identNummer: String,
     aktoerId: String
 ): WireMockServer {

@@ -77,7 +77,7 @@ class AktoerGateway(
     suspend fun getAktoerId(
         ident: NorskIdent,
         correlationId: CorrelationId
-    ): AktoerId {
+    ): AktørId {
 
         val authorizationHeader = cachedAccessTokenClient.getAccessToken(henteAktoerIdScopes).asAuthoriationHeader()
 
@@ -130,7 +130,7 @@ class AktoerGateway(
             throw IllegalStateException("Fikk ${identResponse.identer.size} AktørID'er for det forsespurte fødselsnummeret mot '$completeUrl'")
         }
 
-        val aktoerId = AktoerId(identResponse.identer[0].ident)
+        val aktoerId = AktørId(identResponse.identer[0].ident)
         logger.trace("Resolved AktørID $aktoerId")
         return aktoerId
     }
@@ -192,18 +192,18 @@ class AktoerGateway(
             throw IllegalStateException("Fikk ${identResponse.identer.size} AktørID'er for det forsespurte fødselsnummeret mot '$url'")
         }
 
-        val aktoerId = AktoerId(identResponse.identer[0].ident)
+        val aktoerId = AktørId(identResponse.identer[0].ident)
         logger.trace("Resolved AktørID $aktoerId")
         return aktoerId.id
     }
 
     suspend fun hentNorskIdent(
-        aktoerId: AktoerId,
+        aktørId: AktørId,
         correlationId: CorrelationId
     ): NorskIdent {
         return get(
             url = fodselsnummerUrl,
-            personIdent = aktoerId.id,
+            personIdent = aktørId.id,
             correlationId = correlationId
         ).tilNorskIdent()
     }

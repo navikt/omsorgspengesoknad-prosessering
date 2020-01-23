@@ -15,7 +15,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import no.nav.helse.CorrelationId
 import no.nav.helse.HttpError
-import no.nav.helse.aktoer.AktoerId
+import no.nav.helse.aktoer.AktørId
 import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.helse.dusseldorf.ktor.core.Retry
 import no.nav.helse.dusseldorf.ktor.health.HealthCheck
@@ -78,7 +78,7 @@ class DokumentGateway(
 
     internal suspend fun lagreDokmenter(
         dokumenter: Set<Dokument>,
-        aktoerId: AktoerId,
+        aktørId: AktørId,
         correlationId: CorrelationId
     ) : List<URI> {
         val authorizationHeader = cachedAccessTokenClient.getAccessToken(lagreDokumentScopes).asAuthoriationHeader()
@@ -90,7 +90,7 @@ class DokumentGateway(
                     requestLagreDokument(
                         dokument = it,
                         correlationId = correlationId,
-                        aktoerId = aktoerId,
+                        aktørId = aktørId,
                         authorizationHeader = authorizationHeader
                     )
                 })
@@ -101,7 +101,7 @@ class DokumentGateway(
 
     internal suspend fun slettDokmenter(
         urls: List<URI>,
-        aktoerId: AktoerId,
+        aktørId: AktørId,
         correlationId: CorrelationId
     ) {
         val authorizationHeader = cachedAccessTokenClient.getAccessToken(sletteDokumentScopes).asAuthoriationHeader()
@@ -113,7 +113,7 @@ class DokumentGateway(
                     requestSlettDokument(
                         url = it,
                         correlationId = correlationId,
-                        aktoerId = aktoerId,
+                        aktørId = aktørId,
                         authorizationHeader = authorizationHeader
                     )
                 })
@@ -124,14 +124,14 @@ class DokumentGateway(
 
     private suspend fun requestSlettDokument(
         url: URI,
-        aktoerId: AktoerId,
+        aktørId: AktørId,
         correlationId: CorrelationId,
         authorizationHeader: String
     ) {
 
         val urlMedEier = Url.buildURL(
             baseUrl = url,
-            queryParameters = mapOf("eier" to listOf(aktoerId.id))
+            queryParameters = mapOf("eier" to listOf(aktørId.id))
         ).toString()
 
         val httpRequest = urlMedEier
@@ -161,14 +161,14 @@ class DokumentGateway(
 
     private suspend fun requestLagreDokument(
         dokument: Dokument,
-        aktoerId: AktoerId,
+        aktørId: AktørId,
         correlationId: CorrelationId,
         authorizationHeader: String
     ) : URI {
 
         val urlMedEier = Url.buildURL(
             baseUrl = completeUrl,
-            queryParameters = mapOf("eier" to listOf(aktoerId.id))
+            queryParameters = mapOf("eier" to listOf(aktørId.id))
         ).toString()
 
         val body = objectMapper.writeValueAsBytes(dokument)

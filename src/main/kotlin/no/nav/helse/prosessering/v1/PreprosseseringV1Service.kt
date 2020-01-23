@@ -1,7 +1,10 @@
 package no.nav.helse.prosessering.v1
 
 import no.nav.helse.CorrelationId
-import no.nav.helse.aktoer.*
+import no.nav.helse.aktoer.AktoerService
+import no.nav.helse.aktoer.AktørId
+import no.nav.helse.aktoer.Fodselsnummer
+import no.nav.helse.aktoer.NorskIdent
 import no.nav.helse.barn.BarnOppslag
 import no.nav.helse.dokument.DokumentService
 import no.nav.helse.prosessering.Metadata
@@ -30,19 +33,19 @@ internal class PreprosseseringV1Service(
 
         val correlationId = CorrelationId(metadata.correlationId)
 
-        val sokerAktoerId = AktoerId(melding.soker.aktoerId)
+        val søkerAktørId = AktørId(melding.søker.aktørId)
 
-        logger.info("Søkerens AktørID = $sokerAktoerId")
+        logger.info("Søkerens AktørID = $søkerAktørId")
 
         logger.trace("Henter AktørID for barnet.")
-        val barnAktoerId: AktoerId? = when {
-            melding.barn.aktoerId.isNullOrBlank() -> hentBarnetsAktoerId(barn = melding.barn, correlationId = correlationId)
-            else -> AktoerId(melding.barn.aktoerId)
+        val barnAktørId: AktørId? = when {
+            melding.barn.aktørId.isNullOrBlank() -> hentBarnetsAktoerId(barn = melding.barn, correlationId = correlationId)
+            else -> AktørId(melding.barn.aktørId)
         }
-        logger.info("Barnets AktørID = $barnAktoerId")
+        logger.info("Barnets AktørID = $barnAktørId")
 
         val barnetsIdent: NorskIdent? = when {
-            barnAktoerId != null -> aktoerService.getIdent(barnAktoerId.id, correlationId = correlationId)
+            barnAktørId != null -> aktoerService.getIdent(barnAktørId.id, correlationId = correlationId)
             else -> null
         }
 
@@ -58,7 +61,7 @@ internal class PreprosseseringV1Service(
         val soknadOppsummeringPdfUrl = dokumentService.lagreSoknadsOppsummeringPdf(
             pdf = soknadOppsummeringPdf,
             correlationId = correlationId,
-            aktoerId = sokerAktoerId
+            aktørId = søkerAktørId
         )
 
         logger.trace("Mellomlagring av Oppsummerings-PDF OK")
@@ -67,7 +70,7 @@ internal class PreprosseseringV1Service(
 
         val soknadJsonUrl = dokumentService.lagreSoknadsMelding(
             melding = melding,
-            aktoerId = sokerAktoerId,
+            aktørId = søkerAktørId,
             correlationId = correlationId
         )
 
@@ -81,19 +84,22 @@ internal class PreprosseseringV1Service(
             )
         )
 
-        if (melding.vedleggUrls.isNotEmpty()) {
-            logger.trace("Legger til ${melding.vedleggUrls.size} vedlegg URL's fra meldingen som dokument.")
-            melding.vedleggUrls.forEach { komplettDokumentUrls.add(listOf(it)) }
+        if (melding.samværsavtale != null) {
+             komplettDokumentUrls.add(listOf(melding.samværsavtale!!))
         }
+
+        if (melding.legeerklæring != null) {
+             komplettDokumentUrls.add(listOf(melding.legeerklæring!!))
+        }
+
 
         logger.trace("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
 
 
         val preprossesertMeldingV1 = PreprossesertMeldingV1(
-            dokumentUrls = komplettDokumentUrls.toList(),
             melding = melding,
-            sokerAktoerId = sokerAktoerId,
-            barnAktoerId = barnAktoerId,
+            søkerAktørId = søkerAktørId,
+            barnAktørId = barnAktørId,
             barnetsNavn = barnetsNavn,
             barnetsNorskeIdent = barnetsIdent
         )
@@ -143,15 +149,11 @@ internal class PreprosseseringV1Service(
     private suspend fun hentBarnetsAktoerId(
         barn: Barn,
         correlationId: CorrelationId
-    ): AktoerId? {
+    ): AktørId? {
         return try {
             when {
-                !barn.fodselsnummer.isNullOrBlank() -> aktoerService.getAktorId(
-                    ident = Fodselsnummer(barn.fodselsnummer),
-                    correlationId = correlationId
-                )
-                !barn.alternativId.isNullOrBlank() -> aktoerService.getAktorId(
-                    ident = AlternativId(barn.alternativId),
+                !barn.fødselsnummer.isNullOrBlank() -> aktoerService.getAktorId(
+                    ident = Fodselsnummer(barn.fødselsnummer),
                     correlationId = correlationId
                 )
                 else -> null
