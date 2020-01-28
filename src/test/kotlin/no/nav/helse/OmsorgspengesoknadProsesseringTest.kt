@@ -139,15 +139,13 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        kafkaTestConsumer.hentJournalført(melding.soknadId)
+        kafkaTestConsumer.hentJournalført(melding.søknadId)
     }
 
     @Test
     fun `Melding med språk og skal jobbe prosent blir prosessert`() {
 
         val sprak = "nn"
-        val jobb1SkalJobbeProsent = 50.422
-        val jobb2SkalJobberProsent = 12.111
 
         val melding = gyldigMelding(
             fødselsnummerSoker = gyldigFodselsnummerA,
@@ -156,7 +154,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        val oppgaveOpprettet = kafkaTestConsumer.hentJournalført(melding.soknadId).data
+        val oppgaveOpprettet = kafkaTestConsumer.hentJournalført(melding.søknadId).data
         assertEquals(sprak, oppgaveOpprettet.melding.språk)
     }
 
@@ -175,7 +173,7 @@ class OmsorgspengesoknadProsesseringTest {
 
         wireMockServer.stubJournalfor(201) // Simulerer journalføring fungerer igjen
         restartEngine()
-        kafkaTestConsumer.hentJournalført(melding.soknadId)
+        kafkaTestConsumer.hentJournalført(melding.søknadId)
     }
 
     private fun readyGir200HealthGir503() {
@@ -197,7 +195,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        kafkaTestConsumer.hentJournalført(melding.soknadId)
+        kafkaTestConsumer.hentJournalført(melding.søknadId)
     }
 
     @Test
@@ -209,7 +207,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        kafkaTestConsumer.hentJournalført(melding.soknadId)
+        kafkaTestConsumer.hentJournalført(melding.søknadId)
     }
 
     @Test
@@ -222,7 +220,7 @@ class OmsorgspengesoknadProsesseringTest {
         wireMockServer.stubAktoerRegisterGetAktoerIdNotFound(gyldigFodselsnummerC)
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        kafkaTestConsumer.hentJournalført(melding.soknadId)
+        kafkaTestConsumer.hentJournalført(melding.søknadId)
     }
 
     @Test
@@ -235,7 +233,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.soknadId)
+        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.søknadId)
         assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", hentOpprettetOppgave.data.melding.barn.navn)
     }
 
@@ -252,7 +250,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.soknadId)
+        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.søknadId)
         assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", hentOpprettetOppgave.data.melding.barn.navn)
     }
 
@@ -270,7 +268,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.soknadId)
+        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.søknadId)
         assertEquals(forventetFodselsNummer, hentOpprettetOppgave.data.melding.barn.fødselsnummer)
     }
 
@@ -287,7 +285,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
-        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.soknadId)
+        val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.søknadId)
         assertEquals(forventetFodselsNummer, hentOpprettetOppgave.data.melding.barn.fødselsnummer)
     }
 
@@ -300,7 +298,7 @@ class OmsorgspengesoknadProsesseringTest {
         sprak: String? = null
     ): MeldingV1 = MeldingV1(
         språk = sprak,
-        soknadId = UUID.randomUUID().toString(),
+        søknadId = UUID.randomUUID().toString(),
         mottatt = ZonedDateTime.now(),
         søker = Søker(
             aktørId = "123456",

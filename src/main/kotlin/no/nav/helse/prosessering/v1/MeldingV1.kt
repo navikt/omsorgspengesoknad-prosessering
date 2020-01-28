@@ -8,7 +8,7 @@ import java.time.ZonedDateTime
 
 data class MeldingV1 (
     val nyVersjon: Boolean = false,
-    val soknadId: String,
+    val søknadId: String,
     val mottatt: ZonedDateTime,
     val språk: String? = "nb",
     val kroniskEllerFunksjonshemming: Boolean = false,
@@ -21,8 +21,8 @@ data class MeldingV1 (
     val medlemskap: Medlemskap,
     val utenlandsopphold: List<Utenlandsopphold> = listOf(),
     val harBekreftetOpplysninger : Boolean,
-    var legeerklæring : URI? = null,
-    var samværsavtale : URI? = null,
+    var legeerklæring : List<URI> = listOf(),
+    var samværsavtale : List<URI> = listOf(),
     val harForstattRettigheterOgPlikter : Boolean
 )
 

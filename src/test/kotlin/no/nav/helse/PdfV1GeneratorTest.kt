@@ -20,7 +20,7 @@ class PdfV1GeneratorTest {
     private fun fullGyldigMelding(soknadsId: String): MeldingV1 {
         return MeldingV1(
             språk = "nb",
-            soknadId = soknadsId,
+            søknadId = soknadsId,
             mottatt = ZonedDateTime.now(),
             søker = Søker(
                 aktørId = "123456",
@@ -56,24 +56,6 @@ class PdfV1GeneratorTest {
     private fun gyldigMelding(
         soknadId: String,
         språk: String? = "nb",
-        organisasjoner: List<Organisasjon> = listOf(
-            Organisasjon(
-                organisasjonsnummer = "987564785",
-                navn = "NAV"
-            ),
-            Organisasjon(
-                organisasjonsnummer = "975124568",
-                navn = "Kiwi"
-            ),
-            Organisasjon(
-                organisasjonsnummer = "952352687",
-                navn = "Bjerkheim gård"
-            ),
-            Organisasjon(
-                organisasjonsnummer = "952352655",
-                navn = "Hopp i havet"
-            )
-        ),
         barn: Barn = Barn(
             navn = "Børge Øverbø Ånsnes",
             fødselsnummer = null,
@@ -93,7 +75,7 @@ class PdfV1GeneratorTest {
         )
     ) = MeldingV1(
         språk = språk,
-        soknadId = soknadId,
+        søknadId = soknadId,
         mottatt = ZonedDateTime.now(),
         søker = Søker(
             aktørId = "123456",

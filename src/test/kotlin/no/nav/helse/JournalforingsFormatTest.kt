@@ -15,13 +15,13 @@ class JournalforingsFormatTest {
 
     @Test
     fun `Soknaden journalfoeres som JSON uten vedlegg`() {
-        val soknadId = UUID.randomUUID().toString()
-        val json = JournalforingsFormat.somJson(melding(soknadId))
+        val søknadId = UUID.randomUUID().toString()
+        val json = JournalforingsFormat.somJson(melding(søknadId))
         println(String(json))
         JSONAssert.assertEquals(
             """{
                   "ny_versjon": false,
-                  "soknad_id": "$soknadId",
+                  "søknad_id": "$søknadId",
                   "mottatt": "2018-01-02T03:04:05.000000006Z",
                   "språk": "nb",
                   "kronisk_eller_funksjonshemming": false,
@@ -51,8 +51,8 @@ class JournalforingsFormatTest {
                   },
                   "utenlandsopphold": [],
                   "har_bekreftet_opplysninger": true,
-                  "legeerklæring": null,
-                  "samværsavtale": null,
+                  "legeerklæring": [],
+                  "samværsavtale": [],
                   "har_forstatt_rettigheter_og_plikter": true
                 }
 
@@ -62,7 +62,7 @@ class JournalforingsFormatTest {
     }
 
     private fun melding(soknadId: String): MeldingV1 = MeldingV1(
-        soknadId = soknadId,
+        søknadId = soknadId,
         mottatt = ZonedDateTime.of(2018, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
         søker = Søker(
             aktørId = "123456",

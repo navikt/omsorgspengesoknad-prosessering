@@ -31,32 +31,34 @@ internal class CleanupStream(
         private const val NAME = "CleanupV1"
         private val logger = LoggerFactory.getLogger("no.nav.$NAME.topology")
 
-        private fun topology(dokumentService: DokumentService) : Topology {
+        private fun topology(dokumentService: DokumentService): Topology {
             val builder = StreamsBuilder()
             val fromTopic = Topics.JOURNALFORT
 
             builder
-                .stream<String, TopicEntry<Journalfort>>(fromTopic.name, Consumed.with(fromTopic.keySerde, fromTopic.valueSerde))
+                .stream<String, TopicEntry<Journalfort>>(
+                    fromTopic.name,
+                    Consumed.with(fromTopic.keySerde, fromTopic.valueSerde)
+                )
                 .filter { _, entry -> 1 == entry.metadata.version }
-                .foreach { soknadId, entry  -> try {
-                    process(NAME, soknadId, entry) {
-                        logger.info("Sletter dokumenter.")
-                        val list = mutableListOf<URI>()
-                        if (entry.data.melding.samværsavtale != null) {
-                            list += entry.data.melding.samværsavtale!!
-                        }
-                        if (entry.data.melding.legeerklæring != null) {
-                            list += entry.data.melding.legeerklæring!!
-                        }
+                .foreach { soknadId, entry ->
+                    try {
+                        process(NAME, soknadId, entry) {
+                            logger.info("Sletter dokumenter.")
+                            val list = mutableListOf<URI>()
+                            list.addAll(entry.data.melding.samværsavtale)
+                            list.addAll(entry.data.melding.legeerklæring)
 
-                        dokumentService.slettDokumeter(
-                            urlBolks = listOf(list),
-                            aktørId = AktørId(entry.data.melding.søker.aktørId),
-                            correlationId = CorrelationId(entry.metadata.correlationId)
-                        )
-                        logger.info("Dokumenter slettet.")
+                            dokumentService.slettDokumeter(
+                                urlBolks = listOf(list),
+                                aktørId = AktørId(entry.data.melding.søker.aktørId),
+                                correlationId = CorrelationId(entry.metadata.correlationId)
+                            )
+                            logger.info("Dokumenter slettet.")
+                        }
+                    } catch (ignore: Throwable) {
                     }
-                } catch (ignore: Throwable) {} }
+                }
             return builder.build()
         }
     }

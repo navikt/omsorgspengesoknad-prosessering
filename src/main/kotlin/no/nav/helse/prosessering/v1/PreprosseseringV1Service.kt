@@ -28,8 +28,8 @@ internal class PreprosseseringV1Service(
         melding: MeldingV1,
         metadata: Metadata
     ): PreprossesertMeldingV1 {
-        val soknadId = SoknadId(melding.soknadId)
-        logger.info("Preprosseserer $soknadId")
+        val søknadId = SoknadId(melding.søknadId)
+        logger.info("Preprosseserer $søknadId")
 
         val correlationId = CorrelationId(metadata.correlationId)
 
@@ -39,7 +39,10 @@ internal class PreprosseseringV1Service(
 
         logger.trace("Henter AktørID for barnet.")
         val barnAktørId: AktørId? = when {
-            melding.barn.aktørId.isNullOrBlank() -> hentBarnetsAktoerId(barn = melding.barn, correlationId = correlationId)
+            melding.barn.aktørId.isNullOrBlank() -> hentBarnetsAktoerId(
+                barn = melding.barn,
+                correlationId = correlationId
+            )
             else -> AktørId(melding.barn.aktørId)
         }
         logger.info("Barnets AktørID = $barnAktørId")
@@ -49,7 +52,8 @@ internal class PreprosseseringV1Service(
             else -> null
         }
 
-        val barnetsNavn: String? = slaaOppBarnetsNavn(melding.barn, barnetsIdent = barnetsIdent, correlationId = correlationId)
+        val barnetsNavn: String? =
+            slaaOppBarnetsNavn(melding.barn, barnetsIdent = barnetsIdent, correlationId = correlationId)
 
         logger.trace("Genererer Oppsummerings-PDF av søknaden.")
 
@@ -84,14 +88,8 @@ internal class PreprosseseringV1Service(
             )
         )
 
-        if (melding.samværsavtale != null) {
-             komplettDokumentUrls.add(listOf(melding.samværsavtale!!))
-        }
-
-        if (melding.legeerklæring != null) {
-             komplettDokumentUrls.add(listOf(melding.legeerklæring!!))
-        }
-
+        komplettDokumentUrls.add(melding.samværsavtale)
+        komplettDokumentUrls.add(melding.legeerklæring)
 
         logger.trace("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
 

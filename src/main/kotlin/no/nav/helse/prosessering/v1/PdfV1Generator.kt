@@ -73,12 +73,12 @@ internal class PdfV1Generator  {
     ) : ByteArray {
         soknadTemplate.apply(Context
             .newBuilder(mapOf(
-                "soknad_id" to melding.soknadId,
+                "soknad_id" to melding.søknadId,
                 "soknad_mottatt_dag" to melding.mottatt.withZoneSameInstant(ZONE_ID).norskDag(),
                 "soknad_mottatt" to DATE_TIME_FORMATTER.format(melding.mottatt),
+              //  "fødselsnummer" to melding.søker.fødselsnummer,
                 "søker" to mapOf(
                     "navn" to melding.søker.formatertNavn(),
-                    "fødselsnummer" to melding.søker.fødselsnummer,
                     "relasjon_til_barnet" to melding.relasjonTilBarnet
                 ),
                 "barn" to mapOf(

@@ -46,12 +46,8 @@ internal class JournalforingsStream(
                     process(NAME, soknadId, entry) {
                         logger.info("Journalfører dokumenter.")
                         val list = mutableListOf<URI>()
-                        if (entry.data.samværsavtale != null) {
-                            list += entry.data.samværsavtale!!
-                        }
-                        if (entry.data.legeerklæring != null) {
-                            list += entry.data.legeerklæring!!
-                        }
+                        list.addAll(entry.data.samværsavtale)
+                        list.addAll(entry.data.legeerklæring)
 
                         val journaPostId = joarkGateway.journalfoer(
                             mottatt = entry.data.mottatt,

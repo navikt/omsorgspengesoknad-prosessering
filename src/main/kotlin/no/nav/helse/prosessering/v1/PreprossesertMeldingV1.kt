@@ -22,8 +22,8 @@ data class PreprossesertMeldingV1(
     val utenlandsopphold: List<Utenlandsopphold> = listOf(),
     val harBekreftetOpplysninger: Boolean,
     val harForstattRettigheterOgPlikter: Boolean,
-    var legeerklæring: URI? = null,
-    var samværsavtale: URI? = null
+    var legeerklæring: List<URI> = listOf(),
+    var samværsavtale: List<URI> = listOf()
 ) {
     internal constructor(
         melding: MeldingV1,
@@ -33,7 +33,7 @@ data class PreprossesertMeldingV1(
         barnetsNorskeIdent: NorskIdent?
     ) : this(
         språk = melding.språk,
-        soknadId = melding.soknadId,
+        soknadId = melding.søknadId,
         mottatt = melding.mottatt,
         kroniskEllerFunksjonshemming = melding.kroniskEllerFunksjonshemming,
         søker = PreprossesertSøker(melding.søker, søkerAktørId),
