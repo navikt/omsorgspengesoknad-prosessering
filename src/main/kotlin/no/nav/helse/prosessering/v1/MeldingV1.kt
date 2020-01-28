@@ -50,10 +50,6 @@ data class Barn(
     }
 }
 
-data class Arbeidsgivere(
-    val organisasjoner : List<Organisasjon>
-)
-
 data class Organisasjon(
     val organisasjonsnummer: String,
     val navn: String?,

@@ -15,7 +15,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-internal class PdfV1Generator  {
+internal class PdfV1Generator {
     private companion object {
         private const val ROOT = "handlebars"
         private const val SOKNAD = "soknad"
@@ -56,6 +56,7 @@ internal class PdfV1Generator  {
             val base64string = Base64.getEncoder().encodeToString(bytes)
             return "data:image/png;base64,$base64string"
         }
+
         private fun loadImages() = mapOf(
             "Checkbox_off.png" to loadPng("Checkbox_off"),
             "Checkbox_on.png" to loadPng("Checkbox_on"),
@@ -70,41 +71,45 @@ internal class PdfV1Generator  {
         melding: MeldingV1,
         barnetsIdent: NorskIdent?,
         barnetsNavn: String?
-    ) : ByteArray {
-        soknadTemplate.apply(Context
-            .newBuilder(mapOf(
-                "soknad_id" to melding.søknadId,
-                "soknad_mottatt_dag" to melding.mottatt.withZoneSameInstant(ZONE_ID).norskDag(),
-                "soknad_mottatt" to DATE_TIME_FORMATTER.format(melding.mottatt),
-              //  "fødselsnummer" to melding.søker.fødselsnummer,
-                "søker" to mapOf(
-                    "navn" to melding.søker.formatertNavn(),
-                    "relasjon_til_barnet" to melding.relasjonTilBarnet
-                ),
-                "barn" to mapOf(
-                    "navn" to barnetsNavn,
-                    "id" to barnetsIdent?.getValue()
-                ),
-                "kroniskEllerFunksjonshemming" to melding.kroniskEllerFunksjonshemming,
-                "erYrkesaktiv" to melding.erYrkesaktiv,
-                "delerOmsorg" to melding.delerOmsorg,
-                "sammeAddresse" to melding.sammeAddresse,
-                "medlemskap" to mapOf(
-                    "har_bodd_i_utlandet_siste_12_mnd" to melding.medlemskap.harBoddIUtlandetSiste12Mnd,
-                    "utenlandsopphold_siste_12_mnd" to melding.medlemskap.utenlandsoppholdSiste12Mnd.somMapUtenlandsopphold(),
-                    "skal_bo_i_utlandet_neste_12_mnd" to melding.medlemskap.skalBoIUtlandetNeste12Mnd,
-                    "utenlandsopphold_neste_12_mnd" to melding.medlemskap.utenlandsoppholdNeste12Mnd.somMapUtenlandsopphold()
-                ),
-                "samtykke" to mapOf(
-                    "har_forstatt_rettigheter_og_plikter" to melding.harForstattRettigheterOgPlikter,
-                    "har_bekreftet_opplysninger" to melding.harBekreftetOpplysninger
-                ),
-                "hjelp" to mapOf(
-                    "språk" to melding.språk?.sprakTilTekst()
+    ): ByteArray {
+        soknadTemplate.apply(
+            Context
+                .newBuilder(
+                    mapOf(
+                        "soknad_id" to melding.søknadId,
+                        "soknad_mottatt_dag" to melding.mottatt.withZoneSameInstant(ZONE_ID).norskDag(),
+                        "soknad_mottatt" to DATE_TIME_FORMATTER.format(melding.mottatt),
+                        "søker" to mapOf(
+                            "navn" to melding.søker.formatertNavn(),
+                            "fødselsnummer" to melding.søker.fødselsnummer,
+                            "relasjon_til_barnet" to melding.relasjonTilBarnet
+                        ),
+                        "barn" to mapOf(
+                            "navn" to barnetsNavn,
+                            "id" to barnetsIdent?.getValue()
+                        ),
+                        "kroniskEllerFunksjonshemming" to melding.kroniskEllerFunksjonshemming,
+                        "erYrkesaktiv" to melding.erYrkesaktiv,
+                        "delerOmsorg" to melding.delerOmsorg,
+                        "sammeAddresse" to melding.sammeAddresse,
+                        "medlemskap" to mapOf(
+                            "har_bodd_i_utlandet_siste_12_mnd" to melding.medlemskap.harBoddIUtlandetSiste12Mnd,
+                            "utenlandsopphold_siste_12_mnd" to melding.medlemskap.utenlandsoppholdSiste12Mnd.somMapUtenlandsopphold(),
+                            "skal_bo_i_utlandet_neste_12_mnd" to melding.medlemskap.skalBoIUtlandetNeste12Mnd,
+                            "utenlandsopphold_neste_12_mnd" to melding.medlemskap.utenlandsoppholdNeste12Mnd.somMapUtenlandsopphold()
+                        ),
+                        "samtykke" to mapOf(
+                            "har_forstatt_rettigheter_og_plikter" to melding.harForstattRettigheterOgPlikter,
+                            "har_bekreftet_opplysninger" to melding.harBekreftetOpplysninger
+                        ),
+                        "hjelp" to mapOf(
+                            "språk" to melding.språk?.sprakTilTekst()
+                        )
+                    )
                 )
-            ))
-            .resolver(MapValueResolver.INSTANCE)
-            .build()).let { html ->
+                .resolver(MapValueResolver.INSTANCE)
+                .build()
+        ).let { html ->
             val outputStream = ByteArrayOutputStream()
 
             PdfRendererBuilder()
@@ -123,19 +128,37 @@ internal class PdfV1Generator  {
 
 
     private fun PdfRendererBuilder.medFonter() =
-        useFont({ ByteArrayInputStream(REGULAR_FONT) }, "Source Sans Pro", 400, BaseRendererBuilder.FontStyle.NORMAL, false)
-        .useFont({ ByteArrayInputStream(BOLD_FONT) }, "Source Sans Pro", 700, BaseRendererBuilder.FontStyle.NORMAL, false)
-        .useFont({ ByteArrayInputStream(ITALIC_FONT) }, "Source Sans Pro", 400, BaseRendererBuilder.FontStyle.ITALIC, false)
+        useFont(
+            { ByteArrayInputStream(REGULAR_FONT) },
+            "Source Sans Pro",
+            400,
+            BaseRendererBuilder.FontStyle.NORMAL,
+            false
+        )
+            .useFont(
+                { ByteArrayInputStream(BOLD_FONT) },
+                "Source Sans Pro",
+                700,
+                BaseRendererBuilder.FontStyle.NORMAL,
+                false
+            )
+            .useFont(
+                { ByteArrayInputStream(ITALIC_FONT) },
+                "Source Sans Pro",
+                400,
+                BaseRendererBuilder.FontStyle.ITALIC,
+                false
+            )
 }
 
 private fun List<Utenlandsopphold>.somMapUtenlandsopphold(): List<Map<String, Any?>> {
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withZone(ZoneId.of("Europe/Oslo"))
     return map {
-        mapOf<String,Any?>(
+        mapOf<String, Any?>(
             "landnavn" to it.landnavn,
             "fraOgMed" to dateFormatter.format(it.fraOgMed),
             "tilOgMed" to dateFormatter.format(it.tilOgMed)
-            )
+        )
     }
 }
 
