@@ -45,7 +45,7 @@ internal fun WireMockServer.stubAktoerRegisterGetAktoerIdNotFound(
 }
 
 
-internal fun WireMockServer.stubAktoerRegister(
+internal fun WireMockServer.stubAktørRegister(
     identNummer: String,
     aktoerId: String
 ): WireMockServer {
@@ -139,7 +139,7 @@ internal fun WireMockServer.stubOpprettOppgave(): WireMockServer {
                 .withBody(
                     """
                     {
-                        "oppgave_id" : "5678"
+                        "oppgaveId" : "5678"
                     }
                     """.trimIndent()
                 )
@@ -157,7 +157,7 @@ internal fun WireMockServer.stubJournalfor(responseCode: Int = 201): WireMockSer
                 .withBody(
                     """
                     {
-                        "journal_post_id" : "9101112"
+                        "journalPostId" : "9101112"
                     }
                     """.trimIndent()
                 )

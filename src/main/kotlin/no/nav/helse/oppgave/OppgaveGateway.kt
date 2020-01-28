@@ -2,7 +2,6 @@ package no.nav.helse.oppgave
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
@@ -11,7 +10,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.Url
 import no.nav.helse.CorrelationId
 import no.nav.helse.HttpError
-import no.nav.helse.aktoer.AktoerId
+import no.nav.helse.aktoer.AktørId
 import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.helse.dusseldorf.ktor.health.HealthCheck
 import no.nav.helse.dusseldorf.ktor.health.Healthy
@@ -55,8 +54,8 @@ class OppgaveGateway(
     }
 
     suspend fun lagOppgave(
-        sokerAktoerId: AktoerId,
-        barnAktoerId: AktoerId?,
+        sokerAktørId: AktørId,
+        barnAktørId: AktørId?,
         journalPostId: JournalPostId,
         correlationId: CorrelationId
     ) : OppgaveId {
@@ -64,8 +63,8 @@ class OppgaveGateway(
         val authorizationHeader = cachedAccessTokenClient.getAccessToken(oppretteOppgaveScopes).asAuthoriationHeader()
 
         val oppgaveRequest = OppgaveRequest(
-            soker = Person(sokerAktoerId.id),
-            barn = Person(barnAktoerId?.id),
+            soker = Person(sokerAktørId.id),
+            barn = Person(barnAktørId?.id),
             journalPostId = journalPostId.journalPostId
         )
 
@@ -101,7 +100,6 @@ class OppgaveGateway(
     private fun configuredObjectMapper() : ObjectMapper {
         val objectMapper = jacksonObjectMapper()
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        objectMapper.propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
         return objectMapper
     }
 }

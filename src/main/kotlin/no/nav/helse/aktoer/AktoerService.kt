@@ -8,11 +8,11 @@ class AktoerService(
     suspend fun getAktorId(
         ident: NorskIdent,
         correlationId: CorrelationId
-    ): AktoerId {
+    ): AktørId {
         return aktoerGateway.getAktoerId(ident, correlationId)
     }
 
     suspend fun getIdent(aktoerId: String, correlationId: CorrelationId): NorskIdent {
-        return aktoerGateway.hentNorskIdent(aktoerId = AktoerId(id = aktoerId), correlationId = correlationId)
+        return aktoerGateway.hentNorskIdent(aktørId = AktørId(id = aktoerId), correlationId = correlationId)
     }
 }

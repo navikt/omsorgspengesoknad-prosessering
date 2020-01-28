@@ -3,68 +3,52 @@ package no.nav.helse.prosessering.v1
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.net.URI
-import java.time.Duration
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
 data class MeldingV1 (
-    val sprak: String? = null,
-    val soknadId: String,
+    val nyVersjon: Boolean = false,
+    val søknadId: String,
     val mottatt: ZonedDateTime,
-    val fraOgMed : LocalDate,
-    val tilOgMed : LocalDate,
-    val soker : Soker,
+    val språk: String? = "nb",
+    val kroniskEllerFunksjonshemming: Boolean = false,
+    val erYrkesaktiv: Boolean = false,
     val barn : Barn,
+    val søker : Søker,
     val relasjonTilBarnet : String,
-    val arbeidsgivere: Arbeidsgivere,
-    var vedleggUrls : List<URI> = listOf(),
+    val delerOmsorg : Boolean = false,
+    val sammeAddresse : Boolean = false,
     val medlemskap: Medlemskap,
-    val grad : Int?,
-    val harMedsoker : Boolean,
-    val samtidigHjemme: Boolean? = null,
-    val harForstattRettigheterOgPlikter : Boolean,
+    val utenlandsopphold: List<Utenlandsopphold> = listOf(),
     val harBekreftetOpplysninger : Boolean,
-    val dagerPerUkeBorteFraJobb: Double? = null,
-    val tilsynsordning: Tilsynsordning?,
-    val beredskap: Beredskap?,
-    val nattevaak: Nattevaak?
+    var legeerklæring : List<URI> = listOf(),
+    var samværsavtale : List<URI> = listOf(),
+    val harForstattRettigheterOgPlikter : Boolean
 )
 
-data class Soker(
-    val aktoerId: String,
-    val fodselsnummer: String,
+data class Søker(
+    val fødselsnummer: String,
     val fornavn: String,
     val mellomnavn: String?,
-    val etternavn: String
+    val etternavn: String,
+    @JsonFormat(pattern = "yyyy-MM-dd") val fødselsdato : LocalDate?,
+    val aktørId: String
 ) {
     override fun toString(): String {
-        return "Soker(aktoerId='$aktoerId', fornavn='$fornavn', mellomnavn=$mellomnavn, etternavn='$etternavn')"
+        return "Soker(fornavn='$fornavn', mellomnavn=$mellomnavn, etternavn='$etternavn', fødselsdato=$fødselsdato, aktørId='$aktørId')"
     }
 }
 
 data class Barn(
-    val fodselsnummer: String?,
     val navn : String?,
-    val alternativId: String?,
-    val aktoerId: String?
+    val fødselsnummer: String?,
+    @JsonFormat(pattern = "yyyy-MM-dd") val fødselsdato : LocalDate?,
+    val aktørId: String?
 ) {
     override fun toString(): String {
-        return "Barn(navn=$navn, aktoerId=$aktoerId)"
+        return "Barn(navn=$navn, aktørId=$aktørId)"
     }
 }
-
-data class Arbeidsgivere(
-    val organisasjoner : List<Organisasjon>
-)
-
-data class Organisasjon(
-    val organisasjonsnummer: String,
-    val navn: String?,
-    val skalJobbe: String? = null,
-    val jobberNormaltTimer: Double? = null,
-    val skalJobbeProsent: Double?  = null,
-    val vetIkkeEkstrainfo: String? = null
-)
 
 data class Medlemskap(
     @JsonProperty("har_bodd_i_utlandet_siste_12_mnd")
@@ -76,53 +60,6 @@ data class Medlemskap(
     @JsonProperty("utenlandsopphold_neste_12_mnd")
     val utenlandsoppholdNeste12Mnd: List<Utenlandsopphold> = listOf()
 )
-
-data class TilsynsordningJa(
-    val mandag: Duration?,
-    val tirsdag: Duration?,
-    val onsdag: Duration?,
-    val torsdag: Duration?,
-    val fredag: Duration?,
-    val tilleggsinformasjon: String? = null
-) {
-    override fun toString(): String {
-        return "TilsynsordningJa(mandag=$mandag, tirsdag=$tirsdag, onsdag=$onsdag, torsdag=$torsdag, fredag=$fredag)"
-    }
-}
-
-data class TilsynsordningVetIkke(
-    val svar: String,
-    val annet: String? = null
-) {
-    override fun toString(): String {
-        return "TilsynsordningVetIkke(svar='$svar')"
-    }
-}
-
-data class Tilsynsordning(
-    val svar: String,
-    val ja: TilsynsordningJa?,
-    val vetIkke: TilsynsordningVetIkke?
-)
-
-data class Nattevaak(
-    val harNattevaak: Boolean,
-    val tilleggsinformasjon: String?
-) {
-    override fun toString(): String {
-        return "Nattevaak(harNattevaak=$harNattevaak)"
-    }
-}
-
-data class Beredskap(
-    @JsonProperty("i_beredskap")
-    val beredskap: Boolean,
-    val tilleggsinformasjon: String?
-) {
-    override fun toString(): String {
-        return "Beredskap(beredskap=$beredskap)"
-    }
-}
 
 data class Utenlandsopphold(
     @JsonFormat(pattern = "yyyy-MM-dd") val fraOgMed: LocalDate,

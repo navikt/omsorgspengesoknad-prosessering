@@ -2,7 +2,6 @@ package no.nav.helse.joark
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -12,7 +11,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.Url
 import no.nav.helse.CorrelationId
 import no.nav.helse.HttpError
-import no.nav.helse.aktoer.AktoerId
+import no.nav.helse.aktoer.AktørId
 import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.helse.dusseldorf.ktor.health.HealthCheck
 import no.nav.helse.dusseldorf.ktor.health.Healthy
@@ -57,7 +56,7 @@ class JoarkGateway(
     }
 
     suspend fun journalfoer(
-        aktoerId: AktoerId,
+        aktørId: AktørId,
         mottatt: ZonedDateTime,
         dokumenter: List<List<URI>>,
         correlationId: CorrelationId
@@ -66,7 +65,7 @@ class JoarkGateway(
         val authorizationHeader = cachedAccessTokenClient.getAccessToken(journalforeScopes).asAuthoriationHeader()
 
         val joarkRequest = JoarkRequest(
-            aktoerId = aktoerId.id,
+            aktoerId = aktørId.id,
             mottatt = mottatt,
             dokumenter = dokumenter
         )
@@ -103,7 +102,6 @@ class JoarkGateway(
     private fun configuredObjectMapper() : ObjectMapper {
         val objectMapper = jacksonObjectMapper()
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        objectMapper.propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
         objectMapper.registerModule(JavaTimeModule())
         return objectMapper
     }
