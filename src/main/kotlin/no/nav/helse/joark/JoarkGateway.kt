@@ -2,7 +2,6 @@ package no.nav.helse.joark
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -103,7 +102,6 @@ class JoarkGateway(
     private fun configuredObjectMapper() : ObjectMapper {
         val objectMapper = jacksonObjectMapper()
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        objectMapper.propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
         objectMapper.registerModule(JavaTimeModule())
         return objectMapper
     }
