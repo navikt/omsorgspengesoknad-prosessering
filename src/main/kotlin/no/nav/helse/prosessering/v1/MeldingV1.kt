@@ -50,15 +50,6 @@ data class Barn(
     }
 }
 
-data class Organisasjon(
-    val organisasjonsnummer: String,
-    val navn: String?,
-    val skalJobbe: String? = null,
-    val jobberNormaltTimer: Double? = null,
-    val skalJobbeProsent: Double?  = null,
-    val vetIkkeEkstrainfo: String? = null
-)
-
 data class Medlemskap(
     @JsonProperty("har_bodd_i_utlandet_siste_12_mnd")
     val harBoddIUtlandetSiste12Mnd : Boolean,
