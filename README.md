@@ -1,4 +1,5 @@
 # omsorgspengesoknad-prosessering
+![CI / CD](https://github.com/navikt/omsorgspengesoknad-prosessering/workflows/CI%20/%20CD/badge.svg)
 
 Tjeneste som prosesserer søknader om omsorgspenger.
 Leser søknader fra Kafka topic `privat-omsorgspenger-mottatt` som legges der av [omsorgspenger-mottak](https://github.com/navikt/omsorgspenger-mottak)
