@@ -43,7 +43,7 @@ spec:
         kvPath: /azuread/data/dev/creds/omsorgspengesoknad-prosessering
       - mountPath: /var/run/secrets/nais.io/serviceuser
         kvPath: /serviceuser/data/dev/srvomsorgspeng-prs
-webproxy: true
+  webproxy: true
   env:
     - name: OMSORGSPENGER_OPPGAVE_BASE_URL
       value: https://omsorgspenger-oppgave.nais.preprod.local
