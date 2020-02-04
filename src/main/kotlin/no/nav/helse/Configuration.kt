@@ -41,7 +41,6 @@ data class Configuration(private val config : ApplicationConfig) {
     }
 
     private fun getScopesFor(operation: String) = config.getRequiredList("nav.auth.scopes.$operation", secret = false, builder = { it }).toSet()
-    internal fun getOppretteOppgaveScopes() = getScopesFor("opprette-oppgave")
     internal fun getJournalforeScopes() = getScopesFor("journalfore")
     internal fun getLagreDokumentScopes() = getScopesFor("lagre-dokument")
     internal fun getSletteDokumentScopes() = getScopesFor("slette-dokument")
