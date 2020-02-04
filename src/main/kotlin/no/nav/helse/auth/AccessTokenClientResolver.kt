@@ -1,9 +1,10 @@
 package no.nav.helse.auth
 
+import com.nimbusds.jose.jwk.JWK
 import no.nav.helse.dusseldorf.ktor.auth.Client
 import no.nav.helse.dusseldorf.ktor.auth.ClientSecretClient
 import no.nav.helse.dusseldorf.ktor.auth.PrivateKeyClient
-import no.nav.helse.dusseldorf.oauth2.client.FromCertificateHexThumbprint
+import no.nav.helse.dusseldorf.oauth2.client.DirectKeyId
 import no.nav.helse.dusseldorf.oauth2.client.FromJwk
 import no.nav.helse.dusseldorf.oauth2.client.SignedJwtAccessTokenClient
 import org.slf4j.Logger
@@ -27,6 +28,14 @@ internal class AccessTokenClientResolver(
         throw IllegalStateException("Client[$AZURE_V2_ALIAS] må være satt opp.")
     } as PrivateKeyClient
 
+    private val keyId = try {
+        val jwk = JWK.parse(azureV2Client.privateKeyJwk)
+        requireNotNull(jwk.keyID) { "Azure JWK inneholder ikke keyID." }
+        jwk.keyID
+    } catch (_: Throwable) {
+        throw IllegalArgumentException("Azure JWK på feil format.")
+    }
+
     private val naisStsAccessTokenClient = NaisStsAccessTokenClient(
         clientId = naisStsClient.clientId(),
         clientSecret = naisStsClient.clientSecret,
@@ -37,10 +46,9 @@ internal class AccessTokenClientResolver(
         clientId = azureV2Client.clientId(),
         tokenEndpoint = azureV2Client.tokenEndpoint(),
         privateKeyProvider = FromJwk(azureV2Client.privateKeyJwk),
-        keyIdProvider = FromCertificateHexThumbprint(azureV2Client.certificateHexThumbprint)
+        keyIdProvider = DirectKeyId(keyId)
     )
 
-    internal fun oppgaveAccessTokenClient() = azureV2AccessTokenClient
     internal fun dokumentAccessTokenClient() = azureV2AccessTokenClient
     internal fun joarkAccessTokenClient() = azureV2AccessTokenClient
     internal fun aktoerRegisterAccessTokenClient() = naisStsAccessTokenClient

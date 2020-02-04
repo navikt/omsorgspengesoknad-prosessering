@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val dusseldorfKtorVersion = "1.2.5.b695602"
+val dusseldorfKtorVersion = "1.3.0.b7013ab"
 val k9FormatVersion = "1.0.0.0356f75"
 val ktorVersion = ext.get("ktorVersion").toString()
 val slf4jVersion = ext.get("slf4jVersion").toString()
@@ -20,7 +20,8 @@ plugins {
 }
 
 buildscript {
-    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/b695602315f8f05305773db692fd1af7cfeae620/gradle/dusseldorf-ktor.gradle.kts")
+    // Henter ut diverse dependency versjoner, i.e. ktorVersion.
+    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/b7013abce578447fb79186175b728e26e1537c27/gradle/dusseldorf-ktor.gradle.kts")
 }
 
 dependencies {
@@ -50,7 +51,7 @@ dependencies {
     // Test
     testCompile("org.apache.kafka:kafka-clients:$kafkaVersion")
     testCompile ("no.nav:kafka-embedded-env:$kafkaEmbeddedEnvVersion")
-    testCompile ( "no.nav.helse:dusseldorf-ktor-test-support:$dusseldorfKtorVersion")
+    testCompile ( "no.nav.helse:dusseldorf-test-support:$dusseldorfKtorVersion")
     testCompile("io.ktor:ktor-server-test-host:$ktorVersion") {
         exclude(group = "org.eclipse.jetty")
     }
