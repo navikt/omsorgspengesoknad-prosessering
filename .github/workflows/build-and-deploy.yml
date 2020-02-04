@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Test Code
+      - name: Check Code
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -105,8 +105,8 @@ jobs:
           resources: ${{  format('nais/{0}.yml', github.event.deployment.environment) }}
 
 
-  deploy-dev-sbs:
-    name: Deploy to dev-sbs
+  deploy-dev-fss:
+    name: Deploy to dev-fss
     if: startsWith(github.ref, 'refs/heads/dev-') || startsWith(github.ref, 'refs/heads/master') # Deploy if branch is either master or dev-*
     needs: build-code-and-push-docker # Depends on build-code-and-push-docker job
     runs-on: ubuntu-latest
@@ -128,17 +128,17 @@ jobs:
           cp docker_tag/.docker_tag .
       - name: debug
         run: ls -la
-      - name: deploy to dev-sbs
+      - name: deploy to dev-fss
         uses: navikt/deployment-cli/action@0.4.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          cluster: dev-sbs
+          cluster: dev-fss
           team: dusseldorf
-          resources: nais/dev-sbs.yml
+          resources: nais/dev-fss.yml
 
   deploy-prod-sbs:
-    name: Deploy to prod-sbs
+    name: Deploy to prod-fss
     if: startsWith(github.ref, 'refs/heads/master')  # If the branch is master
     needs: build-code-and-push-docker # Depends on build-code-and-push-docker job
     runs-on: ubuntu-latest
@@ -160,11 +160,11 @@ jobs:
           cp docker_tag/.docker_tag .
       - name: debug
         run: ls -la
-      - name: deploy to prod-sbs
+      - name: deploy to prod-fss
         uses: navikt/deployment-cli/action@0.4.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          cluster: prod-sbs
+          cluster: prod-fss
           team: dusseldorf
-          resources: nais/prod-sbs.yml
+          resources: nais/prod-fss.yml
