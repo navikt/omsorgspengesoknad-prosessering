@@ -16,7 +16,6 @@ object TestConfiguration {
         port : Int = 8080,
         aktoerRegisterBaseUrl : String? = wireMockServer?.getAktoerRegisterBaseUrl(),
         tpsProxyBaseUrl : String? = wireMockServer?.getTpsProxyBaseUrl(),
-        omsorgspengerOppgaveBaseUrl : String? = wireMockServer?.getOmsorgspengerOppgaveBaseUrl(),
         omsorgspengerJoarkBaseUrl : String? = wireMockServer?.getOmsorgspengerJoarkBaseUrl(),
         k9DokumentBaseUrl : String? = wireMockServer?.getK9DokumentBaseUrl()
     ) : Map<String, String>{
@@ -24,7 +23,6 @@ object TestConfiguration {
             Pair("ktor.deployment.port","$port"),
             Pair("nav.aktoer_register_base_url","$aktoerRegisterBaseUrl"),
             Pair("nav.tps_proxy_v1_base_url","$tpsProxyBaseUrl"),
-            Pair("nav.omsorgspenger_oppgave_base_url","$omsorgspengerOppgaveBaseUrl"),
             Pair("nav.omsorgspenger_joark_base_url","$omsorgspengerJoarkBaseUrl"),
             Pair("nav.k9_dokument_base_url","$k9DokumentBaseUrl")
         )
@@ -46,7 +44,6 @@ object TestConfiguration {
             map["nav.auth.scopes.lagre-dokument"] = "k9-dokument/.default"
             map["nav.auth.scopes.slette-dokument"] = "k9-dokument/.default"
             map["nav.auth.scopes.journalfore"] = "omsorgspenger-joark/.default"
-            map["nav.auth.scopes.opprette-oppgave"] = "omsorgspenger-oppgave/.default"
         }
 
         kafkaEnvironment?.let {
