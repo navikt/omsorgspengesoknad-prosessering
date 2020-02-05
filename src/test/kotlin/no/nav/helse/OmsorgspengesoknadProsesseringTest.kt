@@ -268,7 +268,7 @@ class OmsorgspengesoknadProsesseringTest {
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
         val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.søknadId)
-        assertEquals(forventetFodselsNummer, hentOpprettetOppgave.data.melding.barn.fødselsnummer)
+        assertEquals(forventetFodselsNummer, hentOpprettetOppgave.data.melding.barn.norskIdentifikator)
     }
 
     @Test
@@ -285,7 +285,7 @@ class OmsorgspengesoknadProsesseringTest {
 
         kafkaTestProducer.leggSoknadTilProsessering(melding)
         val hentOpprettetOppgave: TopicEntry<Journalfort> = kafkaTestConsumer.hentJournalført(melding.søknadId)
-        assertEquals(forventetFodselsNummer, hentOpprettetOppgave.data.melding.barn.fødselsnummer)
+        assertEquals(forventetFodselsNummer, hentOpprettetOppgave.data.melding.barn.norskIdentifikator)
     }
 
     private fun gyldigMelding(

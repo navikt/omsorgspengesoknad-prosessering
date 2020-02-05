@@ -69,16 +69,16 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
 internal fun Double.erUnderEttAar() = 0.0 == this
 private fun PreprossesertBarn.idType(): String {
     return when {
-        fødselsnummer != null -> "fødselsnummer"
+        norskIdentifikator != null -> "fødselsnummer"
         else -> "ingen_id"
     }
 }
 internal fun PreprossesertBarn.fodseldato() : LocalDate? {
-    if (fødselsnummer == null) return null
+    if (norskIdentifikator == null) return null
     return try {
-        val dag = fødselsnummer.substring(0,2).toInt()
-        val maned = fødselsnummer.substring(2,4).toInt()
-        val ar = "20${fødselsnummer.substring(4,6)}".toInt()
+        val dag = norskIdentifikator.substring(0,2).toInt()
+        val maned = norskIdentifikator.substring(2,4).toInt()
+        val ar = "20${norskIdentifikator.substring(4,6)}".toInt()
         LocalDate.of(ar, maned, dag)
     } catch (cause: Throwable) {
         null

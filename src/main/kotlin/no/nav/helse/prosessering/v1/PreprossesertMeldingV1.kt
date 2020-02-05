@@ -62,7 +62,7 @@ data class PreprossesertSøker(
 }
 
 data class PreprossesertBarn(
-    val fødselsnummer: String?,
+    val norskIdentifikator: String?,
     val fødselsDato: LocalDate?,
     val navn: String?,
     val aktoerId: String?
@@ -75,7 +75,7 @@ data class PreprossesertBarn(
         barnetsNorskeIdent: NorskIdent?,
         aktørId: AktørId?
     ) : this(
-        fødselsnummer = barn.norskIdentifikator ?: (barnetsNorskeIdent as? Fodselsnummer)?.getValue(),
+        norskIdentifikator = barn.norskIdentifikator ?: (barnetsNorskeIdent as? Fodselsnummer)?.getValue(),
         fødselsDato = barnetsFødselsdato,
         navn = barnetsNavn,
         aktoerId = aktørId?.id
