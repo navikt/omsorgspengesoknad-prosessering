@@ -1,5 +1,6 @@
 package no.nav.helse
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.Application
 import io.ktor.application.ApplicationStopping
@@ -50,7 +51,9 @@ fun Application.omsorgspengesoknadProsessering() {
 
     install(ContentNegotiation) {
         jackson {
-            dusseldorfConfigured().configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
+            dusseldorfConfigured()
+                .setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
+                .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
 
         }
     }
