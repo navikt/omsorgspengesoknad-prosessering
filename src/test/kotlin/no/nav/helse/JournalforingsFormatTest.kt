@@ -28,7 +28,7 @@ class JournalforingsFormatTest {
                   "er_yrkesaktiv": false,
                   "barn": {
                     "navn": "Kari",
-                    "fødselsnummer": "2323",
+                    "norsk_identifikator": "2323",
                     "fødselsdato": null,
                     "aktør_id": null
                   },
@@ -74,7 +74,7 @@ class JournalforingsFormatTest {
         ),
         barn = Barn(
             navn = "Kari",
-            fødselsnummer = "2323",
+            norskIdentifikator = "2323",
             fødselsdato = null,
             aktørId = null
         ),

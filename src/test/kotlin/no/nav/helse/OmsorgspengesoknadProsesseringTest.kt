@@ -309,7 +309,7 @@ class OmsorgspengesoknadProsesseringTest {
         ),
         barn = Barn(
             navn = barnetsNavn,
-            fødselsnummer = fødselsnummerBarn,
+            norskIdentifikator = fødselsnummerBarn,
             aktørId = aktørIdBarn,
             fødselsdato = barnetsFødselsdato
         ),

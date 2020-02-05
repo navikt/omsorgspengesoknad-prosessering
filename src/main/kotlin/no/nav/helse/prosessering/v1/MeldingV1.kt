@@ -41,7 +41,7 @@ data class Søker(
 
 data class Barn(
     val navn : String?,
-    val fødselsnummer: String?,
+    val norskIdentifikator: String?,
     @JsonFormat(pattern = "yyyy-MM-dd") val fødselsdato : LocalDate?,
     val aktørId: String?
 ) {

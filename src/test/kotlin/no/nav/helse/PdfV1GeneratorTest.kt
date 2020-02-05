@@ -31,7 +31,7 @@ class PdfV1GeneratorTest {
                 fødselsdato = fødselsdato
             ),
             barn = Barn(
-                fødselsnummer = barnetsIdent.getValue(),
+                norskIdentifikator = barnetsIdent.getValue(),
                 fødselsdato = barnetsFødselsdato,
                 aktørId = "123456",
                 navn = barnetsNavn
@@ -58,7 +58,7 @@ class PdfV1GeneratorTest {
         språk: String? = "nb",
         barn: Barn = Barn(
             navn = "Børge Øverbø Ånsnes",
-            fødselsnummer = null,
+            norskIdentifikator = null,
             aktørId = null,
             fødselsdato = barnetsFødselsdato
         ),

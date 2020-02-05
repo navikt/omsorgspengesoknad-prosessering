@@ -150,8 +150,8 @@ internal class PreprosseseringV1Service(
     ): AktørId? {
         return try {
             when {
-                !barn.fødselsnummer.isNullOrBlank() -> aktoerService.getAktorId(
-                    ident = Fodselsnummer(barn.fødselsnummer),
+                !barn.norskIdentifikator.isNullOrBlank() -> aktoerService.getAktorId(
+                    ident = Fodselsnummer(barn.norskIdentifikator),
                     correlationId = correlationId
                 )
                 else -> null

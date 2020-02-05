@@ -75,7 +75,7 @@ data class PreprossesertBarn(
         barnetsNorskeIdent: NorskIdent?,
         aktørId: AktørId?
     ) : this(
-        fødselsnummer = barn.fødselsnummer ?: (barnetsNorskeIdent as? Fodselsnummer)?.getValue(),
+        fødselsnummer = barn.norskIdentifikator ?: (barnetsNorskeIdent as? Fodselsnummer)?.getValue(),
         fødselsDato = barnetsFødselsdato,
         navn = barnetsNavn,
         aktoerId = aktørId?.id
