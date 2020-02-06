@@ -15,7 +15,7 @@ import org.apache.kafka.common.serialization.Serializer
 import org.apache.kafka.common.serialization.StringSerializer
 
 data class TopicEntry<V>(val metadata: Metadata, val data: V)
-data class Cleanup(val metadata: Metadata, val melding: PreprossesertMeldingV1)
+data class Cleanup(val metadata: Metadata, val melding: PreprossesertMeldingV1, val journalførtMelding: Journalfort)
 data class Journalfort(val journalPostId: String, val melding: OmsorgspengerSøknad)
 
 internal data class Topic<V>(

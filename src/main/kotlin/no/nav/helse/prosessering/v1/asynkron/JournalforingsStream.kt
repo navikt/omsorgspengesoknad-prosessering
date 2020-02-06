@@ -43,11 +43,14 @@ internal class JournalforingsStream(
 
         private fun topology(joarkGateway: JoarkGateway): Topology {
             val builder = StreamsBuilder()
-            val fraPreprossesert = Topics.PREPROSSESERT
-            val tilJournalført = Topics.JOURNALFORT
+            val fraPreprossesert: Topic<TopicEntry<PreprossesertMeldingV1>> = Topics.PREPROSSESERT
+            val tilCleanup: Topic<TopicEntry<Cleanup>> = Topics.CLEANUP
 
-            builder
-                .stream<String, TopicEntry<PreprossesertMeldingV1>>(fraPreprossesert.name, Consumed.with(fraPreprossesert.keySerde, fraPreprossesert.valueSerde))
+            val mapValues = builder
+                .stream<String, TopicEntry<PreprossesertMeldingV1>>(
+                    fraPreprossesert.name,
+                    Consumed.with(fraPreprossesert.keySerde, fraPreprossesert.valueSerde)
+                )
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
@@ -67,10 +70,15 @@ internal class JournalforingsStream(
                             journalPostId = journaPostId.journalPostId,
                             melding = entry.data.tilK9Omsorgspengesøknad()
                         )
-                        journalfort
+                        Cleanup(
+                            metadata = entry.metadata,
+                            melding = entry.data,
+                            journalførtMelding = journalfort
+                        )
                     }
                 }
-                .to(tilJournalført.name, Produced.with(tilJournalført.keySerde, tilJournalført.valueSerde))
+            mapValues
+                .to(tilCleanup.name, Produced.with(tilCleanup.keySerde, tilCleanup.valueSerde))
             return builder.build()
         }
     }
@@ -91,7 +99,11 @@ private fun PreprossesertSøker.tilK9Søker(): Søker = Søker.builder()
 
 private fun PreprossesertBarn.tilK9Barn(): Barn {
     return when {
-        !norskIdentifikator.isNullOrBlank() -> Barn.builder().norskIdentitetsnummer(NorskIdentitetsnummer.of(norskIdentifikator)).build()
+        !norskIdentifikator.isNullOrBlank() -> Barn.builder().norskIdentitetsnummer(
+            NorskIdentitetsnummer.of(
+                norskIdentifikator
+            )
+        ).build()
         fødselsDato != null -> Barn.builder().fødselsdato(fødselsDato).build()
         else -> throw IllegalArgumentException("Ikke tillatt med barn som mangler både fødselsdato og fødselnummer.")
     }
