@@ -48,7 +48,8 @@ internal class PreprosseseringV1Service(
         logger.info("Barnets AktørID = $barnAktørId")
 
         val barnetsIdent: NorskIdent? = when {
-            barnAktørId != null -> aktoerService.getIdent(barnAktørId.id, correlationId = correlationId)
+            !melding.barn.norskIdentifikator.isNullOrBlank() -> Fodselsnummer(melding.barn.norskIdentifikator)
+            melding.barn.norskIdentifikator.isNullOrBlank() && barnAktørId != null -> aktoerService.getIdent(barnAktørId.id, correlationId = correlationId)
             else -> null
         }
 

@@ -33,11 +33,11 @@ internal class PreprosseseringStream(
 
         private fun topology(preprosseseringV1Service: PreprosseseringV1Service) : Topology {
             val builder = StreamsBuilder()
-            val fromTopic = Topics.MOTTATT
-            val toTopic = Topics.PREPROSSESERT
+            val fromMottatt = Topics.MOTTATT
+            val toPreprossesert = Topics.PREPROSSESERT
 
             builder
-                .stream<String, TopicEntry<MeldingV1>>(fromTopic.name, Consumed.with(fromTopic.keySerde, fromTopic.valueSerde))
+                .stream<String, TopicEntry<MeldingV1>>(fromMottatt.name, Consumed.with(fromMottatt.keySerde, fromMottatt.valueSerde))
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry  ->
                     process(NAME, soknadId, entry) {
@@ -50,7 +50,7 @@ internal class PreprosseseringStream(
                         preprossesertMelding
                     }
                 }
-                .to(toTopic.name, Produced.with(toTopic.keySerde, toTopic.valueSerde))
+                .to(toPreprossesert.name, Produced.with(toPreprossesert.keySerde, toPreprossesert.valueSerde))
             return builder.build()
         }
     }

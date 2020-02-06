@@ -43,11 +43,11 @@ internal class JournalforingsStream(
 
         private fun topology(joarkGateway: JoarkGateway): Topology {
             val builder = StreamsBuilder()
-            val fromTopic = Topics.PREPROSSESERT
-            val toTopic = Topics.JOURNALFORT
+            val fraPreprossesert = Topics.PREPROSSESERT
+            val tilJournalført = Topics.JOURNALFORT
 
             builder
-                .stream<String, TopicEntry<PreprossesertMeldingV1>>(fromTopic.name, Consumed.with(fromTopic.keySerde, fromTopic.valueSerde))
+                .stream<String, TopicEntry<PreprossesertMeldingV1>>(fraPreprossesert.name, Consumed.with(fraPreprossesert.keySerde, fraPreprossesert.valueSerde))
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
@@ -63,13 +63,14 @@ internal class JournalforingsStream(
                             dokumenter = listOf(list)
                         )
                         logger.info("Dokumenter journalført med ID = ${journaPostId.journalPostId}.")
-                        Journalfort(
+                        val journalfort = Journalfort(
                             journalPostId = journaPostId.journalPostId,
-                            melding = entry.data
+                            melding = entry.data.tilK9Omsorgspengesøknad()
                         )
+                        journalfort
                     }
                 }
-                .to(toTopic.name, Produced.with(toTopic.keySerde, toTopic.valueSerde))
+                .to(tilJournalført.name, Produced.with(tilJournalført.keySerde, tilJournalført.valueSerde))
             return builder.build()
         }
     }
@@ -88,7 +89,10 @@ private fun PreprossesertSøker.tilK9Søker(): Søker = Søker.builder()
     .norskIdentitetsnummer(NorskIdentitetsnummer.of(fødselsnummer))
     .build()
 
-private fun PreprossesertBarn.tilK9Barn(): Barn = Barn.builder()
-    .norskIdentitetsnummer(NorskIdentitetsnummer.of(norskIdentifikator))
-    .fødselsdato(fødselsDato)
-    .build()
+private fun PreprossesertBarn.tilK9Barn(): Barn {
+    return when {
+        !norskIdentifikator.isNullOrBlank() -> Barn.builder().norskIdentitetsnummer(NorskIdentitetsnummer.of(norskIdentifikator)).build()
+        fødselsDato != null -> Barn.builder().fødselsdato(fødselsDato).build()
+        else -> throw IllegalArgumentException("Ikke tillatt med barn som mangler både fødselsdato og fødselnummer.")
+    }
+}
