@@ -52,6 +52,7 @@ dependencies {
         exclude(group = "org.eclipse.jetty")
     }
     testCompile("org.skyscreamer:jsonassert:1.5.0")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 repositories {

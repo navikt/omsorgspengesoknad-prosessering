@@ -16,7 +16,7 @@ data class Configuration(private val config : ApplicationConfig) {
     fun getAktoerRegisterBaseUrl() = URI(config.getRequiredString("nav.aktoer_register_base_url", secret = false))
     fun getTpsProxyV1Url() = URI(config.getRequiredString("nav.tps_proxy_v1_base_url", secret = false))
     fun getOmsorgspengerOppgaveBaseUrl() = URI(config.getRequiredString("nav.omsorgspenger_oppgave_base_url", secret = false))
-    fun getOmsorgspengerJoarkBaseUrl() = URI(config.getRequiredString("nav.omsorgspenger_joark_base_url", secret = false))
+    fun getk9JoarkBaseUrl() = URI(config.getRequiredString("nav.K9_JOARK_BASE_URL", secret = false))
     fun getK9DokumentBaseUrl() = URI(config.getRequiredString("nav.k9_dokument_base_url", secret = false))
 
 
