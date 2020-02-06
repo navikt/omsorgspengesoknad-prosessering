@@ -23,7 +23,7 @@ object TestConfiguration {
             Pair("ktor.deployment.port","$port"),
             Pair("nav.aktoer_register_base_url","$aktoerRegisterBaseUrl"),
             Pair("nav.tps_proxy_v1_base_url","$tpsProxyBaseUrl"),
-            Pair("nav.omsorgspenger_joark_base_url","$omsorgspengerJoarkBaseUrl"),
+            Pair("nav.K9_JOARK_BASE_URL","$omsorgspengerJoarkBaseUrl"),
             Pair("nav.k9_dokument_base_url","$k9DokumentBaseUrl")
         )
 

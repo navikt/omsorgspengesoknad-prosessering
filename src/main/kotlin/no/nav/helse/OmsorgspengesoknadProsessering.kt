@@ -89,7 +89,7 @@ fun Application.omsorgspengesoknadProsessering() {
         barnOppslag = BarnOppslag(tpsProxyV1Gateway)
     )
     val joarkGateway = JoarkGateway(
-        baseUrl = configuration.getOmsorgspengerJoarkBaseUrl(),
+        baseUrl = configuration.getk9JoarkBaseUrl(),
         accessTokenClient = accessTokenClientResolver.joarkAccessTokenClient(),
         journalforeScopes = configuration.getJournalforeScopes()
     )
@@ -129,7 +129,7 @@ fun Application.omsorgspengesoknadProsessering() {
                             Url.healthURL(configuration.getK9DokumentBaseUrl()) to HttpRequestHealthConfig(
                                 expectedStatus = HttpStatusCode.OK
                             ),
-                            Url.healthURL(configuration.getOmsorgspengerJoarkBaseUrl()) to HttpRequestHealthConfig(
+                            Url.healthURL(configuration.getk9JoarkBaseUrl()) to HttpRequestHealthConfig(
                                 expectedStatus = HttpStatusCode.OK
                             )
                         )

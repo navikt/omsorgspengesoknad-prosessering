@@ -45,8 +45,8 @@ spec:
         kvPath: /serviceuser/data/dev/srvomsorgspeng-prs
   webproxy: true
   env:
-    - name: OMSORGSPENGER_JOARK_BASE_URL
-      value: https://omsorgspenger-joark.nais.preprod.local
+    - name: K9_JOARK_BASE_URL
+      value: https://k9-joark.nais.preprod.local
     - name: K9_DOKUMENT_BASE_URL
       value: https://k9-dokument.nais.preprod.local
     - name: AKTOER_REGISTER_BASE_URL

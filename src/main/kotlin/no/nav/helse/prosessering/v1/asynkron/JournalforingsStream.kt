@@ -62,6 +62,7 @@ internal class JournalforingsStream(
                         val journaPostId = joarkGateway.journalfoer(
                             mottatt = entry.data.mottatt,
                             aktørId = AktørId(entry.data.søker.aktørId),
+                            norskIdent = entry.data.søker.fødselsnummer,
                             correlationId = CorrelationId(entry.metadata.correlationId),
                             dokumenter = listOf(list)
                         )
