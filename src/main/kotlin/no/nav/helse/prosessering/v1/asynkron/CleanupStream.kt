@@ -47,7 +47,9 @@ internal class CleanupStream(
                         logger.info("Sletter dokumenter.")
                         val list = mutableListOf<URI>()
                         list.addAll(entry.data.melding.samværsavtale)
-                        list.addAll(entry.data.melding.legeerklæring)
+                        if (!entry.data.melding.legeerklæring.isEmpty()) {
+                            list.addAll(entry.data.melding.legeerklæring)
+                        }
 
                         dokumentService.slettDokumeter(
                             urlBolks = listOf(list),
