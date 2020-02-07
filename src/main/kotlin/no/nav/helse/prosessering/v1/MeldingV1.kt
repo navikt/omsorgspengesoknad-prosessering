@@ -6,24 +6,24 @@ import java.net.URI
 import java.time.LocalDate
 import java.time.ZonedDateTime
 
-data class MeldingV1 (
+data class MeldingV1(
     val nyVersjon: Boolean = false,
     val søknadId: String,
     val mottatt: ZonedDateTime,
     val språk: String? = "nb",
     val kroniskEllerFunksjonshemming: Boolean = false,
     val erYrkesaktiv: Boolean = false,
-    val barn : Barn,
-    val søker : Søker,
-    val relasjonTilBarnet : String,
-    val delerOmsorg : Boolean = false,
-    val sammeAddresse : Boolean = false,
+    val barn: Barn,
+    val søker: Søker,
+    val relasjonTilBarnet: String,
+    val delerOmsorg: Boolean = false,
+    val sammeAddresse: Boolean = false,
     val medlemskap: Medlemskap,
     val utenlandsopphold: List<Utenlandsopphold> = listOf(),
-    val harBekreftetOpplysninger : Boolean,
-    var legeerklæring : List<URI> = listOf(),
-    var samværsavtale : List<URI> = listOf(),
-    val harForstattRettigheterOgPlikter : Boolean
+    val harBekreftetOpplysninger: Boolean,
+    var legeerklæring: List<URI> = listOf(),
+    var samværsavtale: List<URI> = listOf(),
+    val harForstattRettigheterOgPlikter: Boolean
 )
 
 data class Søker(
@@ -31,7 +31,7 @@ data class Søker(
     val fornavn: String,
     val mellomnavn: String?,
     val etternavn: String,
-    @JsonFormat(pattern = "yyyy-MM-dd") val fødselsdato : LocalDate?,
+    @JsonFormat(pattern = "yyyy-MM-dd") val fødselsdato: LocalDate?,
     val aktørId: String
 ) {
     override fun toString(): String {
@@ -40,9 +40,9 @@ data class Søker(
 }
 
 data class Barn(
-    val navn : String?,
+    val navn: String?,
     val norskIdentifikator: String?,
-    @JsonFormat(pattern = "yyyy-MM-dd") val fødselsdato : LocalDate?,
+    @JsonFormat(pattern = "yyyy-MM-dd") val fødselsdato: LocalDate?,
     val aktørId: String?
 ) {
     override fun toString(): String {
@@ -51,9 +51,9 @@ data class Barn(
 }
 
 data class Medlemskap(
-    val harBoddIUtlandetSiste12Mnd : Boolean,
+    val harBoddIUtlandetSiste12Mnd: Boolean,
     val utenlandsoppholdSiste12Mnd: List<Utenlandsopphold> = listOf(),
-    val skalBoIUtlandetNeste12Mnd : Boolean,
+    val skalBoIUtlandetNeste12Mnd: Boolean,
     val utenlandsoppholdNeste12Mnd: List<Utenlandsopphold> = listOf()
 )
 

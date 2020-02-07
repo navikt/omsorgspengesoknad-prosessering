@@ -1,5 +1,6 @@
 package no.nav.helse
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.typesafe.config.ConfigFactory
 import io.ktor.config.ApplicationConfig
@@ -176,7 +177,7 @@ class OmsorgspengesoknadProsesseringTest {
     fun `Melding som gjeder søker med D-nummer`() {
         val melding = gyldigMelding(
             fødselsnummerSoker = dNummerA,
-            fødselsnummerBarn = gyldigFodselsnummerB,barnetsFødselsdato = null
+            fødselsnummerBarn = gyldigFodselsnummerB, barnetsFødselsdato = null
         )
 
         kafkaTestProducer.leggTilMottak(melding)
@@ -220,7 +221,8 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val preprossesertMelding: TopicEntry<PreprossesertMeldingV1> = preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
+        val preprossesertMelding: TopicEntry<PreprossesertMeldingV1> =
+            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
         assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", preprossesertMelding.data.barn.navn)
     }
 
@@ -237,7 +239,8 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val hentOpprettetOppgave: TopicEntry<PreprossesertMeldingV1> = preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
+        val hentOpprettetOppgave: TopicEntry<PreprossesertMeldingV1> =
+            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
         assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", hentOpprettetOppgave.data.barn.navn)
     }
 
@@ -256,13 +259,13 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val journalførtMelding: TopicEntry<Journalfort> = journalføringsKonsumer.hentJournalførtMelding(melding.søknadId)
-        assertEquals(forventetFodselsNummer, journalførtMelding.data.melding.barn.norskIdentitetsnummer.verdi)
+        val journalførtMelding: TopicEntry<Journalfort> =
+            journalføringsKonsumer.hentJournalførtMelding(melding.søknadId)
+        assertEquals(forventetFodselsNummer, journalførtMelding.data.søknad.barn.norskIdentitetsnummer.verdi)
     }
 
     @Test
     fun `Forvent barnets fødselsnummer blir slått opp dersom den ikke er satt i melding`() {
-        //wireMockServer.stubAktørRegister(gyldigFodselsnummerB, "666")
         val forventetFodselsNummer = gyldigFodselsnummerB
 
         val melding = gyldigMelding(
@@ -274,7 +277,25 @@ class OmsorgspengesoknadProsesseringTest {
 
         kafkaTestProducer.leggTilMottak(melding)
         val prossesertMelding: TopicEntry<Journalfort> = journalføringsKonsumer.hentJournalførtMelding(melding.søknadId)
-        assertEquals(forventetFodselsNummer, prossesertMelding.data.melding.barn.norskIdentitetsnummer.verdi)
+        assertEquals(forventetFodselsNummer, prossesertMelding.data.søknad.barn.norskIdentitetsnummer.verdi)
+    }
+
+    @Test
+    fun `Forvent riktig format på journalført melding`() {
+        val melding = gyldigMelding(
+            fødselsnummerSoker = gyldigFodselsnummerA,
+            fødselsnummerBarn = null,
+            barnetsNavn = "Ole Dole Doffen",
+            aktørIdBarn = "777777777"
+        )
+
+        kafkaTestProducer.leggTilMottak(melding)
+        val prossesertMelding: TopicEntry<Journalfort> = journalføringsKonsumer.hentJournalførtMelding(melding.søknadId)
+        println(
+            jacksonObjectMapper()
+                .writerWithDefaultPrettyPrinter()
+                .writeValueAsString(prossesertMelding)
+        )
     }
 
     private fun gyldigMelding(

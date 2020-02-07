@@ -68,8 +68,8 @@ internal class JournalforingsStream(
                         )
                         logger.info("Dokumenter journalført med ID = ${journaPostId.journalPostId}.")
                         val journalfort = Journalfort(
-                            journalPostId = journaPostId.journalPostId,
-                            melding = entry.data.tilK9Omsorgspengesøknad()
+                            journalpostId = journaPostId.journalPostId,
+                            søknad = entry.data.tilK9Omsorgspengesøknad()
                         )
                         Cleanup(
                             metadata = entry.metadata,
