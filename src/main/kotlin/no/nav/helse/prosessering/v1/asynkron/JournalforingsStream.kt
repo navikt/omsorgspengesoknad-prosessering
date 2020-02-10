@@ -54,19 +54,21 @@ internal class JournalforingsStream(
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
-                        logger.info("Journalfører dokumenter.")
+
                         val list = mutableListOf<URI>()
                         if (!entry.data.samværsavtale.isNullOrEmpty()) {
                             list.addAll(entry.data.samværsavtale)
                         }
                         list.addAll(entry.data.legeerklæring)
 
+                        val dokumenter = listOf(list)
+                        logger.info("Journalfører dokumenter: {}", dokumenter)
                         val journaPostId = joarkGateway.journalfoer(
                             mottatt = entry.data.mottatt,
                             aktørId = AktørId(entry.data.søker.aktørId),
                             norskIdent = entry.data.søker.fødselsnummer,
                             correlationId = CorrelationId(entry.metadata.correlationId),
-                            dokumenter = listOf(list)
+                            dokumenter = dokumenter
                         )
                         logger.info("Dokumenter journalført med ID = ${journaPostId.journalpostId}.")
                         val journalfort = Journalfort(
