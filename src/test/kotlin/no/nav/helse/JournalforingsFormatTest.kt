@@ -51,8 +51,6 @@ class JournalforingsFormatTest {
                   },
                   "utenlandsopphold": [],
                   "harBekreftetOpplysninger": true,
-                  "legeerklæring": [],
-                  "samværsavtale": [],
                   "harForstattRettigheterOgPlikter": true
                 }
 
