@@ -40,6 +40,8 @@ data class PreprossesertMeldingV1(
         barn = PreprossesertBarn(melding.barn, melding.barn.fødselsdato, barnetsNavn, barnetsNorskeIdent, barnAktørId),
         relasjonTilBarnet = melding.relasjonTilBarnet,
         medlemskap = melding.medlemskap,
+        legeerklæring = melding.legeerklæring,
+        samværsavtale = melding.samværsavtale,
         harForstattRettigheterOgPlikter = melding.harForstattRettigheterOgPlikter,
         harBekreftetOpplysninger = melding.harBekreftetOpplysninger
     )
