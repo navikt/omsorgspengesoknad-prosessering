@@ -1,5 +1,6 @@
 package no.nav.helse.dokument
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -84,10 +85,10 @@ class DokumentGateway(
 
         return coroutineScope {
             val deferred = mutableListOf<Deferred<URI>>()
-            dokumenter.forEach {
+            dokumenter.forEach { dokument: Dokument ->
                 deferred.add(async {
                     requestLagreDokument(
-                        dokument = it,
+                        dokument = dokument,
                         correlationId = correlationId,
                         aktørId = aktørId,
                         authorizationHeader = authorizationHeader
@@ -212,7 +213,7 @@ class DokumentGateway(
 
     data class Dokument(
         val content: ByteArray,
-        val contentType: String,
+        @JsonProperty("content_type") val contentType: String,
         val title: String
     )
 }

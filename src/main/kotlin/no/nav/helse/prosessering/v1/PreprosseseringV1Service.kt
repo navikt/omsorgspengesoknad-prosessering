@@ -69,7 +69,6 @@ internal class PreprosseseringV1Service(
             correlationId = correlationId,
             aktørId = søkerAktørId
         )
-
         logger.info("Mellomlagring av Oppsummerings-PDF OK")
 
         logger.info("Mellomlagrer Oppsummerings-JSON")
