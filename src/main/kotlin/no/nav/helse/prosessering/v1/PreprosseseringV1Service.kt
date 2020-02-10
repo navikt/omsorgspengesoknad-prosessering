@@ -59,31 +59,27 @@ internal class PreprosseseringV1Service(
         val barnetsNavn: String? =
             slaaOppBarnetsNavn(melding.barn, barnetsIdent = barnetsIdent, correlationId = correlationId)
 
-        logger.trace("Genererer Oppsummerings-PDF av søknaden.")
-
+        logger.info("Genererer Oppsummerings-PDF av søknaden.")
         val soknadOppsummeringPdf = pdfV1Generator.generateSoknadOppsummeringPdf(melding, barnetsIdent, barnetsNavn)
+        logger.info("Generering av Oppsummerings-PDF OK.")
 
-        logger.trace("Generering av Oppsummerings-PDF OK.")
-        logger.trace("Mellomlagrer Oppsummerings-PDF.")
-
+        logger.info("Mellomlagrer Oppsummerings-PDF.")
         val soknadOppsummeringPdfUrl = dokumentService.lagreSoknadsOppsummeringPdf(
             pdf = soknadOppsummeringPdf,
             correlationId = correlationId,
             aktørId = søkerAktørId
         )
 
-        logger.trace("Mellomlagring av Oppsummerings-PDF OK")
+        logger.info("Mellomlagring av Oppsummerings-PDF OK")
 
-        logger.trace("Mellomlagrer Oppsummerings-JSON")
+        logger.info("Mellomlagrer Oppsummerings-JSON")
 
         val soknadJsonUrl = dokumentService.lagreSoknadsMelding(
             melding = melding,
             aktørId = søkerAktørId,
             correlationId = correlationId
         )
-
-        logger.trace("Mellomlagrer Oppsummerings-JSON OK.")
-
+        logger.info("Mellomlagrer Oppsummerings-JSON OK.")
 
         val komplettDokumentUrls = mutableListOf(
             listOf(
