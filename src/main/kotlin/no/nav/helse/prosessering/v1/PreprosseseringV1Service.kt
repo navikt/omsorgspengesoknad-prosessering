@@ -49,7 +49,10 @@ internal class PreprosseseringV1Service(
 
         val barnetsIdent: NorskIdent? = when {
             !melding.barn.norskIdentifikator.isNullOrBlank() -> Fodselsnummer(melding.barn.norskIdentifikator)
-            melding.barn.norskIdentifikator.isNullOrBlank() && barnAktørId != null -> aktoerService.getIdent(barnAktørId.id, correlationId = correlationId)
+            melding.barn.norskIdentifikator.isNullOrBlank() && barnAktørId != null -> aktoerService.getIdent(
+                barnAktørId.id,
+                correlationId = correlationId
+            )
             else -> null
         }
 
@@ -89,7 +92,9 @@ internal class PreprosseseringV1Service(
             )
         )
 
-        komplettDokumentUrls.add(melding.samværsavtale)
+        if (!melding.samværsavtale.isNullOrEmpty()) {
+            komplettDokumentUrls.add(melding.samværsavtale)
+        }
         komplettDokumentUrls.add(melding.legeerklæring)
 
         logger.trace("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
