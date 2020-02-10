@@ -93,7 +93,7 @@ internal class PreprosseseringV1Service(
         }
         komplettDokumentUrls.add(melding.legeerklæring)
 
-        logger.trace("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
+        logger.info("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
 
 
         val preprossesertMeldingV1 = PreprossesertMeldingV1(
