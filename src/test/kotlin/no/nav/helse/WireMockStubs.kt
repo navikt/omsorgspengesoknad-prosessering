@@ -138,7 +138,7 @@ internal fun WireMockServer.stubJournalfor(responseCode: Int = 201): WireMockSer
                 .withBody(
                     """
                     {
-                        "journalPostId" : "9101112"
+                        "journal_post_id" : "9101112"
                     }
                     """.trimIndent()
                 )

@@ -66,9 +66,9 @@ internal class JournalforingsStream(
                             correlationId = CorrelationId(entry.metadata.correlationId),
                             dokumenter = listOf(list)
                         )
-                        logger.info("Dokumenter journalført med ID = ${journaPostId.journalPostId}.")
+                        logger.info("Dokumenter journalført med ID = ${journaPostId.journalpostId}.")
                         val journalfort = Journalfort(
-                            journalpostId = journaPostId.journalPostId,
+                            journalpostId = journaPostId.journalpostId,
                             søknad = entry.data.tilK9Omsorgspengesøknad()
                         )
                         Cleanup(
