@@ -111,8 +111,8 @@ class JoarkGateway(
 }
 
 private data class JoarkRequest(
-    val aktoerId: String,
-    val norskIdent: String,
+    @JsonProperty("aktoer_id") val aktoerId: String,
+    @JsonProperty("norsk_ident") val norskIdent: String,
     val mottatt: ZonedDateTime,
     val dokumenter: List<List<URI>>
 )
