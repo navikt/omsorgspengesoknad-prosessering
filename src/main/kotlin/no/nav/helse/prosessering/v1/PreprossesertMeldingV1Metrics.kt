@@ -9,25 +9,6 @@ import kotlin.math.absoluteValue
 
 private val ZONE_ID = ZoneId.of("Europe/Oslo")
 
-private val periodeSoknadGjelderIUkerHistogram = Histogram.build()
-    .buckets(0.00, 1.00, 4.00, 8.00, 12.00, 16.00, 20.00, 24.00, 28.00, 32.00, 36.00, 40.00, 44.00, 48.00, 52.00)
-    .name("antall_uker_soknaden_gjelder_histogram")
-    .help("Antall uker søknaden gjelder")
-    .register()
-
-private val valgteArbeidsgivereHistogram = Histogram.build()
-    .buckets(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0)
-    .name("antall_valgte_arbeidsgivere_histogram")
-    .help("Antall arbeidsgivere valgt i søknadene")
-    .register()
-
-
-private val gradHistogram = Histogram.build()
-    .buckets(20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0)
-    .name("grad_histogram")
-    .help("Graden søknaden gjelder")
-    .register()
-
 private val barnetsAlderHistogram = Histogram.build()
     .buckets(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0)
     .name("barnets_alder_histogram")
