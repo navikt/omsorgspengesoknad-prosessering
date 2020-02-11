@@ -23,6 +23,7 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.net.URI
 import java.time.Duration
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -265,6 +266,25 @@ class OmsorgspengesoknadProsesseringTest {
     }
 
     @Test
+    fun `Forvent 2 legeerklæringer og 2 samværsavtaler dersom den er satt i melding`() {
+        wireMockServer.stubAktørRegister(gyldigFodselsnummerB, "56789")
+
+        val melding = gyldigMelding(
+            fødselsnummerSoker = gyldigFodselsnummerA,
+            fødselsnummerBarn = gyldigFodselsnummerB,
+            barnetsFødselsdato = null,
+            barnetsNavn = null,
+            aktørIdBarn = "56789"
+        )
+
+        kafkaTestProducer.leggTilMottak(melding)
+        val preprossesertMelding: TopicEntry<PreprossesertMeldingV1> =
+            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
+        assertEquals(2, preprossesertMelding.data.legeerklæring.size)
+        assertEquals(2, preprossesertMelding.data.samværsavtale.size)
+    }
+
+    @Test
     fun `Forvent barnets fødselsnummer blir slått opp dersom den ikke er satt i melding`() {
         val forventetFodselsNummer = gyldigFodselsnummerB
 
@@ -322,6 +342,14 @@ class OmsorgspengesoknadProsesseringTest {
             norskIdentifikator = fødselsnummerBarn,
             aktørId = aktørIdBarn,
             fødselsdato = barnetsFødselsdato
+        ),
+        legeerklæring = listOf(
+            URI("http://localhost:8080/vedlegg/1"),
+            URI("http://localhost:8080/vedlegg/2")
+        ),
+        samværsavtale = listOf(
+            URI("http://localhost:8080/vedlegg/3"),
+            URI("http://localhost:8080/vedlegg/4")
         ),
         relasjonTilBarnet = "Mor",
         harBekreftetOpplysninger = true,
