@@ -45,8 +45,6 @@ spec:
         kvPath: /serviceuser/data/prod/srvomsorgspeng-prs
   webproxy: true
   env:
-    - name: OMSORGSPENGER_OPPGAVE_BASE_URL
-      value: https://omsorgspenger-oppgave.nais.adeo.no
     - name: K9_JOARK_BASE_URL
       value: https://k9-joark.nais.adeo.no
     - name: K9_DOKUMENT_BASE_URL
