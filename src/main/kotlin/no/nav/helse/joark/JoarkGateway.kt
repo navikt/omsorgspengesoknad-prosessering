@@ -56,7 +56,7 @@ class JoarkGateway(
         }
     }
 
-    suspend fun journalfoer(
+    suspend fun journalfør(
         aktørId: AktørId,
         norskIdent: String,
         mottatt: ZonedDateTime,

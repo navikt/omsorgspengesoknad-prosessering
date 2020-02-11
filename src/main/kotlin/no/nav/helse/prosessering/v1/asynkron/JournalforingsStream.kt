@@ -63,7 +63,7 @@ internal class JournalforingsStream(
 
                         val dokumenter = listOf(list)
                         logger.info("Journalfører dokumenter: {}", dokumenter)
-                        val journaPostId = joarkGateway.journalfoer(
+                        val journaPostId = joarkGateway.journalfør(
                             mottatt = entry.data.mottatt,
                             aktørId = AktørId(entry.data.søker.aktørId),
                             norskIdent = entry.data.søker.fødselsnummer,
