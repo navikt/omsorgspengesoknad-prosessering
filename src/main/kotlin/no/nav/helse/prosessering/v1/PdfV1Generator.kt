@@ -88,6 +88,7 @@ internal class PdfV1Generator {
                             "navn" to barnetsNavn,
                             "id" to barnetsIdent?.getValue()
                         ),
+                        "sammeAddresse" to melding.sammeAddresse,
                         "kroniskEllerFunksjonshemming" to melding.kroniskEllerFunksjonshemming,
                         "arbeidssituasjon" to melding.arbeidssituasjon,
                         "medlemskap" to mapOf(
