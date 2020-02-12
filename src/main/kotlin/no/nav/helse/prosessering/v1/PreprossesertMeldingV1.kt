@@ -15,7 +15,7 @@ data class PreprossesertMeldingV1(
     val arbeidssituasjon: List<String>,
     val barn: PreprossesertBarn,
     val søker: PreprossesertSøker,
-    val relasjonTilBarnet: String,
+    val relasjonTilBarnet: String? = null,
     val sammeAddresse: Boolean = false,
     val medlemskap: Medlemskap,
     var legeerklæring: List<URI> = listOf(),

@@ -25,9 +25,11 @@
                 <div class="persontekst__sidetopp">
                     <img class="ikon" src="{{ image "Personikon.png" }}"/>
                     <div class="persontekst__personalia">
+                        {{#if søker.relasjonTilBarnet}}
                         <p>
-                            Søker
+                            {{søker.relasjonTilBarnet}} til barnet.
                         </p>
+                        {{/if}}
                         <p class="navn">
                             {{ søker.navn }}
                         </p>

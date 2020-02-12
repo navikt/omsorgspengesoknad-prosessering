@@ -15,7 +15,7 @@ data class MeldingV1(
     val arbeidssituasjon: List<String>,
     val barn: Barn,
     val søker: Søker,
-    val relasjonTilBarnet: String,
+    val relasjonTilBarnet: String? = null,
     val sammeAddresse: Boolean = false,
     val medlemskap: Medlemskap,
     var legeerklæring: List<URI> = listOf(),

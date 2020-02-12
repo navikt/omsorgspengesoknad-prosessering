@@ -82,7 +82,7 @@ internal class PdfV1Generator {
                         "søker" to mapOf(
                             "navn" to melding.søker.formatertNavn(),
                             "fødselsnummer" to melding.søker.fødselsnummer,
-                            "relasjon_til_barnet" to melding.relasjonTilBarnet
+                            "relasjonTilBarnet" to melding.relasjonTilBarnet
                         ),
                         "barn" to mapOf(
                             "navn" to barnetsNavn,
