@@ -11,6 +11,7 @@ data class PreprossesertMeldingV1(
     val soknadId: String,
     val mottatt: ZonedDateTime,
     val språk: String?,
+    val dokumentUrls: List<List<URI>>,
     val kroniskEllerFunksjonshemming: Boolean,
     val arbeidssituasjon: List<String>,
     val barn: PreprossesertBarn,
@@ -18,13 +19,12 @@ data class PreprossesertMeldingV1(
     val relasjonTilBarnet: String? = null,
     val sammeAddresse: Boolean = false,
     val medlemskap: Medlemskap,
-    var legeerklæring: List<URI> = listOf(),
-    var samværsavtale: List<URI> = listOf(),
     val harBekreftetOpplysninger: Boolean,
     val harForstattRettigheterOgPlikter: Boolean
 ) {
     internal constructor(
         melding: MeldingV1,
+        dokumentUrls: List<List<URI>>,
         søkerAktørId: AktørId,
         barnAktørId: AktørId?,
         barnetsNavn: String?,
@@ -33,14 +33,13 @@ data class PreprossesertMeldingV1(
         språk = melding.språk,
         soknadId = melding.søknadId,
         mottatt = melding.mottatt,
+        dokumentUrls = dokumentUrls,
         kroniskEllerFunksjonshemming = melding.kroniskEllerFunksjonshemming,
         søker = PreprossesertSøker(melding.søker, søkerAktørId),
         arbeidssituasjon = melding.arbeidssituasjon,
         barn = PreprossesertBarn(melding.barn, melding.barn.fødselsdato, barnetsNavn, barnetsNorskeIdent, barnAktørId),
         relasjonTilBarnet = melding.relasjonTilBarnet,
         medlemskap = melding.medlemskap,
-        legeerklæring = melding.legeerklæring,
-        samværsavtale = melding.samværsavtale,
         harForstattRettigheterOgPlikter = melding.harForstattRettigheterOgPlikter,
         harBekreftetOpplysninger = melding.harBekreftetOpplysninger
     )

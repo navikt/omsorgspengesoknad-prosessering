@@ -88,15 +88,16 @@ internal class PreprosseseringV1Service(
         )
 
         if (!melding.samværsavtale.isNullOrEmpty()) {
-            komplettDokumentUrls.add(melding.samværsavtale)
+            melding.samværsavtale.forEach { komplettDokumentUrls.add(listOf(it)) }
         }
-        komplettDokumentUrls.add(melding.legeerklæring)
+        melding.legeerklæring.forEach { komplettDokumentUrls.add(listOf(it)) }
 
         logger.info("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
 
 
         val preprossesertMeldingV1 = PreprossesertMeldingV1(
             melding = melding,
+            dokumentUrls = komplettDokumentUrls.toList(),
             søkerAktørId = søkerAktørId,
             barnAktørId = barnAktørId,
             barnetsNavn = barnetsNavn,

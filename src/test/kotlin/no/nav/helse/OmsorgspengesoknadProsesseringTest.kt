@@ -280,8 +280,8 @@ class OmsorgspengesoknadProsesseringTest {
         kafkaTestProducer.leggTilMottak(melding)
         val preprossesertMelding: TopicEntry<PreprossesertMeldingV1> =
             preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
-        assertEquals(2, preprossesertMelding.data.legeerklæring.size)
-        assertEquals(2, preprossesertMelding.data.samværsavtale.size)
+        assertEquals(5, preprossesertMelding.data.dokumentUrls.size)
+        // 2 legeerklæringsvedlegg, 2, to samværsavtalevedlegg, og 1 søknadPdf.
     }
 
     @Test
