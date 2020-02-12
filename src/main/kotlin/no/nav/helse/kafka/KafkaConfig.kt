@@ -13,7 +13,7 @@ import java.time.Duration
 import java.util.*
 
 private val logger: Logger = LoggerFactory.getLogger(KafkaConfig::class.java)
-private const val ID_PREFIX = "srvpps-prosessering-"
+private const val ID_PREFIX = "srvomsorgspeng-prs-"
 
 internal class KafkaConfig(
     bootstrapServers: String,

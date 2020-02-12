@@ -82,16 +82,14 @@ internal class PdfV1Generator {
                         "søker" to mapOf(
                             "navn" to melding.søker.formatertNavn(),
                             "fødselsnummer" to melding.søker.fødselsnummer,
-                            "relasjon_til_barnet" to melding.relasjonTilBarnet
+                            "relasjonTilBarnet" to melding.relasjonTilBarnet
                         ),
                         "barn" to mapOf(
                             "navn" to barnetsNavn,
                             "id" to barnetsIdent?.getValue()
                         ),
                         "kroniskEllerFunksjonshemming" to melding.kroniskEllerFunksjonshemming,
-                        "erYrkesaktiv" to melding.erYrkesaktiv,
-                        "delerOmsorg" to melding.delerOmsorg,
-                        "sammeAddresse" to melding.sammeAddresse,
+                        "arbeidssituasjon" to melding.arbeidssituasjon,
                         "medlemskap" to mapOf(
                             "har_bodd_i_utlandet_siste_12_mnd" to melding.medlemskap.harBoddIUtlandetSiste12Mnd,
                             "utenlandsopphold_siste_12_mnd" to melding.medlemskap.utenlandsoppholdSiste12Mnd.somMapUtenlandsopphold(),

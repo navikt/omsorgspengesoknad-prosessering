@@ -58,7 +58,7 @@ paths:
       description: ""
       operationId: ""
       requestBody:
-        $ref: "#/components/requestBodies/PreprossesertMeldingV1Request"
+        $ref: "#/components/requestBodies/JournalføringsMeldingRequest"
 
 components:
   requestBodies:
@@ -82,6 +82,16 @@ components:
                 $ref: "#/components/schemas/Metadata"
               data:
                 $ref: "#/components/schemas/PreprossesertMeldingV1"
+    JournalføringsMeldingRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              metadata:
+                $ref: "#/components/schemas/Metadata"
+              data:
+                $ref: "#/components/schemas/JournalFøringsMelding"
 
   schemas:
     Metadata:
@@ -299,7 +309,6 @@ components:
               type: string
               format: uri
               example: "https://omsorgspenger-api/vedlegg/da61256a-51b1-41b7-b9b6-e5ce1705fae9"
-
         harBekreftetOpplysninger:
           type: "boolean"
           example: true
@@ -350,3 +359,43 @@ components:
         aktørId:
           type: "string"
           example: "123456"
+    
+    JournalFøringsSøker:
+      type: object
+      properties:
+        norskIdentitetsnummer:
+          type: string
+          example: "11111111111"
+    
+    JournalFøringsBarn:
+      type: object
+      properties:
+        norskIdentitetsnummer:
+          type: string
+          example: "11111111111"
+        fødselsdato:
+          type: string
+          format: date
+          pattern: "YYYY-MM-DD"
+          example: "2015-01-01"
+    
+    JournalFøringsMelding:
+      type: object
+      properties:
+        søknadId:
+            type: string
+            format: uuid
+            example: "2e444590-0568-4c2b-b21b-24df58776118"
+        mottattDato:
+          type: string
+          format: date-time
+          pattern: "YYYY-MM-DD"
+          example: "2020-01-20"
+        versjon:
+          type: string
+          example: "0.0.1"
+        søker:
+          $ref: "#/components/schemas/JournalFøringsSøker"
+        barn:
+          $ref: "#/components/schemas/JournalFøringsBarn"
+

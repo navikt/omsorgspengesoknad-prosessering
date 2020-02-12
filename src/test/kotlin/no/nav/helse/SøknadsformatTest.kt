@@ -1,6 +1,6 @@
 package no.nav.helse
 
-import no.nav.helse.dokument.JournalforingsFormat
+import no.nav.helse.dokument.Søknadsformat
 import no.nav.helse.prosessering.v1.Barn
 import no.nav.helse.prosessering.v1.Medlemskap
 import no.nav.helse.prosessering.v1.MeldingV1
@@ -11,26 +11,26 @@ import java.time.ZonedDateTime
 import java.util.*
 import kotlin.test.Test
 
-class JournalforingsFormatTest {
+class SøknadsformatTest {
 
     @Test
     fun `Soknaden journalfoeres som JSON uten vedlegg`() {
         val søknadId = UUID.randomUUID().toString()
-        val json = JournalforingsFormat.somJson(melding(søknadId))
+        val json = Søknadsformat.somJson(melding(søknadId))
         println(String(json))
         JSONAssert.assertEquals(
             """{
-                  "ny_versjon": false,
-                  "søknad_id": "$søknadId",
+                  "nyVersjon": false,
+                  "søknadId": "$søknadId",
                   "mottatt": "2018-01-02T03:04:05.000000006Z",
                   "språk": "nb",
-                  "kronisk_eller_funksjonshemming": false,
-                  "er_yrkesaktiv": false,
+                  "kroniskEllerFunksjonshemming": false,
+                  "arbeidssituasjon": ["Arbeidstaker", "Frilans", "Selvstendig Næringsdrivende"],
                   "barn": {
                     "navn": "Kari",
-                    "fødselsnummer": "2323",
+                    "norskIdentifikator": "2323",
                     "fødselsdato": null,
-                    "aktør_id": null
+                    "aktørId": null
                   },
                   "søker": {
                     "fødselsnummer": "1212",
@@ -38,22 +38,18 @@ class JournalforingsFormatTest {
                     "mellomnavn": "Mellomnavn",
                     "etternavn": "Nordmann",
                     "fødselsdato": null,
-                    "aktør_id": "123456"
+                    "aktørId": "123456"
                   },
-                  "relasjon_til_barnet": "Mor",
-                  "deler_omsorg": false,
-                  "samme_addresse": false,
+                  "relasjonTilBarnet": "Mor",
+                  "sammeAddresse": false,
                   "medlemskap": {
-                    "har_bodd_i_utlandet_siste_12_mnd": true,
-                    "utenlandsopphold_siste_12_mnd": [],
-                    "skal_bo_i_utlandet_neste_12_mnd": true,
-                    "utenlandsopphold_neste_12_mnd": []
+                    "harBoddIUtlandetSiste12Mnd": true,
+                    "utenlandsoppholdSiste12Mnd": [],
+                    "skalBoIUtlandetNeste12Mnd": true,
+                    "utenlandsoppholdNeste12Mnd": []
                   },
-                  "utenlandsopphold": [],
-                  "har_bekreftet_opplysninger": true,
-                  "legeerklæring": [],
-                  "samværsavtale": [],
-                  "har_forstatt_rettigheter_og_plikter": true
+                  "harBekreftetOpplysninger": true,
+                  "harForstattRettigheterOgPlikter": true
                 }
 
         """.trimIndent(), String(json), true
@@ -74,14 +70,17 @@ class JournalforingsFormatTest {
         ),
         barn = Barn(
             navn = "Kari",
-            fødselsnummer = "2323",
+            norskIdentifikator = "2323",
             fødselsdato = null,
             aktørId = null
         ),
         relasjonTilBarnet = "Mor",
+        arbeidssituasjon = listOf("Arbeidstaker", "Frilans", "Selvstendig Næringsdrivende"),
         medlemskap = Medlemskap(
             harBoddIUtlandetSiste12Mnd = true,
-            skalBoIUtlandetNeste12Mnd = true
+            skalBoIUtlandetNeste12Mnd = true,
+            utenlandsoppholdSiste12Mnd = listOf(),
+            utenlandsoppholdNeste12Mnd = listOf()
         ),
         harBekreftetOpplysninger = true,
         harForstattRettigheterOgPlikter = true

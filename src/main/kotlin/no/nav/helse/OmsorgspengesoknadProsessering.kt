@@ -1,5 +1,6 @@
 package no.nav.helse
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.Application
 import io.ktor.application.ApplicationStopping
@@ -31,7 +32,6 @@ import no.nav.helse.dusseldorf.ktor.health.HealthService
 import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.dusseldorf.ktor.metrics.MetricsRoute
 import no.nav.helse.joark.JoarkGateway
-import no.nav.helse.oppgave.OppgaveGateway
 import no.nav.helse.prosessering.v1.PdfV1Generator
 import no.nav.helse.prosessering.v1.PreprosseseringV1Service
 import no.nav.helse.prosessering.v1.asynkron.AsynkronProsesseringV1Service
@@ -51,7 +51,9 @@ fun Application.omsorgspengesoknadProsessering() {
 
     install(ContentNegotiation) {
         jackson {
-            dusseldorfConfigured().configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
+            dusseldorfConfigured()
+                .setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
+                .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
 
         }
     }
@@ -87,15 +89,9 @@ fun Application.omsorgspengesoknadProsessering() {
         barnOppslag = BarnOppslag(tpsProxyV1Gateway)
     )
     val joarkGateway = JoarkGateway(
-        baseUrl = configuration.getOmsorgspengerJoarkBaseUrl(),
+        baseUrl = configuration.getk9JoarkBaseUrl(),
         accessTokenClient = accessTokenClientResolver.joarkAccessTokenClient(),
         journalforeScopes = configuration.getJournalforeScopes()
-    )
-
-    val oppgaveGateway = OppgaveGateway(
-        baseUrl = configuration.getOmsorgspengerOppgaveBaseUrl(),
-        accessTokenClient = accessTokenClientResolver.oppgaveAccessTokenClient(),
-        oppretteOppgaveScopes = configuration.getOppretteOppgaveScopes()
     )
 
     val asynkronProsesseringV1Service = AsynkronProsesseringV1Service(
@@ -127,17 +123,13 @@ fun Application.omsorgspengesoknadProsessering() {
                 healthChecks = mutableSetOf(
                     dokumentGateway,
                     joarkGateway,
-                    oppgaveGateway,
                     aktoerGateway,
                     HttpRequestHealthCheck(
                         mapOf(
                             Url.healthURL(configuration.getK9DokumentBaseUrl()) to HttpRequestHealthConfig(
                                 expectedStatus = HttpStatusCode.OK
                             ),
-                            Url.healthURL(configuration.getOmsorgspengerJoarkBaseUrl()) to HttpRequestHealthConfig(
-                                expectedStatus = HttpStatusCode.OK
-                            ),
-                            Url.healthURL(configuration.getOmsorgspengerOppgaveBaseUrl()) to HttpRequestHealthConfig(
+                            Url.healthURL(configuration.getk9JoarkBaseUrl()) to HttpRequestHealthConfig(
                                 expectedStatus = HttpStatusCode.OK
                             )
                         )

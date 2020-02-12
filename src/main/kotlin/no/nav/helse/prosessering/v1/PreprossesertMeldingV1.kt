@@ -12,18 +12,16 @@ data class PreprossesertMeldingV1(
     val mottatt: ZonedDateTime,
     val språk: String?,
     val kroniskEllerFunksjonshemming: Boolean,
-    val erYrkesaktiv: Boolean = false,
+    val arbeidssituasjon: List<String>,
     val barn: PreprossesertBarn,
     val søker: PreprossesertSøker,
-    val relasjonTilBarnet: String,
-    val delerOmsorg: Boolean = false,
+    val relasjonTilBarnet: String? = null,
     val sammeAddresse: Boolean = false,
     val medlemskap: Medlemskap,
-    val utenlandsopphold: List<Utenlandsopphold> = listOf(),
-    val harBekreftetOpplysninger: Boolean,
-    val harForstattRettigheterOgPlikter: Boolean,
     var legeerklæring: List<URI> = listOf(),
-    var samværsavtale: List<URI> = listOf()
+    var samværsavtale: List<URI> = listOf(),
+    val harBekreftetOpplysninger: Boolean,
+    val harForstattRettigheterOgPlikter: Boolean
 ) {
     internal constructor(
         melding: MeldingV1,
@@ -37,9 +35,12 @@ data class PreprossesertMeldingV1(
         mottatt = melding.mottatt,
         kroniskEllerFunksjonshemming = melding.kroniskEllerFunksjonshemming,
         søker = PreprossesertSøker(melding.søker, søkerAktørId),
+        arbeidssituasjon = melding.arbeidssituasjon,
         barn = PreprossesertBarn(melding.barn, melding.barn.fødselsdato, barnetsNavn, barnetsNorskeIdent, barnAktørId),
         relasjonTilBarnet = melding.relasjonTilBarnet,
         medlemskap = melding.medlemskap,
+        legeerklæring = melding.legeerklæring,
+        samværsavtale = melding.samværsavtale,
         harForstattRettigheterOgPlikter = melding.harForstattRettigheterOgPlikter,
         harBekreftetOpplysninger = melding.harBekreftetOpplysninger
     )
@@ -62,7 +63,7 @@ data class PreprossesertSøker(
 }
 
 data class PreprossesertBarn(
-    val fødselsnummer: String?,
+    val norskIdentifikator: String?,
     val fødselsDato: LocalDate?,
     val navn: String?,
     val aktoerId: String?
@@ -75,7 +76,7 @@ data class PreprossesertBarn(
         barnetsNorskeIdent: NorskIdent?,
         aktørId: AktørId?
     ) : this(
-        fødselsnummer = barn.fødselsnummer ?: (barnetsNorskeIdent as? Fodselsnummer)?.getValue(),
+        norskIdentifikator = barn.norskIdentifikator ?: (barnetsNorskeIdent as? Fodselsnummer)?.getValue(),
         fødselsDato = barnetsFødselsdato,
         navn = barnetsNavn,
         aktoerId = aktørId?.id

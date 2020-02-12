@@ -147,7 +147,7 @@ class AktoerGateway(
             .header(
                 HttpHeaders.Authorization to authorizationHeader,
                 HttpHeaders.Accept to "application/json",
-                "Nav-Consumer-Id" to "omsorgspengesoknad-api",
+                "Nav-Consumer-Id" to "omsorgspengesoknad-prosessering",
                 "Nav-Personidenter" to personIdent,
                 "Nav-Call-Id" to correlationId
             )
@@ -159,7 +159,7 @@ class AktoerGateway(
             logger = logger
         ) {
             val (request, _, result) = Operation.monitored(
-                app = "omsorgspengesoknad-api",
+                app = "omsorgspengesoknad-prosessering",
                 operation = HENTE_AKTOER_ID_OPERATION,
                 resultResolver = { 200 == it.second.statusCode }
             ) { httpRequest.awaitStringResponseResult() }

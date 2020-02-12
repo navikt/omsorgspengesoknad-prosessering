@@ -1,5 +1,6 @@
 package no.nav.helse.joark
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -27,7 +28,7 @@ import java.net.URI
 import java.time.ZonedDateTime
 
 class JoarkGateway(
-    baseUrl : URI,
+    baseUrl: URI,
     private val accessTokenClient: AccessTokenClient,
     private val journalforeScopes: Set<String>
 ) : HealthCheck {
@@ -38,7 +39,7 @@ class JoarkGateway(
 
     private val completeUrl = Url.buildURL(
         baseUrl = baseUrl,
-        pathParts = listOf("v1","journalforing")
+        pathParts = listOf("v1", "omsorgspenge", "journalforing")
     ).toString()
 
     private val objectMapper = configuredObjectMapper()
@@ -55,17 +56,19 @@ class JoarkGateway(
         }
     }
 
-    suspend fun journalfoer(
+    suspend fun journalfør(
         aktørId: AktørId,
+        norskIdent: String,
         mottatt: ZonedDateTime,
         dokumenter: List<List<URI>>,
         correlationId: CorrelationId
-    ) : JournalPostId {
+    ): JournalPostId {
 
         val authorizationHeader = cachedAccessTokenClient.getAccessToken(journalforeScopes).asAuthoriationHeader()
 
         val joarkRequest = JoarkRequest(
             aktoerId = aktørId.id,
+            norskIdent = norskIdent,
             mottatt = mottatt,
             dokumenter = dokumenter
         )
@@ -90,7 +93,7 @@ class JoarkGateway(
         ) { httpRequest.awaitStringResponseResult() }
 
         return result.fold(
-            { success -> objectMapper.readValue(success)},
+            { success -> objectMapper.readValue(success) },
             { error ->
                 logger.error("Error response = '${error.response.body().asString("text/plain")}' fra '${request.url}'")
                 logger.error(error.toString())
@@ -99,17 +102,19 @@ class JoarkGateway(
         )
     }
 
-    private fun configuredObjectMapper() : ObjectMapper {
+    private fun configuredObjectMapper(): ObjectMapper {
         val objectMapper = jacksonObjectMapper()
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         objectMapper.registerModule(JavaTimeModule())
         return objectMapper
     }
 }
+
 private data class JoarkRequest(
-    val aktoerId: String,
+    @JsonProperty("aktoer_id") val aktoerId: String,
+    @JsonProperty("norsk_ident") val norskIdent: String,
     val mottatt: ZonedDateTime,
     val dokumenter: List<List<URI>>
 )
 
-data class JournalPostId(val journalPostId: String)
+data class JournalPostId(@JsonProperty("journal_post_id") val journalpostId: String)

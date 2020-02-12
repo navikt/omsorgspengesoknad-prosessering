@@ -46,6 +46,19 @@
         {
           "member": "srvomsorgspeng-prs",
           "role": "CONSUMER"
+        }
+      ],
+      "numPartitions": 3,
+      "topicName": "privat-omsorgspengesoknad-cleanup"
+    },
+    {
+      "configEntries": {
+        "retention.ms": -1
+      },
+      "members": [
+        {
+          "member": "srvomsorgspeng-prs",
+          "role": "PRODUCER"
         },
         {
           "member": "srvk9-fordel",

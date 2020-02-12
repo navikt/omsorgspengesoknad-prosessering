@@ -10,6 +10,7 @@ import no.nav.helse.kafka.ManagedStreamReady
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
+import org.apache.kafka.streams.kstream.Produced
 import org.slf4j.LoggerFactory
 import java.net.URI
 
@@ -33,32 +34,34 @@ internal class CleanupStream(
 
         private fun topology(dokumentService: DokumentService): Topology {
             val builder = StreamsBuilder()
-            val fromTopic = Topics.JOURNALFORT
+            val fraCleanup: Topic<TopicEntry<Cleanup>> = Topics.CLEANUP
+            val tilJournalfort: Topic<TopicEntry<Journalfort>> = Topics.JOURNALFORT
 
             builder
-                .stream<String, TopicEntry<Journalfort>>(
-                    fromTopic.name,
-                    Consumed.with(fromTopic.keySerde, fromTopic.valueSerde)
+                .stream<String, TopicEntry<Cleanup>>(
+                    fraCleanup.name, Consumed.with(fraCleanup.keySerde, fraCleanup.valueSerde)
                 )
                 .filter { _, entry -> 1 == entry.metadata.version }
-                .foreach { soknadId, entry ->
-                    try {
-                        process(NAME, soknadId, entry) {
-                            logger.info("Sletter dokumenter.")
-                            val list = mutableListOf<URI>()
-                            list.addAll(entry.data.melding.samværsavtale)
+                .mapValues { soknadId, entry ->
+                    process(NAME, soknadId, entry) {
+                        logger.info("Sletter dokumenter.")
+                        val list = mutableListOf<URI>()
+                        list.addAll(entry.data.melding.samværsavtale)
+                        if (!entry.data.melding.legeerklæring.isEmpty()) {
                             list.addAll(entry.data.melding.legeerklæring)
-
-                            dokumentService.slettDokumeter(
-                                urlBolks = listOf(list),
-                                aktørId = AktørId(entry.data.melding.søker.aktørId),
-                                correlationId = CorrelationId(entry.metadata.correlationId)
-                            )
-                            logger.info("Dokumenter slettet.")
                         }
-                    } catch (ignore: Throwable) {
+
+                        dokumentService.slettDokumeter(
+                            urlBolks = listOf(list),
+                            aktørId = AktørId(entry.data.melding.søker.aktørId),
+                            correlationId = CorrelationId(entry.metadata.correlationId)
+                        )
+                        logger.info("Dokumenter slettet.")
+                        logger.info("Videresender journalført melding")
+                        entry.data.journalførtMelding
                     }
                 }
+                .to(tilJournalfort.name, Produced.with(tilJournalfort.keySerde, tilJournalfort.valueSerde))
             return builder.build()
         }
     }

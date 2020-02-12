@@ -5,12 +5,11 @@ import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.matching.AnythingPattern
 import com.github.tomakehurst.wiremock.matching.EqualToPattern
 import io.ktor.http.HttpHeaders
-import no.nav.helse.dusseldorf.ktor.testsupport.wiremock.WireMockBuilder
+import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import java.util.*
 
 private const val aktoerRegisterBasePath = "/aktoerregister-mock"
 private const val tpsProxyBasePath = "/tps-proxy-mock"
-private const val omsorgspengerOppgaveBaseUrl = "/omsorgspenger-oppgave-mock"
 private const val omsorgspengerJoarkBaseUrl = "/omsorgspenger-joark-mock"
 private const val k9DokumentBasePath = "/k9-dokument-mock"
 
@@ -131,24 +130,6 @@ internal fun WireMockServer.stubSlettDokument(): WireMockServer {
     return this
 }
 
-internal fun WireMockServer.stubOpprettOppgave(): WireMockServer {
-    WireMock.stubFor(
-        WireMock.post(WireMock.urlPathMatching(".*$omsorgspengerOppgaveBaseUrl.*")).willReturn(
-            WireMock.aResponse()
-                .withHeader("Content-Type", "application/json")
-                .withBody(
-                    """
-                    {
-                        "oppgaveId" : "5678"
-                    }
-                    """.trimIndent()
-                )
-                .withStatus(201)
-        )
-    )
-    return this
-}
-
 internal fun WireMockServer.stubJournalfor(responseCode: Int = 201): WireMockServer {
     WireMock.stubFor(
         WireMock.post(WireMock.urlPathMatching(".*$omsorgspengerJoarkBaseUrl.*")).willReturn(
@@ -157,7 +138,7 @@ internal fun WireMockServer.stubJournalfor(responseCode: Int = 201): WireMockSer
                 .withBody(
                     """
                     {
-                        "journalPostId" : "9101112"
+                        "journal_post_id" : "9101112"
                     }
                     """.trimIndent()
                 )
@@ -201,12 +182,10 @@ private fun WireMockServer.stubHealthEndpoint(
     return this
 }
 
-internal fun WireMockServer.stubOmsorgspengerOppgaveHealth() = stubHealthEndpoint("$omsorgspengerOppgaveBaseUrl/health")
 internal fun WireMockServer.stubK9DokumentHealth() = stubHealthEndpoint("$k9DokumentBasePath/health")
 internal fun WireMockServer.stubOmsorgspengerJoarkHealth() = stubHealthEndpoint("$omsorgspengerJoarkBaseUrl/health")
 
 internal fun WireMockServer.getAktoerRegisterBaseUrl() = baseUrl() + aktoerRegisterBasePath
 internal fun WireMockServer.getTpsProxyBaseUrl() = baseUrl() + tpsProxyBasePath
-internal fun WireMockServer.getOmsorgspengerOppgaveBaseUrl() = baseUrl() + omsorgspengerOppgaveBaseUrl
 internal fun WireMockServer.getOmsorgspengerJoarkBaseUrl() = baseUrl() + omsorgspengerJoarkBaseUrl
 internal fun WireMockServer.getK9DokumentBaseUrl() = baseUrl() + k9DokumentBasePath

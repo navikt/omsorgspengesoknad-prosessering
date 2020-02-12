@@ -31,15 +31,18 @@ internal class PreprosseseringStream(
         private const val NAME = "PreprosesseringV1"
         private val logger = LoggerFactory.getLogger("no.nav.$NAME.topology")
 
-        private fun topology(preprosseseringV1Service: PreprosseseringV1Service) : Topology {
+        private fun topology(preprosseseringV1Service: PreprosseseringV1Service): Topology {
             val builder = StreamsBuilder()
-            val fromTopic = Topics.MOTTATT
-            val toTopic = Topics.PREPROSSESERT
+            val fromMottatt = Topics.MOTTATT
+            val tilPreprossesert = Topics.PREPROSSESERT
 
             builder
-                .stream<String, TopicEntry<MeldingV1>>(fromTopic.name, Consumed.with(fromTopic.keySerde, fromTopic.valueSerde))
+                .stream<String, TopicEntry<MeldingV1>>(
+                    fromMottatt.name,
+                    Consumed.with(fromMottatt.keySerde, fromMottatt.valueSerde)
+                )
                 .filter { _, entry -> 1 == entry.metadata.version }
-                .mapValues { soknadId, entry  ->
+                .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
                         logger.info("Preprosesserer søknad.")
                         val preprossesertMelding = preprosseseringV1Service.preprosseser(
@@ -50,7 +53,7 @@ internal class PreprosseseringStream(
                         preprossesertMelding
                     }
                 }
-                .to(toTopic.name, Produced.with(toTopic.keySerde, toTopic.valueSerde))
+                .to(tilPreprossesert.name, Produced.with(tilPreprossesert.keySerde, tilPreprossesert.valueSerde))
             return builder.build()
         }
     }
