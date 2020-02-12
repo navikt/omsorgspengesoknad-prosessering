@@ -45,14 +45,9 @@ internal class CleanupStream(
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
                         logger.info("Sletter dokumenter.")
-                        val list = mutableListOf<URI>()
-                        list.addAll(entry.data.melding.samværsavtale)
-                        if (!entry.data.melding.legeerklæring.isEmpty()) {
-                            list.addAll(entry.data.melding.legeerklæring)
-                        }
 
                         dokumentService.slettDokumeter(
-                            urlBolks = listOf(list),
+                            urlBolks = entry.data.melding.dokumentUrls,
                             aktørId = AktørId(entry.data.melding.søker.aktørId),
                             correlationId = CorrelationId(entry.metadata.correlationId)
                         )
