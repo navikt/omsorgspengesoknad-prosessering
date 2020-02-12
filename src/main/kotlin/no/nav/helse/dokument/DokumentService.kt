@@ -47,7 +47,7 @@ class DokumentService(
     ) : URI {
         return lagreDokument(
             dokument = DokumentGateway.Dokument(
-                content = JournalforingsFormat.somJson(melding),
+                content = Søknadsformat.somJson(melding),
                 contentType = "application/json",
                 title = "Søknad om omsorgspenger som JSON"
             ),

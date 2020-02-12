@@ -12,18 +12,16 @@ data class PreprossesertMeldingV1(
     val mottatt: ZonedDateTime,
     val språk: String?,
     val kroniskEllerFunksjonshemming: Boolean,
-    val erYrkesaktiv: Boolean = false,
+    val arbeidssituasjon: List<String>,
     val barn: PreprossesertBarn,
     val søker: PreprossesertSøker,
     val relasjonTilBarnet: String,
-    val delerOmsorg: Boolean = false,
     val sammeAddresse: Boolean = false,
     val medlemskap: Medlemskap,
-    val utenlandsopphold: List<Utenlandsopphold> = listOf(),
-    val harBekreftetOpplysninger: Boolean,
-    val harForstattRettigheterOgPlikter: Boolean,
     var legeerklæring: List<URI> = listOf(),
-    var samværsavtale: List<URI> = listOf()
+    var samværsavtale: List<URI> = listOf(),
+    val harBekreftetOpplysninger: Boolean,
+    val harForstattRettigheterOgPlikter: Boolean
 ) {
     internal constructor(
         melding: MeldingV1,
@@ -37,6 +35,7 @@ data class PreprossesertMeldingV1(
         mottatt = melding.mottatt,
         kroniskEllerFunksjonshemming = melding.kroniskEllerFunksjonshemming,
         søker = PreprossesertSøker(melding.søker, søkerAktørId),
+        arbeidssituasjon = melding.arbeidssituasjon,
         barn = PreprossesertBarn(melding.barn, melding.barn.fødselsdato, barnetsNavn, barnetsNorskeIdent, barnAktørId),
         relasjonTilBarnet = melding.relasjonTilBarnet,
         medlemskap = melding.medlemskap,

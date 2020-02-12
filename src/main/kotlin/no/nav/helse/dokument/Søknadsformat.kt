@@ -7,7 +7,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.prosessering.v1.MeldingV1
 
-class JournalforingsFormat {
+class Søknadsformat {
     companion object {
         private val objectMapper = jacksonObjectMapper()
             .dusseldorfConfigured()

@@ -352,6 +352,7 @@ class OmsorgspengesoknadProsesseringTest {
             URI("http://localhost:8080/vedlegg/4")
         ),
         relasjonTilBarnet = "Mor",
+        arbeidssituasjon = listOf("Arbeidstaker", "Frilans", "Selvstendig Næringsdrivende"),
         harBekreftetOpplysninger = true,
         harForstattRettigheterOgPlikter = true,
         medlemskap = Medlemskap(

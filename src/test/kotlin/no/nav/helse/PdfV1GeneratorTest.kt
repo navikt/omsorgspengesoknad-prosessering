@@ -5,6 +5,7 @@ import no.nav.helse.prosessering.v1.*
 import java.io.File
 import java.time.LocalDate
 import java.time.ZonedDateTime
+import kotlin.test.Ignore
 import kotlin.test.Test
 
 class PdfV1GeneratorTest {
@@ -37,6 +38,7 @@ class PdfV1GeneratorTest {
                 navn = barnetsNavn
             ),
             relasjonTilBarnet = "Mor",
+            arbeidssituasjon = listOf("Arbeidstaker", "Frilans", "Selvstendig Næringsdrivende"),
             medlemskap = Medlemskap(
                 harBoddIUtlandetSiste12Mnd = true,
                 utenlandsoppholdSiste12Mnd = listOf(
@@ -87,6 +89,7 @@ class PdfV1GeneratorTest {
         ),
         barn = barn,
         relasjonTilBarnet = "Onkel & Nærstående ' <> \" {}",
+        arbeidssituasjon = listOf("Arbeidstaker", "Frilans", "Selvstendig Næringsdrivende"),
         medlemskap = medlemskap,
         harForstattRettigheterOgPlikter = true,
         harBekreftetOpplysninger = true
@@ -111,6 +114,7 @@ class PdfV1GeneratorTest {
     }
 
     @Test
+    @Ignore
     fun `opprett lesbar oppsummerings-PDF`() {
         genererOppsummeringsPdfer(true)
     }

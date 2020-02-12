@@ -12,17 +12,15 @@ data class MeldingV1(
     val mottatt: ZonedDateTime,
     val språk: String? = "nb",
     val kroniskEllerFunksjonshemming: Boolean = false,
-    val erYrkesaktiv: Boolean = false,
+    val arbeidssituasjon: List<String>,
     val barn: Barn,
     val søker: Søker,
     val relasjonTilBarnet: String,
-    val delerOmsorg: Boolean = false,
     val sammeAddresse: Boolean = false,
     val medlemskap: Medlemskap,
-    val utenlandsopphold: List<Utenlandsopphold> = listOf(),
-    val harBekreftetOpplysninger: Boolean,
     var legeerklæring: List<URI> = listOf(),
     var samværsavtale: List<URI> = listOf(),
+    val harBekreftetOpplysninger: Boolean,
     val harForstattRettigheterOgPlikter: Boolean
 )
 

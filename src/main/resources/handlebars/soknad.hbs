@@ -72,24 +72,13 @@
         <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
     {{/if}}
 
-    <h2><span>Yrkesaktiv</span></h2>
-    <p class="sporsmalstekst">Er yrkesaktiv</p>
-    {{# if erYrkesaktiv }}
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
-    {{else}}
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
-    {{/if}}
-
-    <h2><span>Delt omsorg</span></h2>
-    <p class="sporsmalstekst">Er det delt omsorg for barnet</p>
-    {{# if delerOmsorg }}
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
-    {{else}}
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
+    <h2><span>Arbeidssituasjon</span></h2>
+    {{#if arbeidssituasjon}}
+        {{#each arbeidssituasjon as |situasjon|~}}
+          <ul>
+              <li>{{situasjon}}</li>
+          </ul>
+        {{/each}}
     {{/if}}
 
     <h2><span>Bor på samme addresse</span></h2>
@@ -135,12 +124,6 @@
     {{else}}
         <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
         <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
-    {{/if}}
-
-    <!-- ANNET -->
-    {{# if grad }}
-        <h2><span>Annet</span></h2>
-        <p><span class="sporsmalstekst">Søker om grad: </span><span>{{ grad }}%</span></p>
     {{/if}}
 
     <!-- SAMTYKKE -->
