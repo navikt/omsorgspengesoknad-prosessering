@@ -18,7 +18,7 @@ class PdfV1GeneratorTest {
         private val barnetsNavn = "Ole Dole"
     }
 
-    private fun fullGyldigMelding(soknadsId: String): MeldingV1 {
+    private fun fullGyldigMelding(soknadsId: String, barnetsFødselsdato: LocalDate? = null): MeldingV1 {
         return MeldingV1(
             språk = "nb",
             søknadId = soknadsId,
@@ -104,6 +104,14 @@ class PdfV1GeneratorTest {
         )
         if (writeBytes) File(pdfPath(soknadId = id)).writeBytes(pdf)
 
+        id = "2-full-søknad-barnets-fødsesldato"
+        pdf = generator.generateSoknadOppsummeringPdf(
+            melding = fullGyldigMelding(soknadsId = id, barnetsFødselsdato = LocalDate.now().minusDays(4)),
+            barnetsIdent = null,
+            barnetsNavn = barnetsNavn
+        )
+        if (writeBytes) File(pdfPath(soknadId = id)).writeBytes(pdf)
+
     }
 
     private fun pdfPath(soknadId: String) = "${System.getProperty("user.dir")}/generated-pdf-$soknadId.pdf"
@@ -114,7 +122,7 @@ class PdfV1GeneratorTest {
     }
 
     @Test
-    @Ignore
+    //@Ignore
     fun `opprett lesbar oppsummerings-PDF`() {
         genererOppsummeringsPdfer(true)
     }

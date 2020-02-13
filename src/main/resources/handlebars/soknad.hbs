@@ -26,9 +26,9 @@
                     <img class="ikon" src="{{ image "Personikon.png" }}"/>
                     <div class="persontekst__personalia">
                         {{#if søker.relasjonTilBarnet}}
-                        <p>
-                            {{søker.relasjonTilBarnet}} til barnet.
-                        </p>
+                            <p>
+                                {{søker.relasjonTilBarnet}} til barnet.
+                            </p>
                         {{/if}}
                         <p class="navn">
                             {{ søker.navn }}
@@ -49,6 +49,9 @@
                             {{/if}}
                         </p>
                         <p class="id">
+                            {{# if barn.fødselsdato }}
+                                {{ barn.fødselsdato }} <br />
+                            {{/if}}
                             {{# if barn.id }}
                                 {{ barn.id }}
                             {{else}}
@@ -77,9 +80,9 @@
     <h2><span>Arbeidssituasjon</span></h2>
     {{#if arbeidssituasjon}}
         {{#each arbeidssituasjon as |situasjon|~}}
-          <ul>
-              <li>{{situasjon}}</li>
-          </ul>
+            <ul>
+                <li>{{situasjon}}</li>
+            </ul>
         {{/each}}
     {{/if}}
 
