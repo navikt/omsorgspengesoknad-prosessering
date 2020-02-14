@@ -20,7 +20,7 @@ data class PreprossesertMeldingV1(
     val sammeAddresse: Boolean = false,
     val medlemskap: Medlemskap,
     val harBekreftetOpplysninger: Boolean,
-    val harForstattRettigheterOgPlikter: Boolean
+    val harForståttRettigheterOgPlikter: Boolean
 ) {
     internal constructor(
         melding: MeldingV1,
@@ -40,7 +40,7 @@ data class PreprossesertMeldingV1(
         barn = PreprossesertBarn(melding.barn, melding.barn.fødselsdato, barnetsNavn, barnetsNorskeIdent, barnAktørId),
         relasjonTilBarnet = melding.relasjonTilBarnet,
         medlemskap = melding.medlemskap,
-        harForstattRettigheterOgPlikter = melding.harForstattRettigheterOgPlikter,
+        harForståttRettigheterOgPlikter = melding.harForståttRettigheterOgPlikter,
         harBekreftetOpplysninger = melding.harBekreftetOpplysninger
     )
 }

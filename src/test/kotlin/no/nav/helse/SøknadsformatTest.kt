@@ -49,7 +49,7 @@ class SøknadsformatTest {
                     "utenlandsoppholdNeste12Mnd": []
                   },
                   "harBekreftetOpplysninger": true,
-                  "harForstattRettigheterOgPlikter": true
+                  "harForståttRettigheterOgPlikter": true
                 }
 
         """.trimIndent(), String(json), true
@@ -83,6 +83,6 @@ class SøknadsformatTest {
             utenlandsoppholdNeste12Mnd = listOf()
         ),
         harBekreftetOpplysninger = true,
-        harForstattRettigheterOgPlikter = true
+        harForståttRettigheterOgPlikter = true
     )
 }

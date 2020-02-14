@@ -21,7 +21,7 @@ data class MeldingV1(
     var legeerklæring: List<URI> = listOf(),
     var samværsavtale: List<URI> = listOf(),
     val harBekreftetOpplysninger: Boolean,
-    val harForstattRettigheterOgPlikter: Boolean
+    val harForståttRettigheterOgPlikter: Boolean
 )
 
 data class Søker(

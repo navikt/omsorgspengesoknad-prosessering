@@ -5,7 +5,6 @@ import no.nav.helse.prosessering.v1.*
 import java.io.File
 import java.time.LocalDate
 import java.time.ZonedDateTime
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 class PdfV1GeneratorTest {
@@ -50,7 +49,7 @@ class PdfV1GeneratorTest {
                 ),
                 skalBoIUtlandetNeste12Mnd = false
             ),
-            harForstattRettigheterOgPlikter = true,
+            harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true
         )
     }
@@ -91,7 +90,7 @@ class PdfV1GeneratorTest {
         relasjonTilBarnet = "Onkel & Nærstående ' <> \" {}",
         arbeidssituasjon = listOf("Arbeidstaker", "Frilans", "Selvstendig Næringsdrivende"),
         medlemskap = medlemskap,
-        harForstattRettigheterOgPlikter = true,
+        harForståttRettigheterOgPlikter = true,
         harBekreftetOpplysninger = true
     )
 

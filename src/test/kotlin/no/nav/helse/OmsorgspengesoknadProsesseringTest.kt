@@ -354,7 +354,7 @@ class OmsorgspengesoknadProsesseringTest {
         relasjonTilBarnet = "Mor",
         arbeidssituasjon = listOf("Arbeidstaker", "Frilans", "Selvstendig Næringsdrivende"),
         harBekreftetOpplysninger = true,
-        harForstattRettigheterOgPlikter = true,
+        harForståttRettigheterOgPlikter = true,
         medlemskap = Medlemskap(
             harBoddIUtlandetSiste12Mnd = true,
             skalBoIUtlandetNeste12Mnd = true
