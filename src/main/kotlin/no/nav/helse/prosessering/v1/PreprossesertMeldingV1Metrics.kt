@@ -57,6 +57,12 @@ private val arbeidsSituasjonCounter = Counter.build()
     .labelNames("forhold")
     .register()
 
+private val relasjonPåSammeAdresse = Counter.build()
+    .name("relasjon_paa_samme_adresse")
+    .help("Teller for søkere med relasjon på samme adresse som barnet.")
+    .labelNames("relasjon", "sammeAdresse")
+    .register()
+
 internal fun PreprossesertMeldingV1.reportMetrics() {
     val barnetsFodselsdato = barn.fodseldato()
     if (barnetsFodselsdato != null) {
@@ -70,7 +76,10 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
     jaNeiCounter.labels("har_bodd_i_utlandet_siste_12_mnd", medlemskap.harBoddIUtlandetSiste12Mnd.tilJaEllerNei()).inc()
     jaNeiCounter.labels("skal_bo_i_utlandet_neste_12_mnd", medlemskap.skalBoIUtlandetNeste12Mnd.tilJaEllerNei()).inc()
 
-    if (relasjonTilBarnet != null) søkersRelasjonTilBarnetCounter.labels(relasjonTilBarnet).inc()
+    if (relasjonTilBarnet != null) {
+        søkersRelasjonTilBarnetCounter.labels(relasjonTilBarnet).inc()
+        relasjonPåSammeAdresse.labels(relasjonTilBarnet, sammeAddresse.tilJaEllerNei()).inc()
+    }
 
     if (arbeidssituasjon.isNotEmpty()) {
         antallArbeidsSituasjonerCounter.labels(arbeidssituasjon.size.toString()).inc()
@@ -78,6 +87,8 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
     }
 
     sammeAdreseCounter.labels("sammeAdresse", sammeAddresse.tilJaEllerNei()).inc()
+
+
 }
 
 internal fun Double.erUnderEttAar() = 0.0 == this
