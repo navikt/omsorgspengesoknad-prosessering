@@ -36,6 +36,7 @@ private val barnetsAlderIUkerCounter = Counter.build()
 private val sammeAdreseCounter = Counter.build()
     .name("samme_adresse_counter")
     .help("Teller for antall søkere som ikke har samme folkeregisterert adresse som barnet.")
+    .labelNames("spm", "svar")
     .register()
 
 internal fun PreprossesertMeldingV1.reportMetrics() {
@@ -51,7 +52,7 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
     jaNeiCounter.labels("har_bodd_i_utlandet_siste_12_mnd", medlemskap.harBoddIUtlandetSiste12Mnd.tilJaEllerNei()).inc()
     jaNeiCounter.labels("skal_bo_i_utlandet_neste_12_mnd", medlemskap.skalBoIUtlandetNeste12Mnd.tilJaEllerNei()).inc()
 
-    sammeAdreseCounter.labels(sammeAddresse.tilJaEllerNei()).inc()
+    sammeAdreseCounter.labels("sammeAdresse", sammeAddresse.tilJaEllerNei()).inc()
 }
 
 internal fun Double.erUnderEttAar() = 0.0 == this
