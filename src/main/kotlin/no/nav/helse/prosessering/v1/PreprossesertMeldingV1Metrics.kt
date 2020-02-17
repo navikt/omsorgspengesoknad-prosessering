@@ -63,6 +63,12 @@ private val relasjonPåSammeAdresse = Counter.build()
     .labelNames("relasjon", "sammeAdresse")
     .register()
 
+private val medlemskapMedUtenlandsopphold = Counter.build()
+    .name("medlemskap_med_utenlandsopphold")
+    .help("Teller for søkere med utenlandsopphold.")
+    .labelNames("har_bodd_i_utlandet_siste_12_mnd", "utenlandsopphold")
+    .register()
+
 internal fun PreprossesertMeldingV1.reportMetrics() {
     val barnetsFodselsdato = barn.fodseldato()
     if (barnetsFodselsdato != null) {
@@ -75,6 +81,8 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
     idTypePaaBarnCounter.labels(barn.idType()).inc()
     jaNeiCounter.labels("har_bodd_i_utlandet_siste_12_mnd", medlemskap.harBoddIUtlandetSiste12Mnd.tilJaEllerNei()).inc()
     jaNeiCounter.labels("skal_bo_i_utlandet_neste_12_mnd", medlemskap.skalBoIUtlandetNeste12Mnd.tilJaEllerNei()).inc()
+
+    medlemskapMedUtenlandsopphold.labels(medlemskap.harBoddIUtlandetSiste12Mnd.tilJaEllerNei(), medlemskap.utenlandsoppholdSiste12Mnd.size.toString()).inc()
 
     if (relasjonTilBarnet != null) {
         søkersRelasjonTilBarnetCounter.labels(relasjonTilBarnet).inc()
