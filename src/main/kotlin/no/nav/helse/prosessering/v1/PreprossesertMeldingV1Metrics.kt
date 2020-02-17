@@ -39,6 +39,12 @@ private val sammeAdreseCounter = Counter.build()
     .labelNames("spm", "svar")
     .register()
 
+private val søkersRelasjonTilBarnetCounter = Counter.build()
+    .name("søkers_relasjon_til_barnet")
+    .help("Teller for søkers relasjon til barnet.")
+    .labelNames("relasjon")
+    .register()
+
 internal fun PreprossesertMeldingV1.reportMetrics() {
     val barnetsFodselsdato = barn.fodseldato()
     if (barnetsFodselsdato != null) {
@@ -52,6 +58,7 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
     jaNeiCounter.labels("har_bodd_i_utlandet_siste_12_mnd", medlemskap.harBoddIUtlandetSiste12Mnd.tilJaEllerNei()).inc()
     jaNeiCounter.labels("skal_bo_i_utlandet_neste_12_mnd", medlemskap.skalBoIUtlandetNeste12Mnd.tilJaEllerNei()).inc()
 
+    søkersRelasjonTilBarnetCounter.labels(relasjonTilBarnet).inc()
     sammeAdreseCounter.labels("sammeAdresse", sammeAddresse.tilJaEllerNei()).inc()
 }
 
