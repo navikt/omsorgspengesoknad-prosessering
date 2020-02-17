@@ -40,7 +40,7 @@ private val sammeAdreseCounter = Counter.build()
     .register()
 
 private val søkersRelasjonTilBarnetCounter = Counter.build()
-    .name("sokers_relasjon_til_barnet")
+    .name("sokers_relasjon_til_barnet_counter")
     .help("Teller for søkers relasjon til barnet.")
     .labelNames("relasjon")
     .register()
