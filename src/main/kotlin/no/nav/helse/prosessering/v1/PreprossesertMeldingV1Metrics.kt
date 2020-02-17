@@ -74,7 +74,7 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
 
     if (arbeidssituasjon.isNotEmpty()) {
         antallArbeidsSituasjonerCounter.labels(arbeidssituasjon.size.toString()).inc()
-        arbeidsSituasjonCounter.labels(arbeidssituasjon.sortedDescending().joinToString { "," })
+        arbeidsSituasjonCounter.labels(arbeidssituasjon.sortedDescending().joinToString { "," }).inc()
     }
 
     sammeAdreseCounter.labels("sammeAdresse", sammeAddresse.tilJaEllerNei()).inc()
