@@ -45,6 +45,18 @@ private val søkersRelasjonTilBarnetCounter = Counter.build()
     .labelNames("relasjon")
     .register()
 
+private val antallArbeidsSituasjonerCounter = Counter.build()
+    .name("antall_arbeidssituasjoner_counter")
+    .help("Teller for søkers antall arbeidssituasjoner")
+    .labelNames("antall_forhold")
+    .register()
+
+private val arbeidsSituasjonCounter = Counter.build()
+    .name("arbeidssituasjon_counter")
+    .help("Teller for søkers arbeidsforhold")
+    .labelNames("forhold")
+    .register()
+
 internal fun PreprossesertMeldingV1.reportMetrics() {
     val barnetsFodselsdato = barn.fodseldato()
     if (barnetsFodselsdato != null) {
@@ -59,6 +71,11 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
     jaNeiCounter.labels("skal_bo_i_utlandet_neste_12_mnd", medlemskap.skalBoIUtlandetNeste12Mnd.tilJaEllerNei()).inc()
 
     if (relasjonTilBarnet != null) søkersRelasjonTilBarnetCounter.labels(relasjonTilBarnet).inc()
+
+    if (arbeidssituasjon.isNotEmpty()) {
+        antallArbeidsSituasjonerCounter.labels(arbeidssituasjon.size.toString()).inc()
+        arbeidsSituasjonCounter.labels(arbeidssituasjon.sortedDescending().joinToString { "," })
+    }
 
     sammeAdreseCounter.labels("sammeAdresse", sammeAddresse.tilJaEllerNei()).inc()
 }
