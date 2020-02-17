@@ -99,7 +99,7 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
 
     if (arbeidssituasjon.isNotEmpty()) {
         antallArbeidsSituasjonerCounter.labels(arbeidssituasjon.size.toString()).inc()
-        val arbeidsSituasjonerSomString = arbeidssituasjon.sortedDescending().joinToString("x ")
+        val arbeidsSituasjonerSomString = arbeidssituasjon.sortedDescending().joinToString(" & ")
         arbeidsSituasjonCounter.labels(arbeidsSituasjonerSomString).inc()
     }
 
