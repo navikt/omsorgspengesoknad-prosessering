@@ -86,7 +86,8 @@ internal class PdfV1Generator {
                         ),
                         "barn" to mapOf(
                             "navn" to barnetsNavn,
-                            "id" to barnetsIdent?.getValue()
+                            "id" to barnetsIdent?.getValue(),
+                            "fødselsdato" to melding.barn.fødselsdato
                         ),
                         "sammeAddresse" to melding.sammeAddresse,
                         "kroniskEllerFunksjonshemming" to melding.kroniskEllerFunksjonshemming,
@@ -98,8 +99,8 @@ internal class PdfV1Generator {
                             "utenlandsopphold_neste_12_mnd" to melding.medlemskap.utenlandsoppholdNeste12Mnd.somMapUtenlandsopphold()
                         ),
                         "samtykke" to mapOf(
-                            "har_forstatt_rettigheter_og_plikter" to melding.harForstattRettigheterOgPlikter,
-                            "har_bekreftet_opplysninger" to melding.harBekreftetOpplysninger
+                            "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
+                            "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger
                         ),
                         "hjelp" to mapOf(
                             "språk" to melding.språk?.sprakTilTekst()

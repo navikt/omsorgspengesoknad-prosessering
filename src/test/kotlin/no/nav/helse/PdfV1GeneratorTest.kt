@@ -5,7 +5,6 @@ import no.nav.helse.prosessering.v1.*
 import java.io.File
 import java.time.LocalDate
 import java.time.ZonedDateTime
-import kotlin.test.Ignore
 import kotlin.test.Test
 
 class PdfV1GeneratorTest {
@@ -18,7 +17,7 @@ class PdfV1GeneratorTest {
         private val barnetsNavn = "Ole Dole"
     }
 
-    private fun fullGyldigMelding(soknadsId: String): MeldingV1 {
+    private fun fullGyldigMelding(soknadsId: String, barnetsFødselsdato: LocalDate? = null): MeldingV1 {
         return MeldingV1(
             språk = "nb",
             søknadId = soknadsId,
@@ -50,7 +49,7 @@ class PdfV1GeneratorTest {
                 ),
                 skalBoIUtlandetNeste12Mnd = false
             ),
-            harForstattRettigheterOgPlikter = true,
+            harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true
         )
     }
@@ -91,7 +90,7 @@ class PdfV1GeneratorTest {
         relasjonTilBarnet = "Onkel & Nærstående ' <> \" {}",
         arbeidssituasjon = listOf("Arbeidstaker", "Frilans", "Selvstendig Næringsdrivende"),
         medlemskap = medlemskap,
-        harForstattRettigheterOgPlikter = true,
+        harForståttRettigheterOgPlikter = true,
         harBekreftetOpplysninger = true
     )
 
@@ -100,6 +99,14 @@ class PdfV1GeneratorTest {
         var pdf = generator.generateSoknadOppsummeringPdf(
             melding = fullGyldigMelding(soknadsId = id),
             barnetsIdent = barnetsIdent,
+            barnetsNavn = barnetsNavn
+        )
+        if (writeBytes) File(pdfPath(soknadId = id)).writeBytes(pdf)
+
+        id = "2-full-søknad-barnets-fødsesldato"
+        pdf = generator.generateSoknadOppsummeringPdf(
+            melding = fullGyldigMelding(soknadsId = id, barnetsFødselsdato = LocalDate.now().minusDays(4)),
+            barnetsIdent = null,
             barnetsNavn = barnetsNavn
         )
         if (writeBytes) File(pdfPath(soknadId = id)).writeBytes(pdf)
@@ -114,7 +121,7 @@ class PdfV1GeneratorTest {
     }
 
     @Test
-    @Ignore
+    //@Ignore
     fun `opprett lesbar oppsummerings-PDF`() {
         genererOppsummeringsPdfer(true)
     }
