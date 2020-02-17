@@ -87,6 +87,11 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
         medlemskap.utenlandsoppholdSiste12Mnd.size.toString()
     ).inc()
 
+    medlemskapMedUtenlandsopphold.labels(
+        medlemskap.skalBoIUtlandetNeste12Mnd.tilJaEllerNei(),
+        medlemskap.utenlandsoppholdNeste12Mnd.size.toString()
+    ).inc()
+
     if (relasjonTilBarnet != null) {
         søkersRelasjonTilBarnetCounter.labels(relasjonTilBarnet).inc()
         relasjonPåSammeAdresse.labels(relasjonTilBarnet, sammeAddresse.tilJaEllerNei()).inc()
@@ -94,7 +99,8 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
 
     if (arbeidssituasjon.isNotEmpty()) {
         antallArbeidsSituasjonerCounter.labels(arbeidssituasjon.size.toString()).inc()
-        arbeidsSituasjonCounter.labels(arbeidssituasjon.sortedDescending().joinToString("x ")).inc()
+        val arbeidsSituasjonerSomString = arbeidssituasjon.sortedDescending().joinToString("x ")
+        arbeidsSituasjonCounter.labels(arbeidsSituasjonerSomString).inc()
     }
 
     sammeAdreseCounter.labels("sammeAdresse", sammeAddresse.tilJaEllerNei()).inc()
