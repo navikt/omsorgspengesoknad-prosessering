@@ -17,7 +17,7 @@ data class PreprossesertMeldingV1(
     val barn: PreprossesertBarn,
     val søker: PreprossesertSøker,
     val relasjonTilBarnet: String? = null,
-    val sammeAddresse: Boolean = false,
+    val sammeAdresse: Boolean = false,
     val medlemskap: Medlemskap,
     val harBekreftetOpplysninger: Boolean,
     val harForståttRettigheterOgPlikter: Boolean
@@ -36,6 +36,7 @@ data class PreprossesertMeldingV1(
         dokumentUrls = dokumentUrls,
         kroniskEllerFunksjonshemming = melding.kroniskEllerFunksjonshemming,
         søker = PreprossesertSøker(melding.søker, søkerAktørId),
+        sammeAdresse = melding.sammeAdresse,
         arbeidssituasjon = melding.arbeidssituasjon,
         barn = PreprossesertBarn(melding.barn, melding.barn.fødselsdato, barnetsNavn, barnetsNorskeIdent, barnAktørId),
         relasjonTilBarnet = melding.relasjonTilBarnet,
