@@ -103,10 +103,7 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
         arbeidsSituasjonCounter.labels(arbeidsSituasjonerSomString).inc()
     }
 
-    val sammeAdresseString = if (sammeAdresse) "Ja" else "Nei"
-    sammeAdreseCounter.labels("sammeAdresse", sammeAdresseString).inc()
-
-
+    sammeAdreseCounter.labels("sammeAdresse", sammeAdresse.tilJaEllerNei()).inc()
 }
 
 internal fun Double.erUnderEttAar() = 0.0 == this
