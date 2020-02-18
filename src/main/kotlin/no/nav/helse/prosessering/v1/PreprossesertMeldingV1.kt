@@ -17,7 +17,7 @@ data class PreprossesertMeldingV1(
     val barn: PreprossesertBarn,
     val søker: PreprossesertSøker,
     val relasjonTilBarnet: String? = null,
-    val sammeAddresse: Boolean = false,
+    val sammeAdresse: Boolean = false,
     val medlemskap: Medlemskap,
     val harBekreftetOpplysninger: Boolean,
     val harForståttRettigheterOgPlikter: Boolean

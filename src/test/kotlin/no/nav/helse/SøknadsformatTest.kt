@@ -41,7 +41,7 @@ class SøknadsformatTest {
                     "aktørId": "123456"
                   },
                   "relasjonTilBarnet": "Mor",
-                  "sammeAddresse": false,
+                  "sammeAdresse": false,
                   "medlemskap": {
                     "harBoddIUtlandetSiste12Mnd": true,
                     "utenlandsoppholdSiste12Mnd": [],

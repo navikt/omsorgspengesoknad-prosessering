@@ -94,7 +94,7 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
 
     if (relasjonTilBarnet != null) {
         søkersRelasjonTilBarnetCounter.labels(relasjonTilBarnet).inc()
-        relasjonPåSammeAdresse.labels(relasjonTilBarnet, sammeAddresse.tilJaEllerNei()).inc()
+        relasjonPåSammeAdresse.labels(relasjonTilBarnet, sammeAdresse.tilJaEllerNei()).inc()
     }
 
     if (arbeidssituasjon.isNotEmpty()) {
@@ -103,7 +103,7 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
         arbeidsSituasjonCounter.labels(arbeidsSituasjonerSomString).inc()
     }
 
-    sammeAdreseCounter.labels("sammeAdresse", sammeAddresse.tilJaEllerNei()).inc()
+    sammeAdreseCounter.labels("sammeAdresse", sammeAdresse.tilJaEllerNei()).inc()
 
 
 }
