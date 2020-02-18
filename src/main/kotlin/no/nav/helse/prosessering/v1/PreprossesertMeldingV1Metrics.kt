@@ -70,7 +70,7 @@ private val medlemskapMedUtenlandsopphold = Counter.build()
     .register()
 
 internal fun PreprossesertMeldingV1.reportMetrics() {
-    val barnetsFodselsdato = barn.fodseldato()
+    val barnetsFodselsdato = barn.fødselsDato ?: barn.fodseldato()
     if (barnetsFodselsdato != null) {
         val barnetsAlder = barnetsFodselsdato.aarSiden()
         barnetsAlderHistogram.observe(barnetsAlder)
