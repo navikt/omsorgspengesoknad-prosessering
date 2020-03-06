@@ -72,10 +72,10 @@ jobs:
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-sbs
-          RESOURCE: nais/dev-sbs.yml
+          CLUSTER: dev-fss
+          RESOURCE: nais/dev-fss.yml
 
-  deploy-prod-sbs:
+  deploy-prod-fss:
     name: Deploy to prod-fss
     if: startsWith(github.ref, 'refs/heads/master')  # If the branch is master
     needs: build-code-and-push-docker # Depends on build-code-and-push-docker job
@@ -85,5 +85,5 @@ jobs:
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: prod-sbs
-          RESOURCE: nais/prod-sbs.yml
+          CLUSTER: prod-fss
+          RESOURCE: nais/prod-fss.yml
