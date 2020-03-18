@@ -23,6 +23,23 @@
       },
       "members": [
         {
+          "member": "srvpps-mottak",
+          "role": "PRODUCER"
+        },
+        {
+          "member": "srvpps-prosessering",
+          "role": "CONSUMER"
+        }
+      ],
+      "numPartitions": 3,
+      "topicName": "privat-overfore-omsorgsdager-soknad-mottatt"
+    },
+    {
+      "configEntries": {
+        "retention.ms": -1
+      },
+      "members": [
+        {
           "member": "srvomsorgspeng-prs",
           "role": "PRODUCER"
         },
