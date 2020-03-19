@@ -9,7 +9,7 @@ import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1OverforeDager
-import no.nav.helse.prosessering.v1.SøknadOverføreDager
+import no.nav.helse.prosessering.v1.SøknadOverføreDagerV1
 import no.nav.k9.søknad.omsorgspenger.OmsorgspengerSøknad
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serdes
@@ -18,8 +18,9 @@ import org.apache.kafka.common.serialization.StringSerializer
 
 data class TopicEntry<V>(val metadata: Metadata, val data: V)
 data class Cleanup(val metadata: Metadata, val melding: PreprossesertMeldingV1, val journalførtMelding: Journalfort)
-data class CleanupOverforeDager(val metadata: Metadata, val melding: PreprossesertMeldingV1OverforeDager, val journalførtMelding: Journalfort)
+data class CleanupOverforeDager(val metadata: Metadata, val melding: PreprossesertMeldingV1OverforeDager, val journalførtMelding: JournalfortOverforeDager)
 data class Journalfort(val journalpostId: String, val søknad: OmsorgspengerSøknad)
+data class JournalfortOverforeDager(val journalpostId: String, val søknad: PreprossesertMeldingV1OverforeDager)
 
 internal data class Topic<V>(
     val name: String,
@@ -107,10 +108,10 @@ private class JournalfortSerDes: SerDes<TopicEntry<Journalfort>>() {
     }
 }
 
-private class MottattSoknadSerDesOverforeDager: SerDes<TopicEntry<SøknadOverføreDager>>() {
-    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<SøknadOverføreDager>? {
+private class MottattSoknadSerDesOverforeDager: SerDes<TopicEntry<SøknadOverføreDagerV1>>() {
+    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<SøknadOverføreDagerV1>? {
         return data?.let {
-            objectMapper.readValue<TopicEntry<SøknadOverføreDager>>(it)
+            objectMapper.readValue<TopicEntry<SøknadOverføreDagerV1>>(it)
         }
     }
 }
@@ -131,8 +132,8 @@ private class CleanupSerDesOverforeDager: SerDes<TopicEntry<CleanupOverforeDager
     }
 }
 
-private class JournalfortSerDesOverforeDager: SerDes<TopicEntry<Journalfort>>() {
-    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<Journalfort>? {
+private class JournalfortSerDesOverforeDager: SerDes<TopicEntry<JournalfortOverforeDager>>() {
+    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<JournalfortOverforeDager>? {
         return data?.let {
             objectMapper.readValue(it)
         }

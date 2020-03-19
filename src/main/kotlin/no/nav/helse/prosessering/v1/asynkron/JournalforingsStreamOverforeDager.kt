@@ -66,10 +66,12 @@ internal class JournalforingsStreamOverforeDager(
                             dokumenter = dokumenter
                         )
                         logger.info("Dokumenter journalført med ID = ${journaPostId.journalpostId}.")
-                        val journalfort = Journalfort(
+
+                        val journalfort = JournalfortOverforeDager(
                             journalpostId = journaPostId.journalpostId,
-                            søknad = entry.data.tilK9Omsorgspengesøknad()
+                            søknad = entry.data
                         )
+
                         CleanupOverforeDager(
                             metadata = entry.metadata,
                             melding = entry.data,
@@ -85,14 +87,3 @@ internal class JournalforingsStreamOverforeDager(
 
     internal fun stop() = stream.stop(becauseOfError = false)
 }
-
-private fun PreprossesertMeldingV1OverforeDager.tilK9Omsorgspengesøknad(): OmsorgspengerSøknad = OmsorgspengerSøknad.builder()
-    .søknadId(SøknadId.of(soknadId))
-    .mottattDato(mottatt)
-    .søker(søker.tilK9Søker())
-    .build()
-
-private fun PreprossesertSøker.tilK9Søker(): Søker = Søker.builder()
-    .norskIdentitetsnummer(NorskIdentitetsnummer.of(fødselsnummer))
-    .build()
-

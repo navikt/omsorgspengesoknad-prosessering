@@ -35,7 +35,7 @@ internal class CleanupStreamOverforeDager(
         private fun topology(dokumentService: DokumentService): Topology {
             val builder = StreamsBuilder()
             val fraCleanup: Topic<TopicEntry<CleanupOverforeDager>> = Topics.CLEANUP_OVERFOREDAGER
-            val tilJournalfort: Topic<TopicEntry<Journalfort>> = Topics.JOURNALFORT_OVERFOREDAGER
+            val tilJournalfort: Topic<TopicEntry<JournalfortOverforeDager>> = Topics.JOURNALFORT_OVERFOREDAGER
 
             builder
                 .stream<String, TopicEntry<CleanupOverforeDager>>(
