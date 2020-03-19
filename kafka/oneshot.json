@@ -23,23 +23,6 @@
       },
       "members": [
         {
-          "member": "srvpps-mottak",
-          "role": "PRODUCER"
-        },
-        {
-          "member": "srvpps-prosessering",
-          "role": "CONSUMER"
-        }
-      ],
-      "numPartitions": 3,
-      "topicName": "privat-overfore-omsorgsdager-soknad-mottatt"
-    },
-    {
-      "configEntries": {
-        "retention.ms": -1
-      },
-      "members": [
-        {
           "member": "srvomsorgspeng-prs",
           "role": "PRODUCER"
         },
@@ -84,6 +67,74 @@
       ],
       "numPartitions": 3,
       "topicName": "privat-omsorgspengesoknad-journalfort"
+    },
+    {
+      "configEntries": {
+        "retention.ms": -1
+      },
+      "members": [
+        {
+          "member": "srvpps-mottak",
+          "role": "PRODUCER"
+        },
+        {
+          "member": "srvpps-prosessering",
+          "role": "CONSUMER"
+        }
+      ],
+      "numPartitions": 3,
+      "topicName": "privat-overfore-omsorgsdager-soknad-mottatt"
+    },
+    {
+      "configEntries": {
+        "retention.ms": -1
+      },
+      "members": [
+        {
+          "member": "srvomsorgspeng-prs",
+          "role": "PRODUCER"
+        },
+        {
+          "member": "srvomsorgspeng-prs",
+          "role": "CONSUMER"
+        }
+      ],
+      "numPartitions": 3,
+      "topicName": "privat-overfore-omsorgsdager-soknad-preprossesert"
+    },
+    {
+      "configEntries": {
+        "retention.ms": -1
+      },
+      "members": [
+        {
+          "member": "srvomsorgspeng-prs",
+          "role": "PRODUCER"
+        },
+        {
+          "member": "srvomsorgspeng-prs",
+          "role": "CONSUMER"
+        }
+      ],
+      "numPartitions": 3,
+      "topicName": "privat-overfore-omsorgsdager-soknad-cleanup"
+    },
+    {
+      "configEntries": {
+        "retention.ms": -1
+      },
+      "members": [
+        {
+          "member": "srvomsorgspeng-prs",
+          "role": "PRODUCER"
+        },
+        {
+          "member": "srvk9-fordel",
+          "role": "CONSUMER"
+        }
+      ],
+      "numPartitions": 3,
+      "topicName": "privat-overfore-omsorgsdager-soknad-journalfort"
     }
   ]
 }
