@@ -129,7 +129,7 @@ internal class PdfV1Generator {
     }
 
     internal fun generateSoknadOppsummeringPdfOverforeDager(
-        melding: SøknadOverføreDager
+        melding: SøknadOverføreDagerV1
     ): ByteArray {
         soknadOverforeDagerTemplate.apply(
             Context

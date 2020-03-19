@@ -21,7 +21,6 @@ import no.nav.helse.prosessering.v1.asynkron.Journalfort
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.junit.Ignore
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -59,6 +58,7 @@ class OmsorgspengesoknadProsesseringTest {
         private val kafkaTestProducerOverforeDager = kafkaEnvironment.meldingOverforeDagersProducer()
 
         private val journalføringsKonsumer = kafkaEnvironment.journalføringsKonsumer()
+        private val journalføringsKonsumerOverforeDager = kafkaEnvironment.journalføringsKonsumerOverforeDager()
         private val cleanupKonsumer = kafkaEnvironment.cleanupKonsumer()
         private val preprossesertKonsumer = kafkaEnvironment.preprossesertKonsumer()
 
@@ -135,7 +135,6 @@ class OmsorgspengesoknadProsesseringTest {
     }
 
     @Test
-    @Ignore
     fun`Gyldig søknad for overføring av dager blir prosessert av journalføringkonsumer`(){
         val søknad = gyldigMeldingOverforeDager(
             fødselsnummerSoker = gyldigFodselsnummerA,
@@ -143,7 +142,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducerOverforeDager.leggTilMottak(søknad)
-        journalføringsKonsumer.hentJournalførtMelding(søknad.søknadId)
+        journalføringsKonsumerOverforeDager.hentJournalførtMeldingOverforeDager(søknad.søknadId)
     }
 
     @Test
@@ -378,7 +377,7 @@ class OmsorgspengesoknadProsesseringTest {
     private fun gyldigMeldingOverforeDager(
         fødselsnummerSoker: String,
         sprak: String
-    ) : SøknadOverføreDager = SøknadOverføreDager(
+    ) : SøknadOverføreDagerV1 = SøknadOverføreDagerV1(
         språk = sprak,
         søknadId = UUID.randomUUID().toString(),
         mottatt = ZonedDateTime.now(),

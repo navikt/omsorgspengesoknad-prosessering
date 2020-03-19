@@ -1,10 +1,7 @@
 package no.nav.helse.prosessering.v1
 
 import no.nav.helse.aktoer.AktørId
-import no.nav.helse.aktoer.Fodselsnummer
-import no.nav.helse.aktoer.NorskIdent
 import java.net.URI
-import java.time.LocalDate
 import java.time.ZonedDateTime
 
 data class PreprossesertMeldingV1OverforeDager(
@@ -22,7 +19,7 @@ data class PreprossesertMeldingV1OverforeDager(
     val dokumentUrls: List<List<URI>>
     ) {
     internal constructor(
-        melding: SøknadOverføreDager,
+        melding: SøknadOverføreDagerV1,
         søkerAktørId: AktørId,
         dokumentUrls: List<List<URI>>
     ) : this(

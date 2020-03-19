@@ -5,9 +5,10 @@ import no.nav.common.KafkaEnvironment
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
-import no.nav.helse.prosessering.v1.SøknadOverføreDager
+import no.nav.helse.prosessering.v1.SøknadOverføreDagerV1
 import no.nav.helse.prosessering.v1.asynkron.Cleanup
 import no.nav.helse.prosessering.v1.asynkron.Journalfort
+import no.nav.helse.prosessering.v1.asynkron.JournalfortOverforeDager
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP_OVERFOREDAGER
@@ -91,6 +92,16 @@ fun KafkaEnvironment.journalføringsKonsumer(): KafkaConsumer<String, TopicEntry
     return consumer
 }
 
+fun KafkaEnvironment.journalføringsKonsumerOverforeDager(): KafkaConsumer<String, TopicEntry<JournalfortOverforeDager>> {
+    val consumer = KafkaConsumer<String, TopicEntry<JournalfortOverforeDager>>(
+        testConsumerProperties("OverforeDagerKonsumer"),
+        StringDeserializer(),
+        JOURNALFORT_OVERFOREDAGER.serDes
+    )
+    consumer.subscribe(listOf(JOURNALFORT_OVERFOREDAGER.name))
+    return consumer
+}
+
 fun KafkaEnvironment.cleanupKonsumer(): KafkaConsumer<String, TopicEntry<Cleanup>> {
     val consumer = KafkaConsumer<String, TopicEntry<Cleanup>>(
         testConsumerProperties("OmsorgspengesøknadCleanupKonsumer"),
@@ -117,7 +128,7 @@ fun KafkaEnvironment.meldingsProducer() = KafkaProducer<String, TopicEntry<Meldi
     MOTTATT.serDes
 )
 
-fun KafkaEnvironment.meldingOverforeDagersProducer() = KafkaProducer<String, TopicEntry<SøknadOverføreDager>>(
+fun KafkaEnvironment.meldingOverforeDagersProducer() = KafkaProducer<String, TopicEntry<SøknadOverføreDagerV1>>(
     testProducerProperties(),
     MOTTATT_OVERFOREDAGER.keySerializer,
     MOTTATT_OVERFOREDAGER.serDes
@@ -132,6 +143,25 @@ fun KafkaConsumer<String, TopicEntry<Journalfort>>.hentJournalførtMelding(
         seekToBeginning(assignment())
         val entries = poll(Duration.ofSeconds(1))
             .records(JOURNALFORT.name)
+            .filter { it.key() == soknadId }
+
+        if (entries.isNotEmpty()) {
+            assertEquals(1, entries.size)
+            return entries.first().value()
+        }
+    }
+    throw IllegalStateException("Fant ikke opprettet oppgave for søknad $soknadId etter $maxWaitInSeconds sekunder.")
+}
+
+fun KafkaConsumer<String, TopicEntry<JournalfortOverforeDager>>.hentJournalførtMeldingOverforeDager(
+    soknadId: String,
+    maxWaitInSeconds: Long = 20
+): TopicEntry<JournalfortOverforeDager> {
+    val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
+    while (System.currentTimeMillis() < end) {
+        seekToBeginning(assignment())
+        val entries = poll(Duration.ofSeconds(1))
+            .records(JOURNALFORT_OVERFOREDAGER.name)
             .filter { it.key() == soknadId }
 
         if (entries.isNotEmpty()) {
@@ -197,7 +227,7 @@ fun KafkaProducer<String, TopicEntry<MeldingV1>>.leggTilMottak(soknad: MeldingV1
     ).get()
 }
 
-fun KafkaProducer<String, TopicEntry<SøknadOverføreDager>>.leggTilMottak(soknad: SøknadOverføreDager) {
+fun KafkaProducer<String, TopicEntry<SøknadOverføreDagerV1>>.leggTilMottak(soknad: SøknadOverføreDagerV1) {
     send(
         ProducerRecord(
             MOTTATT_OVERFOREDAGER.name,

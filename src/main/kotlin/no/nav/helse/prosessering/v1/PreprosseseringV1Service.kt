@@ -109,7 +109,7 @@ internal class PreprosseseringV1Service(
     }
 
     internal suspend fun preprosseserOverforeDager(
-        melding: SøknadOverføreDager,
+        melding: SøknadOverføreDagerV1,
         metadata: Metadata
     ): PreprossesertMeldingV1OverforeDager {
         val søknadId = SoknadId(melding.søknadId)

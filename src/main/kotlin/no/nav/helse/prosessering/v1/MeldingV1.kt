@@ -24,7 +24,7 @@ data class MeldingV1(
     val harForståttRettigheterOgPlikter: Boolean
 )
 
-data class SøknadOverføreDager (
+data class SøknadOverføreDagerV1 (
     val søknadId: String,
     val mottatt: ZonedDateTime,
     val søker: Søker,
