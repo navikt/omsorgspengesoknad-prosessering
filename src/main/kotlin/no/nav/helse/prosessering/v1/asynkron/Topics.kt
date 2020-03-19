@@ -8,6 +8,8 @@ import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
+import no.nav.helse.prosessering.v1.PreprossesertMeldingV1OverforeDager
+import no.nav.helse.prosessering.v1.SøknadOverføreDager
 import no.nav.k9.søknad.omsorgspenger.OmsorgspengerSøknad
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serdes
@@ -16,6 +18,7 @@ import org.apache.kafka.common.serialization.StringSerializer
 
 data class TopicEntry<V>(val metadata: Metadata, val data: V)
 data class Cleanup(val metadata: Metadata, val melding: PreprossesertMeldingV1, val journalførtMelding: Journalfort)
+data class CleanupOverforeDager(val metadata: Metadata, val melding: PreprossesertMeldingV1OverforeDager, val journalførtMelding: Journalfort)
 data class Journalfort(val journalpostId: String, val søknad: OmsorgspengerSøknad)
 
 internal data class Topic<V>(
@@ -43,6 +46,22 @@ internal object Topics {
     val JOURNALFORT = Topic(
         name = "privat-omsorgspengesoknad-journalfort",
         serDes = JournalfortSerDes()
+    )
+    val MOTTATT_OVERFOREDAGER = Topic(
+        name = "privat-overfore-omsorgsdager-soknad-mottatt",
+        serDes = MottattSoknadSerDesOverforeDager()
+    )
+    val PREPROSSESERT_OVERFOREDAGER = Topic(
+        name = "privat-overfore-omsorgsdager-soknad-preprossesert",
+        serDes = PreprossesertSerDesOverforeDager()
+    )
+    val CLEANUP_OVERFOREDAGER = Topic(
+        name = "privat-overfore-omsorgsdager-soknad-cleanup",
+        serDes = CleanupSerDesOverforeDager()
+    )
+    val JOURNALFORT_OVERFOREDAGER = Topic(
+        name = "pprivat-overfore-omsorgsdager-soknad-journalfort",
+        serDes = JournalfortSerDesOverforeDager()
     )
 }
 
@@ -87,3 +106,37 @@ private class JournalfortSerDes: SerDes<TopicEntry<Journalfort>>() {
         }
     }
 }
+
+private class MottattSoknadSerDesOverforeDager: SerDes<TopicEntry<SøknadOverføreDager>>() {
+    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<SøknadOverføreDager>? {
+        return data?.let {
+            objectMapper.readValue<TopicEntry<SøknadOverføreDager>>(it)
+        }
+    }
+}
+
+private class PreprossesertSerDesOverforeDager: SerDes<TopicEntry<PreprossesertMeldingV1OverforeDager>>() {
+    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<PreprossesertMeldingV1OverforeDager>? {
+        return data?.let {
+            objectMapper.readValue(it)
+        }
+    }
+}
+
+private class CleanupSerDesOverforeDager: SerDes<TopicEntry<CleanupOverforeDager>>() {
+    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<CleanupOverforeDager>? {
+        return data?.let {
+            objectMapper.readValue(it)
+        }
+    }
+}
+
+private class JournalfortSerDesOverforeDager: SerDes<TopicEntry<Journalfort>>() {
+    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<Journalfort>? {
+        return data?.let {
+            objectMapper.readValue(it)
+        }
+    }
+}
+
+

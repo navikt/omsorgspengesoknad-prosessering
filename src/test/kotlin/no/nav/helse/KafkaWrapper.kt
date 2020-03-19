@@ -5,13 +5,18 @@ import no.nav.common.KafkaEnvironment
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
+import no.nav.helse.prosessering.v1.SøknadOverføreDager
 import no.nav.helse.prosessering.v1.asynkron.Cleanup
 import no.nav.helse.prosessering.v1.asynkron.Journalfort
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP
+import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT
+import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT
+import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSSESERT
+import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSSESERT_OVERFOREDAGER
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
@@ -38,7 +43,11 @@ object KafkaWrapper {
                 MOTTATT.name,
                 PREPROSSESERT.name,
                 JOURNALFORT.name,
-                CLEANUP.name
+                CLEANUP.name,
+                MOTTATT_OVERFOREDAGER.name,
+                PREPROSSESERT_OVERFOREDAGER.name,
+                JOURNALFORT_OVERFOREDAGER.name,
+                CLEANUP_OVERFOREDAGER.name
             )
         )
         return kafkaEnvironment
@@ -106,6 +115,12 @@ fun KafkaEnvironment.meldingsProducer() = KafkaProducer<String, TopicEntry<Meldi
     testProducerProperties(),
     MOTTATT.keySerializer,
     MOTTATT.serDes
+)
+
+fun KafkaEnvironment.meldingOverforeDagersProducer() = KafkaProducer<String, TopicEntry<SøknadOverføreDager>>(
+    testProducerProperties(),
+    MOTTATT_OVERFOREDAGER.keySerializer,
+    MOTTATT_OVERFOREDAGER.serDes
 )
 
 fun KafkaConsumer<String, TopicEntry<Journalfort>>.hentJournalførtMelding(
@@ -182,5 +197,21 @@ fun KafkaProducer<String, TopicEntry<MeldingV1>>.leggTilMottak(soknad: MeldingV1
     ).get()
 }
 
+fun KafkaProducer<String, TopicEntry<SøknadOverføreDager>>.leggTilMottak(soknad: SøknadOverføreDager) {
+    send(
+        ProducerRecord(
+            MOTTATT_OVERFOREDAGER.name,
+            soknad.søknadId,
+            TopicEntry(
+                metadata = Metadata(
+                    version = 1,
+                    correlationId = UUID.randomUUID().toString(),
+                    requestId = UUID.randomUUID().toString()
+                ),
+                data = soknad
+            )
+        )
+    ).get()
+}
 fun KafkaEnvironment.username() = username
 fun KafkaEnvironment.password() = password

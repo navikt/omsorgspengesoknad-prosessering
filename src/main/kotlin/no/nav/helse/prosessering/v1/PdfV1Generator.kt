@@ -19,6 +19,7 @@ internal class PdfV1Generator {
     private companion object {
         private const val ROOT = "handlebars"
         private const val SOKNAD = "soknad"
+        private const val SOKNAD_OVERFOREDAGER = "soknadOverforeDager"
 
         private val REGULAR_FONT = "$ROOT/fonts/SourceSansPro-Regular.ttf".fromResources().readBytes()
         private val BOLD_FONT = "$ROOT/fonts/SourceSansPro-Bold.ttf".fromResources().readBytes()
@@ -46,6 +47,7 @@ internal class PdfV1Generator {
         }
 
         private val soknadTemplate = handlebars.compile(SOKNAD)
+        private val soknadOverforeDagerTemplate = handlebars.compile(SOKNAD_OVERFOREDAGER)
 
         private val ZONE_ID = ZoneId.of("Europe/Oslo")
         private val DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy").withZone(ZONE_ID)
@@ -126,6 +128,54 @@ internal class PdfV1Generator {
         }
     }
 
+    internal fun generateSoknadOppsummeringPdfOverforeDager(
+        melding: SøknadOverføreDager
+    ): ByteArray {
+        soknadOverforeDagerTemplate.apply(
+            Context
+                .newBuilder(
+                    mapOf(
+                        "soknad_id" to melding.søknadId,
+                        "soknad_mottatt_dag" to melding.mottatt.withZoneSameInstant(ZONE_ID).norskDag(),
+                        "soknad_mottatt" to DATE_TIME_FORMATTER.format(melding.mottatt),
+                        "søker" to mapOf(
+                            "navn" to melding.søker.formatertNavn(),
+                            "fødselsnummer" to melding.søker.fødselsnummer
+                        ),
+                        "arbeidssituasjon" to melding.arbeidssituasjon,
+                        "medlemskap" to mapOf(
+                            "har_bodd_i_utlandet_siste_12_mnd" to melding.medlemskap.harBoddIUtlandetSiste12Mnd,
+                            "utenlandsopphold_siste_12_mnd" to melding.medlemskap.utenlandsoppholdSiste12Mnd.somMapUtenlandsopphold(),
+                            "skal_bo_i_utlandet_neste_12_mnd" to melding.medlemskap.skalBoIUtlandetNeste12Mnd,
+                            "utenlandsopphold_neste_12_mnd" to melding.medlemskap.utenlandsoppholdNeste12Mnd.somMapUtenlandsopphold()
+                        ),
+                        "samtykke" to mapOf(
+                            "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
+                            "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger
+                        ),
+                        "hjelp" to mapOf(
+                            "språk" to melding.språk?.sprakTilTekst()
+                        )
+                    )
+                )
+                .resolver(MapValueResolver.INSTANCE)
+                .build()
+        ).let { html ->
+            val outputStream = ByteArrayOutputStream()
+
+            PdfRendererBuilder()
+                .useFastMode()
+                .withHtmlContent(html, "")
+                .medFonter()
+                .toStream(outputStream)
+                .buildPdfRenderer()
+                .createPDF()
+
+            return outputStream.use {
+                it.toByteArray()
+            }
+        }
+    }
 
     private fun PdfRendererBuilder.medFonter() =
         useFont(

@@ -2,6 +2,7 @@ package no.nav.helse
 
 import no.nav.helse.aktoer.Fodselsnummer
 import no.nav.helse.prosessering.v1.*
+import org.junit.Ignore
 import java.io.File
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -94,6 +95,37 @@ class PdfV1GeneratorTest {
         harBekreftetOpplysninger = true
     )
 
+    private fun gyldigSoknadOverforeDager() = SøknadOverføreDager(
+        språk = "nb",
+        antallDager = 5,
+        harSamfunnskritiskJobb = true,
+        harBekreftetOpplysninger = true,
+        harForståttRettigheterOgPlikter = true,
+        arbeidssituasjon = listOf(Arbeidssituasjon.ARBEIDSTAKER, Arbeidssituasjon.FRILANSER),
+        søknadId = "Overfore dager",
+        medlemskap = Medlemskap(
+            harBoddIUtlandetSiste12Mnd = true,
+            utenlandsoppholdSiste12Mnd = listOf(
+                Utenlandsopphold(
+                    LocalDate.of(2020, 1, 2),
+                    LocalDate.of(2020, 1, 3),
+                    "US", "USA"
+                )
+            ),
+            skalBoIUtlandetNeste12Mnd = false
+        ),
+        mottakerAvDagerNorskIdentifikator = "123456789",
+        mottatt = ZonedDateTime.now(),
+        søker = Søker(
+            aktørId = "123456",
+            fornavn = "Ærling",
+            mellomnavn = "Øverbø",
+            etternavn = "Ånsnes",
+            fødselsnummer = "29099012345",
+            fødselsdato = fødselsdato
+        )
+    )
+
     private fun genererOppsummeringsPdfer(writeBytes: Boolean) {
         var id = "1-full-søknad"
         var pdf = generator.generateSoknadOppsummeringPdf(
@@ -111,6 +143,11 @@ class PdfV1GeneratorTest {
         )
         if (writeBytes) File(pdfPath(soknadId = id)).writeBytes(pdf)
 
+        id = "3-full-søknad-overfore-dager"
+        pdf = generator.generateSoknadOppsummeringPdfOverforeDager(
+            melding = gyldigSoknadOverforeDager()
+        )
+        if (writeBytes) File(pdfPath(soknadId = id)).writeBytes(pdf)
     }
 
     private fun pdfPath(soknadId: String) = "${System.getProperty("user.dir")}/generated-pdf-$soknadId.pdf"
@@ -121,7 +158,7 @@ class PdfV1GeneratorTest {
     }
 
     @Test
-    //@Ignore
+    @Ignore
     fun `opprett lesbar oppsummerings-PDF`() {
         genererOppsummeringsPdfer(true)
     }

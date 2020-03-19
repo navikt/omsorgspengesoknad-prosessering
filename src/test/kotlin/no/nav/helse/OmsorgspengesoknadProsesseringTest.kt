@@ -21,6 +21,7 @@ import no.nav.helse.prosessering.v1.asynkron.Journalfort
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import org.junit.AfterClass
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -55,6 +56,7 @@ class OmsorgspengesoknadProsesseringTest {
 
         private val kafkaEnvironment = KafkaWrapper.bootstrap()
         private val kafkaTestProducer = kafkaEnvironment.meldingsProducer()
+        private val kafkaTestProducerOverforeDager = kafkaEnvironment.meldingOverforeDagersProducer()
 
         private val journalføringsKonsumer = kafkaEnvironment.journalføringsKonsumer()
         private val cleanupKonsumer = kafkaEnvironment.cleanupKonsumer()
@@ -130,6 +132,18 @@ class OmsorgspengesoknadProsesseringTest {
                 }
             }
         }
+    }
+
+    @Test
+    @Ignore
+    fun`Gyldig søknad for overføring av dager blir prosessert av journalføringkonsumer`(){
+        val søknad = gyldigMeldingOverforeDager(
+            fødselsnummerSoker = gyldigFodselsnummerA,
+            sprak = "nb"
+        )
+
+        kafkaTestProducerOverforeDager.leggTilMottak(søknad)
+        journalføringsKonsumer.hentJournalførtMelding(søknad.søknadId)
     }
 
     @Test
@@ -359,6 +373,33 @@ class OmsorgspengesoknadProsesseringTest {
             harBoddIUtlandetSiste12Mnd = true,
             skalBoIUtlandetNeste12Mnd = true
         )
+    )
+
+    private fun gyldigMeldingOverforeDager(
+        fødselsnummerSoker: String,
+        sprak: String
+    ) : SøknadOverføreDager = SøknadOverføreDager(
+        språk = sprak,
+        søknadId = UUID.randomUUID().toString(),
+        mottatt = ZonedDateTime.now(),
+        søker = Søker(
+            aktørId = "123456",
+            fødselsnummer = fødselsnummerSoker,
+            fødselsdato = LocalDate.now().minusDays(1000),
+            etternavn = "Nordmann",
+            mellomnavn = "Mellomnavn",
+            fornavn = "Ola"
+        ),
+        arbeidssituasjon = listOf(Arbeidssituasjon.ARBEIDSTAKER),
+        harBekreftetOpplysninger = true,
+        harForståttRettigheterOgPlikter = true,
+        medlemskap = Medlemskap(
+            harBoddIUtlandetSiste12Mnd = true,
+            skalBoIUtlandetNeste12Mnd = true
+        ),
+        antallDager = 5,
+        mottakerAvDagerNorskIdentifikator = gyldigFodselsnummerB,
+        harSamfunnskritiskJobb = true
     )
 
     private fun ventPaaAtRetryMekanismeIStreamProsessering() = runBlocking { delay(Duration.ofSeconds(30)) }
