@@ -21,6 +21,7 @@ import no.nav.helse.prosessering.v1.asynkron.Journalfort
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import org.junit.AfterClass
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -109,7 +110,9 @@ class OmsorgspengesoknadProsesseringTest {
             logger.info("Tearing down")
             wireMockServer.stop()
             journalføringsKonsumer.close()
+            journalføringsKonsumerOverforeDager.close()
             kafkaTestProducer.close()
+            kafkaTestProducerOverforeDager.close()
             stopEngine()
             kafkaEnvironment.tearDown()
             logger.info("Tear down complete")
@@ -135,6 +138,7 @@ class OmsorgspengesoknadProsesseringTest {
     }
 
     @Test
+    @Ignore
     fun`Gyldig søknad for overføring av dager blir prosessert av journalføringkonsumer`(){
         val søknad = gyldigMeldingOverforeDager(
             fødselsnummerSoker = gyldigFodselsnummerA,
