@@ -27,12 +27,6 @@ private val arbeidsSituasjonCounter = Counter.build()
     .labelNames("forhold")
     .register()
 
-private val relasjonPåSammeAdresse = Counter.build()
-    .name("relasjon_paa_samme_adresse")
-    .help("Teller for søkere med relasjon på samme adresse som barnet.")
-    .labelNames("relasjon", "sammeAdresse")
-    .register()
-
 private val medlemskapMedUtenlandsopphold = Counter.build()
     .name("medlemskap_med_utenlandsopphold")
     .help("Teller for søkere med utenlandsopphold.")
