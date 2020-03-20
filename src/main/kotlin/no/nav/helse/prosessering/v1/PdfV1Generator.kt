@@ -143,6 +143,9 @@ internal class PdfV1Generator {
                             "fødselsnummer" to melding.søker.fødselsnummer
                         ),
                         "arbeidssituasjon" to melding.arbeidssituasjon,
+                        "antallDager" to melding.antallDager,
+                        "mottakerAvDagerNorskIdentifikator" to melding.mottakerAvDagerNorskIdentifikator,
+                        "harSamfunnskritiskJobb" to melding.harSamfunnskritiskJobb,
                         "medlemskap" to mapOf(
                             "har_bodd_i_utlandet_siste_12_mnd" to melding.medlemskap.harBoddIUtlandetSiste12Mnd,
                             "utenlandsopphold_siste_12_mnd" to melding.medlemskap.utenlandsoppholdSiste12Mnd.somMapUtenlandsopphold(),

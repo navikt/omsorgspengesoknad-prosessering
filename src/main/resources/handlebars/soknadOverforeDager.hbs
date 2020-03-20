@@ -5,6 +5,17 @@
     <title>Søknad om overføring av omsorgsdager</title>
     {{#block 'style' }}
     {{/block}}
+
+    {{#*inline "jaNeiCheckbox"}}
+        {{#if parameter}}
+            <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
+            <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
+        {{else}}
+            <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
+            <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
+        {{/if}}
+    {{/inline}}
+
 </head>
 <body>
 <div id="header">
@@ -37,8 +48,15 @@
             </div>
         </div>
     </div>
-    <!-- SAMTYKKE -->
-    <br/>
+
+    <!-- SØKNAD -->
+    <h2><span>Søknad</span></h2>
+    <p class="sporsmalstekst">Har du en jobb som faller inn under samfunnskritiske funksjoner?</p>
+    {{>jaNeiCheckbox parameter=harSamfunnskritiskJobb}}
+    <p>Hvem skal dagene overføres til? {{mottakerAvDagerNorskIdentifikator}}</p>
+    <p>Hvor mange dager skal overføres? {{antallDager}}</p>
+
+    <!-- ARBEIDSSITUASJON -->
     <br/>
     <h2><span>Arbeidssituasjon</span></h2>
     {{#if arbeidssituasjon}}
@@ -90,22 +108,12 @@
     <h2><span>Samtykke</span></h2>
 
     <p class="sporsmalstekst">Har forstått rettigheter og plikter?</p>
-    {{# if samtykke.harForståttRettigheterOgPlikter }}
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
-    {{else}}
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
-    {{/if}}
+    {{>jaNeiCheckbox parameter=samtykke.harForståttRettigheterOgPlikter}}
+
     <hr/>
     <p class="sporsmalstekst">Har bekreftet opplysninger?</p>
-    {{# if samtykke.harBekreftetOpplysninger }}
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
-    {{else}}
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
-    {{/if}}
+    {{>jaNeiCheckbox parameter=samtykke.harBekreftetOpplysninger}}
+
 </div>
 
 <!-- FOOTER -->
