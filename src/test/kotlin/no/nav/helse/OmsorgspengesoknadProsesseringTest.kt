@@ -138,7 +138,7 @@ class OmsorgspengesoknadProsesseringTest {
     }
 
     @Test
-    @Ignore
+    //@Ignore
     fun`Gyldig søknad for overføring av dager blir prosessert av journalføringkonsumer`(){
         val søknad = gyldigMeldingOverforeDager(
             fødselsnummerSoker = gyldigFodselsnummerA,
