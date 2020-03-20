@@ -13,7 +13,7 @@ import org.apache.kafka.streams.kstream.Produced
 import org.slf4j.LoggerFactory
 
 internal class PreprosseseringStreamOverforeDager(
-    preprosseseringV1Service: PreprosseseringV1Service, // TODO: Du må lage en ny stream også
+    preprosseseringV1Service: PreprosseseringV1Service, // TODO: Du må lage en ny service også
     kafkaConfig: KafkaConfig
 ) {
     private val stream = ManagedKafkaStreams(
