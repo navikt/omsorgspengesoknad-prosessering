@@ -74,11 +74,11 @@
       },
       "members": [
         {
-          "member": "srvpps-mottak",
+          "member": "srvomsorgspeng-mtk",
           "role": "PRODUCER"
         },
         {
-          "member": "srvpps-prosessering",
+          "member": "srvomsorgspeng-prs",
           "role": "CONSUMER"
         }
       ],
