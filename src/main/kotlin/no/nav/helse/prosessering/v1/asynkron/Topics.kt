@@ -61,7 +61,7 @@ internal object Topics {
         serDes = CleanupSerDesOverforeDager()
     )
     val JOURNALFORT_OVERFOREDAGER = Topic(
-        name = "pprivat-overfore-omsorgsdager-soknad-journalfort",
+        name = "privat-overfore-omsorgsdager-soknad-journalfort",
         serDes = JournalfortSerDesOverforeDager()
     )
 }
