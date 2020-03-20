@@ -68,7 +68,7 @@ private fun KafkaEnvironment.testConsumerProperties(groupId: String): MutableMap
     }
 }
 
-private fun KafkaEnvironment.testProducerProperties(): MutableMap<String, Any>? {
+private fun KafkaEnvironment.testProducerProperties(clientId: String): MutableMap<String, Any>? {
     return HashMap<String, Any>().apply {
         put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, brokersURL)
         put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT")
@@ -77,7 +77,7 @@ private fun KafkaEnvironment.testProducerProperties(): MutableMap<String, Any>? 
             SaslConfigs.SASL_JAAS_CONFIG,
             "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";"
         )
-        put(ProducerConfig.CLIENT_ID_CONFIG, "OmsorgspengesoknadProsesseringTestProducer")
+        put(ProducerConfig.CLIENT_ID_CONFIG, clientId)
     }
 }
 
@@ -123,13 +123,13 @@ fun KafkaEnvironment.preprossesertKonsumer(): KafkaConsumer<String, TopicEntry<P
 }
 
 fun KafkaEnvironment.meldingsProducer() = KafkaProducer<String, TopicEntry<MeldingV1>>(
-    testProducerProperties(),
+    testProducerProperties("OmsorgspengesoknadProsesseringTestProducer"),
     MOTTATT.keySerializer,
     MOTTATT.serDes
 )
 
 fun KafkaEnvironment.meldingOverforeDagersProducer() = KafkaProducer<String, TopicEntry<SøknadOverføreDagerV1>>(
-    testProducerProperties(),
+    testProducerProperties("OmsorgspengesoknadOverføreDagerProsesseringTestProducer"),
     MOTTATT_OVERFOREDAGER.keySerializer,
     MOTTATT_OVERFOREDAGER.serDes
 )
