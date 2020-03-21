@@ -57,7 +57,7 @@ internal class JournalforingsStreamOverforeDager(
                     process(NAME, soknadId, entry) {
 
                         val dokumenter = entry.data.dokumentUrls
-                        logger.info("Journalfører dokumenter: {}", dokumenter)
+                        logger.info("Journalfører overføre dager dokumenter: {}", dokumenter)
                         val journaPostId = joarkGateway.journalførOverforeDager(
                             mottatt = entry.data.mottatt,
                             aktørId = AktørId(entry.data.søker.aktørId),

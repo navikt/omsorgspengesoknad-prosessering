@@ -49,7 +49,7 @@ internal class PreprosseseringStreamOverforeDager(
                             melding = entry.data,
                             metadata = entry.metadata
                         )
-                        logger.info("Preprossesering ferdig.")
+                        logger.info("Preprossesering overføre dager ferdig.")
                         preprossesertMelding
                     }
                 }

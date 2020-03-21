@@ -44,8 +44,7 @@ internal class CleanupStreamOverforeDager(
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
-                        logger.info("Sletter dokumenter.")
-
+                        logger.info("Sletter overfore dager dokumenter.")
                         dokumentService.slettDokumeter(
                             urlBolks = entry.data.melding.dokumentUrls,
                             aktørId = AktørId(entry.data.melding.søker.aktørId),
