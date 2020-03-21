@@ -139,5 +139,3 @@ private class JournalfortSerDesOverforeDager: SerDes<TopicEntry<JournalfortOverf
         }
     }
 }
-
-
