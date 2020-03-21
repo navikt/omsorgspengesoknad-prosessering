@@ -15,7 +15,6 @@ data class PreprossesertMeldingV1OverforeDager(
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
-    val harSamfunnskritiskJobb: Boolean,
     val dokumentUrls: List<List<URI>>
     ) {
     internal constructor(
@@ -31,7 +30,6 @@ data class PreprossesertMeldingV1OverforeDager(
         medlemskap = melding.medlemskap,
         harForståttRettigheterOgPlikter = melding.harForståttRettigheterOgPlikter,
         harBekreftetOpplysninger = melding.harBekreftetOpplysninger,
-        harSamfunnskritiskJobb = melding.harSamfunnskritiskJobb,
         antallDager = melding.antallDager,
         mottakerAvDagerNorskIdentifikator = melding.mottakerAvDagerNorskIdentifikator,
         dokumentUrls = dokumentUrls

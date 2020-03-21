@@ -34,8 +34,7 @@ data class SøknadOverføreDagerV1 (
     val medlemskap: Medlemskap,
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
-    val arbeidssituasjon: List<Arbeidssituasjon>,
-    val harSamfunnskritiskJobb: Boolean
+    val arbeidssituasjon: List<Arbeidssituasjon>
 )
 
 enum class Arbeidssituasjon() {

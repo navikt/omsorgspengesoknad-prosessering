@@ -98,7 +98,6 @@ class PdfV1GeneratorTest {
     private fun gyldigSoknadOverforeDager() = SøknadOverføreDagerV1(
         språk = "nb",
         antallDager = 5,
-        harSamfunnskritiskJobb = true,
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true,
         arbeidssituasjon = listOf(Arbeidssituasjon.ARBEIDSTAKER, Arbeidssituasjon.FRILANSER),
