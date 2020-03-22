@@ -122,7 +122,8 @@ class PdfV1GeneratorTest {
             etternavn = "Ånsnes",
             fødselsnummer = "29099012345",
             fødselsdato = fødselsdato
-        )
+        ),
+        antallBarn = 2
     )
 
     private fun genererOppsummeringsPdfer(writeBytes: Boolean) {

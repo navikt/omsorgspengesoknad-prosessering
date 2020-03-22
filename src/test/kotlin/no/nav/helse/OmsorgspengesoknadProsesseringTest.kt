@@ -401,7 +401,8 @@ class OmsorgspengesoknadProsesseringTest {
             skalBoIUtlandetNeste12Mnd = true
         ),
         antallDager = 5,
-        fnrMottaker = gyldigFodselsnummerB
+        fnrMottaker = gyldigFodselsnummerB,
+        antallBarn = 2
     )
 
     private fun ventPaaAtRetryMekanismeIStreamProsessering() = runBlocking { delay(Duration.ofSeconds(30)) }
