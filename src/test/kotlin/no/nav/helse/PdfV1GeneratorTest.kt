@@ -113,7 +113,7 @@ class PdfV1GeneratorTest {
             ),
             skalBoIUtlandetNeste12Mnd = false
         ),
-        mottakerAvDagerNorskIdentifikator = "123456789",
+        fnrMottaker = "123456789",
         mottatt = ZonedDateTime.now(),
         søker = Søker(
             aktørId = "123456",

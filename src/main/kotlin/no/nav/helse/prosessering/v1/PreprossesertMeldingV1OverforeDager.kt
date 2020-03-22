@@ -10,7 +10,7 @@ data class PreprossesertMeldingV1OverforeDager(
     val søker: PreprossesertSøker,
     val språk: String,
     val antallDager: Int?=null,
-    val mottakerAvDagerNorskIdentifikator: String? = null,
+    val fnrMottaker: String? = null,
     val medlemskap: Medlemskap,
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
@@ -31,7 +31,7 @@ data class PreprossesertMeldingV1OverforeDager(
         harForståttRettigheterOgPlikter = melding.harForståttRettigheterOgPlikter,
         harBekreftetOpplysninger = melding.harBekreftetOpplysninger,
         antallDager = melding.antallDager,
-        mottakerAvDagerNorskIdentifikator = melding.mottakerAvDagerNorskIdentifikator,
+        fnrMottaker = melding.fnrMottaker,
         dokumentUrls = dokumentUrls
     )
 }
