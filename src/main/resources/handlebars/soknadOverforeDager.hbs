@@ -43,7 +43,6 @@
                             {{ søker.fødselsnummer }}<br/>
                         </p>
                     </div>
-                    <br/>
                 </div>
             </div>
         </div>
@@ -51,16 +50,15 @@
 
     <!-- SØKNAD -->
     <h2><span>Søknad</span></h2>
-    <p>Hvem skal dagene overføres til? {{mottakerAvDagerNorskIdentifikator}}</p>
-    <p>Hvor mange dager skal overføres? {{antallDager}}</p>
+    <p><b>Hvem skal dagene overføres til?</b> {{mottakerAvDagerNorskIdentifikator}}</p>
+    <p><b>Hvor mange dager skal overføres?</b> {{antallDager}}</p>
 
     <!-- ARBEIDSSITUASJON -->
-    <br/>
     <h2><span>Arbeidssituasjon</span></h2>
     {{#if arbeidssituasjon}}
         {{#each arbeidssituasjon as |situasjon|~}}
             <ul>
-                <li>{{situasjon}}</li>
+                <li>{{situasjon.utskriftvennlig}}</li>
             </ul>
         {{/each}}
     {{/if}}

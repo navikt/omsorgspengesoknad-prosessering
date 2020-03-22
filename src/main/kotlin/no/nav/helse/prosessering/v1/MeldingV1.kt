@@ -37,10 +37,10 @@ data class SøknadOverføreDagerV1 (
     val arbeidssituasjon: List<Arbeidssituasjon>
 )
 
-enum class Arbeidssituasjon() {
-    @JsonProperty("arbeidstaker") ARBEIDSTAKER,
-    @JsonProperty("selvstendigNæringsdrivende") SELVSTENDIGNÆRINGSDRIVENDE,
-    @JsonProperty("frilanser") FRILANSER
+enum class Arbeidssituasjon(val utskriftvennlig: String) {
+    @JsonProperty("arbeidstaker") ARBEIDSTAKER("Arbeidstaker"),
+    @JsonProperty("selvstendigNæringsdrivende") SELVSTENDIGNÆRINGSDRIVENDE("Selvstendig næringsdrivende"),
+    @JsonProperty("frilanser") FRILANSER("Frilanser")
 }
 
 data class Søker(

@@ -142,7 +142,7 @@ internal class PdfV1Generator {
                             "navn" to melding.søker.formatertNavn(),
                             "fødselsnummer" to melding.søker.fødselsnummer
                         ),
-                        "arbeidssituasjon" to melding.arbeidssituasjon,
+                        "arbeidssituasjon" to melding.arbeidssituasjon.somMapUtskriftvennlig(),
                         "antallDager" to melding.antallDager,
                         "mottakerAvDagerNorskIdentifikator" to melding.mottakerAvDagerNorskIdentifikator,
                         "medlemskap" to mapOf(
@@ -201,6 +201,14 @@ internal class PdfV1Generator {
                 BaseRendererBuilder.FontStyle.ITALIC,
                 false
             )
+}
+
+private fun List<Arbeidssituasjon>.somMapUtskriftvennlig(): List<Map<String, Any?>> {
+    return map {
+        mapOf(
+            "utskriftvennlig" to it.utskriftvennlig
+        )
+    }
 }
 
 private fun List<Utenlandsopphold>.somMapUtenlandsopphold(): List<Map<String, Any?>> {

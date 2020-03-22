@@ -100,7 +100,7 @@ class PdfV1GeneratorTest {
         antallDager = 5,
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true,
-        arbeidssituasjon = listOf(Arbeidssituasjon.ARBEIDSTAKER, Arbeidssituasjon.FRILANSER),
+        arbeidssituasjon = listOf(Arbeidssituasjon.ARBEIDSTAKER, Arbeidssituasjon.FRILANSER, Arbeidssituasjon.SELVSTENDIGNÆRINGSDRIVENDE),
         søknadId = "Overfore dager",
         medlemskap = Medlemskap(
             harBoddIUtlandetSiste12Mnd = true,
