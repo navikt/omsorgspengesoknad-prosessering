@@ -101,7 +101,7 @@ class PdfV1GeneratorTest {
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true,
         arbeidssituasjon = listOf(Arbeidssituasjon.ARBEIDSTAKER, Arbeidssituasjon.FRILANSER, Arbeidssituasjon.SELVSTENDIGNÆRINGSDRIVENDE),
-        søknadId = "Overfore dager",
+        søknadId = "Overføre dager",
         medlemskap = Medlemskap(
             harBoddIUtlandetSiste12Mnd = true,
             utenlandsoppholdSiste12Mnd = listOf(
@@ -111,7 +111,15 @@ class PdfV1GeneratorTest {
                     "US", "USA"
                 )
             ),
-            skalBoIUtlandetNeste12Mnd = false
+            skalBoIUtlandetNeste12Mnd = true,
+            utenlandsoppholdNeste12Mnd = listOf(
+                Utenlandsopphold(
+                    fraOgMed = LocalDate.of(2020,2,1),
+                    tilOgMed = LocalDate.of(2020,2,24),
+                    landkode = "US",
+                    landnavn = "USA"
+                )
+            )
         ),
         fnrMottaker = "123456789",
         mottatt = ZonedDateTime.now(),
@@ -123,7 +131,7 @@ class PdfV1GeneratorTest {
             fødselsnummer = "29099012345",
             fødselsdato = fødselsdato
         ),
-        antallBarn = 2
+        antallBarn = 3
     )
 
     private fun genererOppsummeringsPdfer(writeBytes: Boolean) {

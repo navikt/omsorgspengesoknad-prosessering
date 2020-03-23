@@ -34,6 +34,9 @@ internal class PdfV1Generator {
             registerHelper("eq", Helper<String> { context, options ->
                 if (context == options.param(0)) options.fn() else options.inverse()
             })
+            registerHelper("eqTall", Helper<Int> { context, options ->
+                if (context == options.param(0)) options.fn() else options.inverse()
+            })
             registerHelper("fritekst", Helper<String> { context, _ ->
                 if (context == null) "" else {
                     val text = Handlebars.Utils.escapeExpression(context)

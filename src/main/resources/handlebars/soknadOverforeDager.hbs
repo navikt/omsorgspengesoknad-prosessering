@@ -52,7 +52,14 @@
     <h2><span>Søknad</span></h2>
     <p><b>Hvem skal dagene overføres til?</b> {{fnrMottaker}}</p>
     <p><b>Hvor mange dager skal overføres?</b> {{antallDager}}</p>
-    <p><b>Hvor mange barn har du?</b> {{antallBarn}}</p>
+    <p><b>Hvor mange barn har du?</b>
+    {{#eqTall antallBarn 3}}
+        3 eller flere
+    {{else}}
+        {{antallBarn}}
+    {{/eqTall}}
+    </p>
+
 
     <!-- ARBEIDSSITUASJON -->
     <h2><span>Arbeidssituasjon</span></h2>
@@ -100,8 +107,6 @@
     {{/if}}
 
     <!-- SAMTYKKE -->
-    <br/>
-    <br/>
     <h2><span>Samtykke</span></h2>
 
     <p class="sporsmalstekst">Har forstått rettigheter og plikter?</p>
