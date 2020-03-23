@@ -157,7 +157,7 @@ internal class PreprosseseringV1Service(
             dokumentUrls = komplettDokumentUrls.toList()
         )
 
-        //preprossesertMeldingV1OverforeDager.reportMetrics()
+        preprossesertMeldingV1OverforeDager.reportMetrics()
         return preprossesertMeldingV1OverforeDager
     }
 
