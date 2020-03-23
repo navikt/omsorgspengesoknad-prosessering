@@ -94,8 +94,12 @@ private fun PreprossesertMeldingV1OverforeDager.tilK9OmsorgspengerOverføringSø
     .søknadId(SøknadId.of(soknadId))
     .mottattDato(mottatt)
     .søker(søker.tilK9Søker())
+    .barn(tilK9Barn())
     .mottaker(fnrMottaker.tilK9Mottaker())
     .build()
+
+// TODO: Når det er en liste med fosterbarn i søknaden må det mappes inn i K9-Format-søknaden her.
+private fun PreprossesertMeldingV1OverforeDager.tilK9Barn() = listOf<Barn>()
 
 private fun PreprossesertSøker.tilK9Søker() = Søker.builder()
     .norskIdentitetsnummer(NorskIdentitetsnummer.of(fødselsnummer))
