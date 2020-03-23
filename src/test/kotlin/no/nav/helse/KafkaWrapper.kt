@@ -7,8 +7,6 @@ import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
 import no.nav.helse.prosessering.v1.SøknadOverføreDagerV1
 import no.nav.helse.prosessering.v1.asynkron.Cleanup
-import no.nav.helse.prosessering.v1.asynkron.Journalfort
-import no.nav.helse.prosessering.v1.asynkron.JournalfortOverforeDager
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP_OVERFOREDAGER
@@ -82,28 +80,28 @@ private fun KafkaEnvironment.testProducerProperties(clientId: String): MutableMa
 }
 
 
-fun KafkaEnvironment.journalføringsKonsumer(): KafkaConsumer<String, TopicEntry<Journalfort>> {
-    val consumer = KafkaConsumer<String, TopicEntry<Journalfort>>(
+fun KafkaEnvironment.journalføringsKonsumer(): KafkaConsumer<String, String> {
+    val consumer = KafkaConsumer(
         testConsumerProperties("K9FordelKonsumer"),
         StringDeserializer(),
-        JOURNALFORT.serDes
+        StringDeserializer()
     )
     consumer.subscribe(listOf(JOURNALFORT.name))
     return consumer
 }
 
-fun KafkaEnvironment.journalføringsKonsumerOverforeDager(): KafkaConsumer<String, TopicEntry<JournalfortOverforeDager>> {
-    val consumer = KafkaConsumer<String, TopicEntry<JournalfortOverforeDager>>(
+fun KafkaEnvironment.journalføringsKonsumerOverforeDager(): KafkaConsumer<String, String> {
+    val consumer = KafkaConsumer(
         testConsumerProperties("OverforeDagerKonsumer"),
         StringDeserializer(),
-        JOURNALFORT_OVERFOREDAGER.serDes
+        StringDeserializer()
     )
     consumer.subscribe(listOf(JOURNALFORT_OVERFOREDAGER.name))
     return consumer
 }
 
 fun KafkaEnvironment.cleanupKonsumer(): KafkaConsumer<String, TopicEntry<Cleanup>> {
-    val consumer = KafkaConsumer<String, TopicEntry<Cleanup>>(
+    val consumer = KafkaConsumer(
         testConsumerProperties("OmsorgspengesøknadCleanupKonsumer"),
         StringDeserializer(),
         CLEANUP.serDes
@@ -113,7 +111,7 @@ fun KafkaEnvironment.cleanupKonsumer(): KafkaConsumer<String, TopicEntry<Cleanup
 }
 
 fun KafkaEnvironment.preprossesertKonsumer(): KafkaConsumer<String, TopicEntry<PreprossesertMeldingV1>> {
-    val consumer = KafkaConsumer<String, TopicEntry<PreprossesertMeldingV1>>(
+    val consumer = KafkaConsumer(
         testConsumerProperties("OmsorgspengesøknadPreprossesertKonsumer"),
         StringDeserializer(),
         PREPROSSESERT.serDes
@@ -122,22 +120,22 @@ fun KafkaEnvironment.preprossesertKonsumer(): KafkaConsumer<String, TopicEntry<P
     return consumer
 }
 
-fun KafkaEnvironment.meldingsProducer() = KafkaProducer<String, TopicEntry<MeldingV1>>(
+fun KafkaEnvironment.meldingsProducer() = KafkaProducer(
     testProducerProperties("OmsorgspengesoknadProsesseringTestProducer"),
     MOTTATT.keySerializer,
     MOTTATT.serDes
 )
 
-fun KafkaEnvironment.meldingOverforeDagersProducer() = KafkaProducer<String, TopicEntry<SøknadOverføreDagerV1>>(
+fun KafkaEnvironment.meldingOverforeDagersProducer() = KafkaProducer(
     testProducerProperties("OmsorgspengesoknadOverføreDagerProsesseringTestProducer"),
     MOTTATT_OVERFOREDAGER.keySerializer,
     MOTTATT_OVERFOREDAGER.serDes
 )
 
-fun KafkaConsumer<String, TopicEntry<Journalfort>>.hentJournalførtMelding(
+fun KafkaConsumer<String, String>.hentJournalførtMelding(
     soknadId: String,
     maxWaitInSeconds: Long = 20
-): TopicEntry<Journalfort> {
+): String {
     val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
     while (System.currentTimeMillis() < end) {
         seekToBeginning(assignment())
@@ -153,10 +151,10 @@ fun KafkaConsumer<String, TopicEntry<Journalfort>>.hentJournalførtMelding(
     throw IllegalStateException("Fant ikke opprettet oppgave for søknad $soknadId etter $maxWaitInSeconds sekunder.")
 }
 
-fun KafkaConsumer<String, TopicEntry<JournalfortOverforeDager>>.hentJournalførtMeldingOverforeDager(
+fun KafkaConsumer<String, String>.hentJournalførtMeldingOverforeDager(
     soknadId: String,
     maxWaitInSeconds: Long = 20
-): TopicEntry<JournalfortOverforeDager> {
+): String {
     val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
     while (System.currentTimeMillis() < end) {
         seekToBeginning(assignment())

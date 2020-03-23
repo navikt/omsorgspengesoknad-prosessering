@@ -1,6 +1,5 @@
 package no.nav.helse
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.typesafe.config.ConfigFactory
 import io.ktor.config.ApplicationConfig
@@ -16,12 +15,12 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.time.delay
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
+import no.nav.helse.k9.assertOverføreDagerFormat
+import no.nav.helse.k9.assertUtvidetAntallDagerFormat
 import no.nav.helse.prosessering.v1.*
-import no.nav.helse.prosessering.v1.asynkron.Journalfort
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.junit.Ignore
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -138,7 +137,6 @@ class OmsorgspengesoknadProsesseringTest {
     }
 
     @Test
-    //@Ignore
     fun`Gyldig søknad for overføring av dager blir prosessert av journalføringkonsumer`(){
         val søknad = gyldigMeldingOverforeDager(
             fødselsnummerSoker = gyldigFodselsnummerA,
@@ -146,7 +144,9 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducerOverforeDager.leggTilMottak(søknad)
-        journalføringsKonsumerOverforeDager.hentJournalførtMeldingOverforeDager(søknad.søknadId)
+        journalføringsKonsumerOverforeDager
+            .hentJournalførtMeldingOverforeDager(søknad.søknadId)
+            .assertOverføreDagerFormat()
     }
 
     @Test
@@ -158,7 +158,9 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        journalføringsKonsumer.hentJournalførtMelding(melding.søknadId)
+        journalføringsKonsumer
+            .hentJournalførtMelding(melding.søknadId)
+            .assertUtvidetAntallDagerFormat()
     }
 
     @Test
@@ -177,7 +179,9 @@ class OmsorgspengesoknadProsesseringTest {
 
         wireMockServer.stubJournalfor(201) // Simulerer journalføring fungerer igjen
         restartEngine()
-        journalføringsKonsumer.hentJournalførtMelding(melding.søknadId)
+        journalføringsKonsumer
+            .hentJournalførtMelding(melding.søknadId)
+            .assertUtvidetAntallDagerFormat()
     }
 
     private fun readyGir200HealthGir503() {
@@ -199,7 +203,9 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        journalføringsKonsumer.hentJournalførtMelding(melding.søknadId)
+        journalføringsKonsumer
+            .hentJournalførtMelding(melding.søknadId)
+            .assertUtvidetAntallDagerFormat()
     }
 
     @Test
@@ -212,7 +218,9 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        journalføringsKonsumer.hentJournalførtMelding(melding.søknadId)
+        journalføringsKonsumer
+            .hentJournalførtMelding(melding.søknadId)
+            .assertUtvidetAntallDagerFormat()
     }
 
     @Test
@@ -226,7 +234,9 @@ class OmsorgspengesoknadProsesseringTest {
         wireMockServer.stubAktoerRegisterGetAktoerIdNotFound(gyldigFodselsnummerC)
 
         kafkaTestProducer.leggTilMottak(melding)
-        preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
+        journalføringsKonsumer
+            .hentJournalførtMelding(melding.søknadId)
+            .assertUtvidetAntallDagerFormat()
     }
 
     @Test
@@ -242,6 +252,9 @@ class OmsorgspengesoknadProsesseringTest {
         val preprossesertMelding: TopicEntry<PreprossesertMeldingV1> =
             preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
         assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", preprossesertMelding.data.barn.navn)
+        journalføringsKonsumer
+            .hentJournalførtMelding(melding.søknadId)
+            .assertUtvidetAntallDagerFormat()
     }
 
     @Test
@@ -257,9 +270,12 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val hentOpprettetOppgave: TopicEntry<PreprossesertMeldingV1> =
+        val preprosessertMelding: TopicEntry<PreprossesertMeldingV1> =
             preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
-        assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", hentOpprettetOppgave.data.barn.navn)
+        assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", preprosessertMelding.data.barn.navn)
+        journalføringsKonsumer
+            .hentJournalførtMelding(melding.søknadId)
+            .assertUtvidetAntallDagerFormat()
     }
 
     @Test
@@ -277,9 +293,14 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val journalførtMelding: TopicEntry<Journalfort> =
-            journalføringsKonsumer.hentJournalførtMelding(melding.søknadId)
-        assertEquals(forventetFodselsNummer, journalførtMelding.data.søknad.barn.norskIdentitetsnummer.verdi)
+        val preprosessertMelding: TopicEntry<PreprossesertMeldingV1> =
+            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
+
+        assertEquals(forventetFodselsNummer, preprosessertMelding.data.barn.norskIdentifikator)
+
+        journalføringsKonsumer
+            .hentJournalførtMelding(melding.søknadId)
+            .assertUtvidetAntallDagerFormat()
     }
 
     @Test
@@ -299,6 +320,9 @@ class OmsorgspengesoknadProsesseringTest {
             preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
         assertEquals(5, preprossesertMelding.data.dokumentUrls.size)
         // 2 legeerklæringsvedlegg, 2, to samværsavtalevedlegg, og 1 søknadPdf.
+        journalføringsKonsumer
+            .hentJournalførtMelding(melding.søknadId)
+            .assertUtvidetAntallDagerFormat()
     }
 
     @Test
@@ -313,8 +337,14 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val prossesertMelding: TopicEntry<Journalfort> = journalføringsKonsumer.hentJournalførtMelding(melding.søknadId)
-        assertEquals(forventetFodselsNummer, prossesertMelding.data.søknad.barn.norskIdentitetsnummer.verdi)
+        val preprosessertMelding: TopicEntry<PreprossesertMeldingV1> =
+            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
+
+        assertEquals(forventetFodselsNummer, preprosessertMelding.data.barn.norskIdentifikator)
+
+        journalføringsKonsumer
+            .hentJournalførtMelding(melding.søknadId)
+            .assertUtvidetAntallDagerFormat()
     }
 
     @Test
@@ -327,12 +357,9 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val prossesertMelding: TopicEntry<Journalfort> = journalføringsKonsumer.hentJournalførtMelding(melding.søknadId)
-        println(
-            jacksonObjectMapper()
-                .writerWithDefaultPrettyPrinter()
-                .writeValueAsString(prossesertMelding)
-        )
+        journalføringsKonsumer
+            .hentJournalførtMelding(melding.søknadId)
+            .assertUtvidetAntallDagerFormat()
     }
 
     private fun gyldigMelding(

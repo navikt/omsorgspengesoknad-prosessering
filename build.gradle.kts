@@ -32,6 +32,8 @@ dependencies {
     compile ( "no.nav.helse:dusseldorf-ktor-health:$dusseldorfKtorVersion")
     compile ( "no.nav.helse:dusseldorf-ktor-auth:$dusseldorfKtorVersion")
     compile ( "no.nav.k9:soknad-omsorgspenger:$k9FormatVersion")
+    compile ( "no.nav.k9:soknad-omsorgspenger-overforing:$k9FormatVersion")
+
     compile ( "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$kotlinxCoroutinesVersion")
     
     // Client
@@ -41,15 +43,15 @@ dependencies {
     // PDF
     compile ( "com.openhtmltopdf:openhtmltopdf-pdfbox:$openhtmltopdfVersion")
     compile ( "com.openhtmltopdf:openhtmltopdf-slf4j:$openhtmltopdfVersion")
-    compile ("org.slf4j:jcl-over-slf4j:$slf4jVersion")
-    compile ("com.github.jknack:handlebars:$handlebarsVersion")
+    compile ( "org.slf4j:jcl-over-slf4j:$slf4jVersion")
+    compile ( "com.github.jknack:handlebars:$handlebarsVersion")
 
     // Kafka
     compile("org.apache.kafka:kafka-streams:$kafkaVersion")
 
     // Test
-    testCompile("org.apache.kafka:kafka-clients:$kafkaVersion")
-    testCompile ("no.nav:kafka-embedded-env:$kafkaEmbeddedEnvVersion")
+    testCompile ( "org.apache.kafka:kafka-clients:$kafkaVersion")
+    testCompile ( "no.nav:kafka-embedded-env:$kafkaEmbeddedEnvVersion")
     testCompile ( "no.nav.helse:dusseldorf-test-support:$dusseldorfKtorVersion")
     testCompile("io.ktor:ktor-server-test-host:$ktorVersion") {
         exclude(group = "org.eclipse.jetty")

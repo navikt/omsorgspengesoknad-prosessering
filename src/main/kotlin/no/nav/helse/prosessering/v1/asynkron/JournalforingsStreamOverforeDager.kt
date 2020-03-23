@@ -16,6 +16,7 @@ import no.nav.k9.søknad.felles.NorskIdentitetsnummer
 import no.nav.k9.søknad.felles.Søker
 import no.nav.k9.søknad.felles.SøknadId
 import no.nav.k9.søknad.omsorgspenger.OmsorgspengerSøknad
+import no.nav.k9.søknad.omsorgspenger.overføring.OmsorgspengerOverføringSøknad
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
@@ -69,7 +70,7 @@ internal class JournalforingsStreamOverforeDager(
 
                         val journalfort = JournalfortOverforeDager(
                             journalpostId = journaPostId.journalpostId,
-                            søknad = entry.data
+                            søknad = entry.data.tilK9OmsorgspengerOverføringSøknad()
                         )
 
                         CleanupOverforeDager(
@@ -87,3 +88,13 @@ internal class JournalforingsStreamOverforeDager(
 
     internal fun stop() = stream.stop(becauseOfError = false)
 }
+
+private fun PreprossesertMeldingV1OverforeDager.tilK9OmsorgspengerOverføringSøknad() = OmsorgspengerOverføringSøknad.builder()
+    .søknadId(SøknadId.of(soknadId))
+    .mottattDato(mottatt)
+    .søker(søker.tilK9Søker())
+    .build()
+
+private fun PreprossesertSøker.tilK9Søker() = Søker.builder()
+    .norskIdentitetsnummer(NorskIdentitetsnummer.of(fødselsnummer))
+    .build()
