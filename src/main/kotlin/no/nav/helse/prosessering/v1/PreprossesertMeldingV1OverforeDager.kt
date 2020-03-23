@@ -9,7 +9,7 @@ data class PreprossesertMeldingV1OverforeDager(
     val mottatt: ZonedDateTime,
     val søker: PreprossesertSøker,
     val språk: String,
-    val antallDager: Int?=null,
+    val antallDager: Int,
     val fnrMottaker: String,
     val medlemskap: Medlemskap,
     val harForståttRettigheterOgPlikter: Boolean,
