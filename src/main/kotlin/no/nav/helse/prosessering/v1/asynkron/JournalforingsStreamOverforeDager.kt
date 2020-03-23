@@ -16,6 +16,7 @@ import no.nav.k9.søknad.felles.NorskIdentitetsnummer
 import no.nav.k9.søknad.felles.Søker
 import no.nav.k9.søknad.felles.SøknadId
 import no.nav.k9.søknad.omsorgspenger.OmsorgspengerSøknad
+import no.nav.k9.søknad.omsorgspenger.overføring.Mottaker
 import no.nav.k9.søknad.omsorgspenger.overføring.OmsorgspengerOverføringSøknad
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
@@ -93,8 +94,13 @@ private fun PreprossesertMeldingV1OverforeDager.tilK9OmsorgspengerOverføringSø
     .søknadId(SøknadId.of(soknadId))
     .mottattDato(mottatt)
     .søker(søker.tilK9Søker())
+    .mottaker(fnrMottaker.tilK9Mottaker())
     .build()
 
 private fun PreprossesertSøker.tilK9Søker() = Søker.builder()
     .norskIdentitetsnummer(NorskIdentitetsnummer.of(fødselsnummer))
+    .build()
+
+private fun String.tilK9Mottaker() = Mottaker.builder()
+    .norskIdentitetsnummer(NorskIdentitetsnummer.of(this))
     .build()
