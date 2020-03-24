@@ -1,6 +1,13 @@
 package no.nav.helse.prosessering.v1
 
 import io.prometheus.client.Counter
+import io.prometheus.client.Histogram
+
+private val antallDagerHistogram = Histogram.build()
+    .buckets(1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0,12.0,13.0,14.0,15.0)
+    .name("antall_dager_histogram")
+    .help("Antall dager som det blir søkt om")
+    .register()
 
 private val jaNeiCounter = Counter.build()
     .name("ja_nei_counter_overfore_dager")
@@ -48,6 +55,8 @@ internal fun PreprossesertMeldingV1OverforeDager.reportMetrics() {
         val arbeidsSituasjonerSomString = arbeidssituasjon.sortedDescending().joinToString(" & ")
         arbeidsSituasjonCounter.labels(arbeidsSituasjonerSomString).inc()
     }
+
+    antallDagerHistogram.observe(antallDager.toDouble())
 }
 
 private fun Boolean.tilJaEllerNei(): String = if (this) "Ja" else "Nei"
