@@ -28,14 +28,21 @@ data class SøknadOverføreDagerV1 (
     val søknadId: String,
     val mottatt: ZonedDateTime,
     val søker: Søker,
-    val språk: String,
+    val språk: String? = "nb",
     val antallDager: Int,
     val fnrMottaker: String,
     val medlemskap: Medlemskap,
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
-    val antallBarn: Int
+    val antallBarn: Int,
+    val fosterbarn: List<Fosterbarn>? = listOf()
+)
+
+data class Fosterbarn(
+    val fødselsnummer: String,
+    val fornavn: String,
+    val etternavn: String
 )
 
 enum class Arbeidssituasjon(val utskriftvennlig: String) {

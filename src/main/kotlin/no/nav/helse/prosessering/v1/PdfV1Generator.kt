@@ -155,6 +155,9 @@ internal class PdfV1Generator {
                             "skal_bo_i_utlandet_neste_12_mnd" to melding.medlemskap.skalBoIUtlandetNeste12Mnd,
                             "utenlandsopphold_neste_12_mnd" to melding.medlemskap.utenlandsoppholdNeste12Mnd.somMapUtenlandsopphold()
                         ),
+                        "fosterbarnListe" to mapOf(
+                            "fosterbarn" to melding.fosterbarn?.somMapFosterbarn()
+                        ),
                         "samtykke" to mapOf(
                             "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
                             "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger
@@ -226,8 +229,18 @@ private fun List<Utenlandsopphold>.somMapUtenlandsopphold(): List<Map<String, An
     }
 }
 
+private fun List<Fosterbarn>.somMapFosterbarn(): List<Map<String, Any?>> {
+    return map {
+        mapOf(
+            "fornavn" to it.fornavn,
+            "etternavn" to it.etternavn,
+            "fnr" to it.fødselsnummer
+        )
+    }
+}
 
 private fun Søker.formatertNavn() = if (mellomnavn != null) "$fornavn $mellomnavn $etternavn" else "$fornavn $etternavn"
+
 private fun String.sprakTilTekst() = when (this.toLowerCase()) {
     "nb" -> "bokmål"
     "nn" -> "nynorsk"

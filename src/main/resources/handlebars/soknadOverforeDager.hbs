@@ -60,6 +60,17 @@
     {{/eqTall}}
     </p>
 
+    <!-- Fosterbarn -->
+    {{#if fosterbarnListe.fosterbarn}}
+        <h2><span>Fosterbarn</span></h2>
+        <ul>
+            {{#each fosterbarnListe.fosterbarn as |barn|~}}
+                <li>
+                    <p>{{barn.fornavn}} {{barn.etternavn}} - {{barn.fnr}} </p>
+                </li>
+            {{/each}}
+        </ul>
+    {{/if}}
 
     <!-- ARBEIDSSITUASJON -->
     <h2><span>Arbeidssituasjon</span></h2>

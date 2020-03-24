@@ -7,15 +7,12 @@ import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
-import no.nav.helse.prosessering.v1.PreprossesertBarn
-import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1OverforeDager
 import no.nav.helse.prosessering.v1.PreprossesertSøker
 import no.nav.k9.søknad.felles.Barn
 import no.nav.k9.søknad.felles.NorskIdentitetsnummer
 import no.nav.k9.søknad.felles.Søker
 import no.nav.k9.søknad.felles.SøknadId
-import no.nav.k9.søknad.omsorgspenger.OmsorgspengerSøknad
 import no.nav.k9.søknad.omsorgspenger.overføring.Mottaker
 import no.nav.k9.søknad.omsorgspenger.overføring.OmsorgspengerOverføringSøknad
 import org.apache.kafka.streams.StreamsBuilder
@@ -23,7 +20,6 @@ import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.slf4j.LoggerFactory
-import java.net.URI
 
 internal class JournalforingsStreamOverforeDager(
     joarkGateway: JoarkGateway,

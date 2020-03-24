@@ -8,7 +8,7 @@ data class PreprossesertMeldingV1OverforeDager(
     val soknadId: String,
     val mottatt: ZonedDateTime,
     val søker: PreprossesertSøker,
-    val språk: String,
+    val språk: String?,
     val antallDager: Int,
     val fnrMottaker: String,
     val medlemskap: Medlemskap,
@@ -16,8 +16,9 @@ data class PreprossesertMeldingV1OverforeDager(
     val harBekreftetOpplysninger: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
     val antallBarn:Int,
-    val dokumentUrls: List<List<URI>>
-    ) {
+    val dokumentUrls: List<List<URI>>,
+    val fosterbarn: List<Fosterbarn>? = listOf()
+) {
     internal constructor(
         melding: SøknadOverføreDagerV1,
         søkerAktørId: AktørId,
@@ -34,7 +35,8 @@ data class PreprossesertMeldingV1OverforeDager(
         antallDager = melding.antallDager,
         fnrMottaker = melding.fnrMottaker,
         dokumentUrls = dokumentUrls,
-        antallBarn = melding.antallBarn
+        antallBarn = melding.antallBarn,
+        fosterbarn = melding.fosterbarn
     )
 }
 
