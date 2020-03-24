@@ -15,7 +15,6 @@ data class PreprossesertMeldingV1OverforeDager(
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
-    val antallBarn:Int,
     val dokumentUrls: List<List<URI>>,
     val fosterbarn: List<Fosterbarn>? = listOf()
 ) {
@@ -35,7 +34,6 @@ data class PreprossesertMeldingV1OverforeDager(
         antallDager = melding.antallDager,
         fnrMottaker = melding.fnrMottaker,
         dokumentUrls = dokumentUrls,
-        antallBarn = melding.antallBarn,
         fosterbarn = melding.fosterbarn
     )
 }

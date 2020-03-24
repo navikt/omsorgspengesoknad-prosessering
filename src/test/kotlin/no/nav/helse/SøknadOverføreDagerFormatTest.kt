@@ -29,7 +29,6 @@ class SøknadOverføreDagerFormatTest {
                     "fødselsdato": null,
                     "aktørId": "123456"
                   },
-                  "antallBarn": 2,
                   "antallDager": 10,
                   "fnrMottaker": "123456789",
                   "medlemskap": {
@@ -74,7 +73,6 @@ class SøknadOverføreDagerFormatTest {
         ),
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true,
-        antallBarn = 2,
         antallDager = 10,
         fnrMottaker = "123456789",
         fosterbarn = listOf(

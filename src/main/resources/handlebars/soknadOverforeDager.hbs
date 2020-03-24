@@ -52,13 +52,6 @@
     <h2><span>Søknad</span></h2>
     <p><b>Hvem skal dagene overføres til?</b> {{fnrMottaker}}</p>
     <p><b>Hvor mange dager skal overføres?</b> {{antallDager}}</p>
-    <p><b>Hvor mange barn har du?</b>
-    {{#eqTall antallBarn 3}}
-        3 eller flere
-    {{else}}
-        {{antallBarn}}
-    {{/eqTall}}
-    </p>
 
     <!-- Fosterbarn -->
     {{#if fosterbarnListe.fosterbarn}}

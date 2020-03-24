@@ -35,7 +35,6 @@ data class SøknadOverføreDagerV1 (
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val arbeidssituasjon: List<Arbeidssituasjon>,
-    val antallBarn: Int,
     val fosterbarn: List<Fosterbarn>? = listOf()
 )
 
