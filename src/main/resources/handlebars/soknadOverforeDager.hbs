@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Søknad om overføring av omsorgsdager</title>
+    {{#block 'style' }}
+    {{/block}}
+
+    {{#*inline "jaNeiCheckbox"}}
+        {{#if parameter}}
+            <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
+            <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
+        {{else}}
+            <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
+            <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
+        {{/if}}
+    {{/inline}}
+
+</head>
+<body>
+<div id="header">
+    <img class="navlogo" src="{{ image "Navlogo.png" }}"/>
+    <h1 class="title">Søknad om overføring av omsorgsdager</h1>
+</div>
+<div class="container">
+    <div id="container_top">
+        <div class="nokkeldata">
+            <br/><br/>
+            <p>
+                <span class="nokkeldata__overskrift">Sendt til NAV</span><br/>
+                {{soknad_mottatt_dag}} {{ soknad_mottatt }}
+            </p>
+        </div>
+        <div class="personinfo">
+            <div class="persontekst">
+                <div class="persontekst__sidetopp">
+                    <img class="ikon" src="{{ image "Personikon.png" }}"/>
+                    <div class="persontekst__personalia">
+                        <p class="navn">
+                            {{ søker.navn }}
+                        </p>
+                        <p class="id">
+                            {{ søker.fødselsnummer }}<br/>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SØKNAD -->
+    <h2><span>Søknad</span></h2>
+    <p><b>Hvem skal dagene overføres til?</b> {{fnrMottaker}}</p>
+    <p><b>Hvor mange dager skal overføres?</b> {{antallDager}}</p>
+
+    <!-- Fosterbarn -->
+    {{#if fosterbarnListe.fosterbarn}}
+        <h2><span>Fosterbarn</span></h2>
+        {{# each fosterbarnListe.fosterbarn as |barn|}}
+            <img class="ikon" src="{{ image "Personikon.png" }}"/>
+            <div class="persontekst__personalia">
+                <p class="navn">
+                    {{ barn.fornavn }} {{barn.etternavn}}
+                </p>
+                <p class="id">
+                    {{ barn.fnr }}
+                </p>
+            </div>
+            <br/>
+        {{/each}}
+    {{/if}}
+
+    <!-- ARBEIDSSITUASJON -->
+    <h2><span>Arbeidssituasjon</span></h2>
+    {{#if arbeidssituasjon}}
+        {{#each arbeidssituasjon as |situasjon|~}}
+            <ul>
+                <li>{{situasjon.utskriftvennlig}}</li>
+            </ul>
+        {{/each}}
+    {{/if}}
+
+    <!-- MEDLEMSKAP -->
+    <h2><span>Medlemskap</span></h2>
+
+    <p class="sporsmalstekst">Har bodd i utlandet siste 12 månedene?</p>
+    {{# if medlemskap.har_bodd_i_utlandet_siste_12_mnd }}
+        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
+        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
+        <ul>
+            {{# each medlemskap.utenlandsopphold_siste_12_mnd as |opphold|~}}
+                <li>
+                    {{opphold.landnavn}} ({{opphold.fraOgMed}} - {{opphold.tilOgMed}})
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
+        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
+    {{/if}}
+    <hr/>
+    <p class="sporsmalstekst">Skal bo i utlandet de neste 12 månedene?</p>
+    {{# if medlemskap.skal_bo_i_utlandet_neste_12_mnd }}
+        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
+        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
+        <ul>
+            {{# each medlemskap.utenlandsopphold_neste_12_mnd as |opphold|~}}
+                <li>
+                    {{opphold.landnavn}} ({{opphold.fraOgMed}} - {{opphold.tilOgMed}})
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
+        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
+    {{/if}}
+
+    <!-- SAMTYKKE -->
+    <h2><span>Samtykke</span></h2>
+
+    <p class="sporsmalstekst">Har forstått rettigheter og plikter?</p>
+    {{>jaNeiCheckbox parameter=samtykke.harForståttRettigheterOgPlikter}}
+
+    <hr/>
+    <p class="sporsmalstekst">Har bekreftet opplysninger?</p>
+    {{>jaNeiCheckbox parameter=samtykke.harBekreftetOpplysninger}}
+
+</div>
+
+<!-- FOOTER -->
+<div id="footer">
+    <span class="soknadsid">{{ soknad_id }}</span>
+    <span class="sidetall">side <span id="pagenumber"></span> av <span id="pagecount"></span></span>
+</div>
+</body>
+</html>

@@ -108,6 +108,59 @@ internal class PreprosseseringV1Service(
         return preprossesertMeldingV1
     }
 
+    internal suspend fun preprosseserOverforeDager(
+        melding: SøknadOverføreDagerV1,
+        metadata: Metadata
+    ): PreprossesertMeldingV1OverforeDager {
+        val søknadId = SoknadId(melding.søknadId)
+        logger.info("Preprosseserer søknad om overføring av omsorgsdager med søknadsId: $søknadId")
+
+        val correlationId = CorrelationId(metadata.correlationId)
+
+        val søkerAktørId = AktørId(melding.søker.aktørId)
+
+        logger.info("Søkerens AktørID = $søkerAktørId")
+
+        logger.info("Genererer Oppsummerings-PDF av søknaden.")
+        val soknadOppsummeringPdf = pdfV1Generator.generateSoknadOppsummeringPdfOverforeDager(melding)
+        logger.info("Generering av Oppsummerings-PDF OK.")
+
+        logger.info("Mellomlagrer Oppsummerings-PDF.")
+        val soknadOppsummeringPdfUrl = dokumentService.lagreSoknadsOppsummeringPdf(
+            pdf = soknadOppsummeringPdf,
+            correlationId = correlationId,
+            aktørId = søkerAktørId
+        )
+        logger.info("Mellomlagring av Oppsummerings-PDF OK")
+
+        logger.info("Mellomlagrer Oppsummerings-JSON")
+
+        val soknadJsonUrl = dokumentService.lagreSoknadOverforeDagerMelding(
+            melding = melding,
+            aktørId = søkerAktørId,
+            correlationId = correlationId
+        )
+        logger.info("Mellomlagrer Oppsummerings-JSON OK.")
+
+        val komplettDokumentUrls = mutableListOf(
+            listOf(
+                soknadOppsummeringPdfUrl,
+                soknadJsonUrl
+            )
+        )
+
+        logger.info("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
+
+        val preprossesertMeldingV1OverforeDager = PreprossesertMeldingV1OverforeDager(
+            melding = melding,
+            søkerAktørId = søkerAktørId,
+            dokumentUrls = komplettDokumentUrls.toList()
+        )
+
+        preprossesertMeldingV1OverforeDager.reportMetrics()
+        return preprossesertMeldingV1OverforeDager
+    }
+
     /**
      * Slår opp barnets navn, gitt enten alternativId, fødselsNummer eller aktørId.
      */
