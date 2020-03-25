@@ -51,7 +51,7 @@ internal class CleanupStreamOverforeDager(
                             correlationId = CorrelationId(entry.metadata.correlationId)
                         )
                         logger.info("Dokumenter slettet.")
-                        logger.info("Videresender journalført melding")
+                        logger.info("Videresender journalført overføre dager melding")
                         entry.data.journalførtMelding
                     }
                 }

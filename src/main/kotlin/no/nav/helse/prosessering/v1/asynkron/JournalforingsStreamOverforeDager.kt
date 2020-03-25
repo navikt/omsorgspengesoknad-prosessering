@@ -64,7 +64,7 @@ internal class JournalforingsStreamOverforeDager(
                             correlationId = CorrelationId(entry.metadata.correlationId),
                             dokumenter = dokumenter
                         )
-                        logger.info("Dokumenter journalført med ID = ${journaPostId.journalpostId}.")
+                        logger.info("Dokumenter til overføre dager journalført med ID = ${journaPostId.journalpostId}.")
 
                         val journalfort = JournalfortOverforeDager(
                             journalpostId = journaPostId.journalpostId,
