@@ -113,7 +113,7 @@ internal class PreprosseseringV1Service(
         metadata: Metadata
     ): PreprossesertMeldingV1OverforeDager {
         val søknadId = SoknadId(melding.søknadId)
-        logger.info("Preprosseserer $søknadId")
+        logger.info("Preprosseserer søknad om overføring av omsorgsdager med søknadsId: $søknadId")
 
         val correlationId = CorrelationId(metadata.correlationId)
 
