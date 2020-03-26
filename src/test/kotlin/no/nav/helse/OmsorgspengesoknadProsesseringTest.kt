@@ -19,6 +19,9 @@ import no.nav.helse.k9.assertOverføreDagerFormat
 import no.nav.helse.k9.assertUtvidetAntallDagerFormat
 import no.nav.helse.prosessering.v1.*
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
+import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
+import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
+import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.slf4j.Logger

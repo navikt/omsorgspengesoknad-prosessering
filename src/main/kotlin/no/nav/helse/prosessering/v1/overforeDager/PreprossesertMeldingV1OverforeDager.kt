@@ -1,6 +1,7 @@
-package no.nav.helse.prosessering.v1
+package no.nav.helse.prosessering.v1.overforeDager
 
 import no.nav.helse.aktoer.AktørId
+import no.nav.helse.prosessering.v1.*
 import java.net.URI
 import java.time.ZonedDateTime
 

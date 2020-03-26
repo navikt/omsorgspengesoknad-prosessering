@@ -2,6 +2,9 @@ package no.nav.helse
 
 import no.nav.helse.aktoer.Fodselsnummer
 import no.nav.helse.prosessering.v1.*
+import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
+import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
+import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import org.junit.Ignore
 import java.io.File
 import java.time.LocalDate

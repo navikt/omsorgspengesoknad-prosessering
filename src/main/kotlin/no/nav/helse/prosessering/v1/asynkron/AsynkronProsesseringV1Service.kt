@@ -4,6 +4,9 @@ import no.nav.helse.dokument.DokumentService
 import no.nav.helse.joark.JoarkGateway
 import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.prosessering.v1.PreprosseseringV1Service
+import no.nav.helse.prosessering.v1.asynkron.overforeDager.CleanupStreamOverforeDager
+import no.nav.helse.prosessering.v1.asynkron.overforeDager.JournalforingsStreamOverforeDager
+import no.nav.helse.prosessering.v1.asynkron.overforeDager.PreprosseseringStreamOverforeDager
 import org.slf4j.LoggerFactory
 
 internal class AsynkronProsesseringV1Service(

@@ -1,4 +1,4 @@
-package no.nav.helse.prosessering.v1.asynkron
+package no.nav.helse.prosessering.v1.asynkron.overforeDager
 
 import no.nav.helse.CorrelationId
 import no.nav.helse.aktoer.AktørId
@@ -7,12 +7,15 @@ import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
+import no.nav.helse.prosessering.v1.asynkron.*
+import no.nav.helse.prosessering.v1.asynkron.Topic
+import no.nav.helse.prosessering.v1.asynkron.Topics
+import no.nav.helse.prosessering.v1.asynkron.process
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.slf4j.LoggerFactory
-import java.net.URI
 
 internal class CleanupStreamOverforeDager(
     kafkaConfig: KafkaConfig,

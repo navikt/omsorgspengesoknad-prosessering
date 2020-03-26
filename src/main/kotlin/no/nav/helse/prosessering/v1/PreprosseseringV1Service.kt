@@ -9,6 +9,9 @@ import no.nav.helse.barn.BarnOppslag
 import no.nav.helse.dokument.DokumentService
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.SoknadId
+import no.nav.helse.prosessering.v1.overforeDager.PreprossesertMeldingV1OverforeDager
+import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
+import no.nav.helse.prosessering.v1.overforeDager.reportMetrics
 import no.nav.helse.tpsproxy.Ident
 import no.nav.helse.tpsproxy.TpsNavn
 import org.slf4j.LoggerFactory
@@ -151,11 +154,12 @@ internal class PreprosseseringV1Service(
 
         logger.info("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
 
-        val preprossesertMeldingV1OverforeDager = PreprossesertMeldingV1OverforeDager(
-            melding = melding,
-            søkerAktørId = søkerAktørId,
-            dokumentUrls = komplettDokumentUrls.toList()
-        )
+        val preprossesertMeldingV1OverforeDager =
+            PreprossesertMeldingV1OverforeDager(
+                melding = melding,
+                søkerAktørId = søkerAktørId,
+                dokumentUrls = komplettDokumentUrls.toList()
+            )
 
         preprossesertMeldingV1OverforeDager.reportMetrics()
         return preprossesertMeldingV1OverforeDager

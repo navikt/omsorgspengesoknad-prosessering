@@ -8,8 +8,8 @@ import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
-import no.nav.helse.prosessering.v1.PreprossesertMeldingV1OverforeDager
-import no.nav.helse.prosessering.v1.SøknadOverføreDagerV1
+import no.nav.helse.prosessering.v1.overforeDager.PreprossesertMeldingV1OverforeDager
+import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import no.nav.k9.søknad.omsorgspenger.OmsorgspengerSøknad
 import no.nav.k9.søknad.omsorgspenger.overføring.OmsorgspengerOverføringSøknad
 import org.apache.kafka.common.serialization.Deserializer

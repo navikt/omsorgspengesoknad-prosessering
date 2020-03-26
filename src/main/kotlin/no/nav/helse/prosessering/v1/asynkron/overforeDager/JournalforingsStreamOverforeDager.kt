@@ -1,4 +1,4 @@
-package no.nav.helse.prosessering.v1.asynkron
+package no.nav.helse.prosessering.v1.asynkron.overforeDager
 
 import no.nav.helse.CorrelationId
 import no.nav.helse.aktoer.AktørId
@@ -7,9 +7,13 @@ import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
-import no.nav.helse.prosessering.v1.Fosterbarn
-import no.nav.helse.prosessering.v1.PreprossesertMeldingV1OverforeDager
+import no.nav.helse.prosessering.v1.overforeDager.PreprossesertMeldingV1OverforeDager
 import no.nav.helse.prosessering.v1.PreprossesertSøker
+import no.nav.helse.prosessering.v1.asynkron.*
+import no.nav.helse.prosessering.v1.asynkron.Topic
+import no.nav.helse.prosessering.v1.asynkron.Topics
+import no.nav.helse.prosessering.v1.asynkron.process
+import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
 import no.nav.k9.søknad.felles.Barn
 import no.nav.k9.søknad.felles.NorskIdentitetsnummer
 import no.nav.k9.søknad.felles.Søker
@@ -68,8 +72,8 @@ internal class JournalforingsStreamOverforeDager(
 
                         val journalfort = JournalfortOverforeDager(
                             journalpostId = journaPostId.journalpostId,
-                            søknad = entry.data.tilK9OmsorgspengerOverføringSøknad()
-                        )
+                                søknad = entry.data.tilK9OmsorgspengerOverføringSøknad()
+                            )
 
                         CleanupOverforeDager(
                             metadata = entry.metadata,

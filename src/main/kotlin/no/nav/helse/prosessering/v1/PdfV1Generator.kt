@@ -9,6 +9,9 @@ import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import no.nav.helse.aktoer.NorskIdent
 import no.nav.helse.dusseldorf.ktor.core.fromResources
+import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
+import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
+import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.time.ZoneId
