@@ -202,7 +202,7 @@
         }
       ],
       "numPartitions": 3,
-      "topicName": "privat-omsorgspenger-ettersending-journalfort"
+      "topicName": "privat-k9-digital-ettersendelse-journalfort"
     }
   ]
 }
