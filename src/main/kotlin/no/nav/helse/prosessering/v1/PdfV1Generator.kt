@@ -9,6 +9,7 @@ import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import no.nav.helse.aktoer.NorskIdent
 import no.nav.helse.dusseldorf.ktor.core.fromResources
+import no.nav.helse.prosessering.v1.ettersending.SøknadEttersendingV1
 import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
 import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
@@ -159,6 +160,48 @@ internal class PdfV1Generator {
                         ),
                         "fosterbarnListe" to mapOf(
                             "fosterbarn" to melding.fosterbarn?.somMapFosterbarn()
+                        ),
+                        "samtykke" to mapOf(
+                            "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
+                            "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger
+                        ),
+                        "hjelp" to mapOf(
+                            "språk" to melding.språk?.sprakTilTekst()
+                        )
+                    )
+                )
+                .resolver(MapValueResolver.INSTANCE)
+                .build()
+        ).let { html ->
+            val outputStream = ByteArrayOutputStream()
+
+            PdfRendererBuilder()
+                .useFastMode()
+                .withHtmlContent(html, "")
+                .medFonter()
+                .toStream(outputStream)
+                .buildPdfRenderer()
+                .createPDF()
+
+            return outputStream.use {
+                it.toByteArray()
+            }
+        }
+    }
+
+    internal fun generateSoknadOppsummeringPdfEttersending(
+        melding: SøknadEttersendingV1
+    ): ByteArray {
+        soknadOverforeDagerTemplate.apply(
+            Context
+                .newBuilder(
+                    mapOf(
+                        "soknad_id" to melding.søknadId,
+                        "soknad_mottatt_dag" to melding.mottatt.withZoneSameInstant(ZONE_ID).norskDag(),
+                        "soknad_mottatt" to DATE_TIME_FORMATTER.format(melding.mottatt),
+                        "søker" to mapOf(
+                            "navn" to melding.søker.formatertNavn(),
+                            "fødselsnummer" to melding.søker.fødselsnummer
                         ),
                         "samtykke" to mapOf(
                             "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
