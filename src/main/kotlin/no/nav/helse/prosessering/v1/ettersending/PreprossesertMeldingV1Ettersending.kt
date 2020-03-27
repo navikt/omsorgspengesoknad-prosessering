@@ -18,8 +18,7 @@ data class PreprossesertMeldingV1Ettersending(
     val harForstattRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val beskrivelse: String,
-    val søknadstype: Søknadstype,
-    val medlemskap: Medlemskap? //Todo fjerne optional
+    val søknadstype: Søknadstype
     ) {
     internal constructor(
         melding: SøknadEttersendingV1,
@@ -33,7 +32,6 @@ data class PreprossesertMeldingV1Ettersending(
         søker = PreprossesertSøker(melding.søker, sokerAktoerId),
         beskrivelse = melding.beskrivelse,
         søknadstype = melding.søknadstype,
-        medlemskap = melding.medlemskap,
         harForstattRettigheterOgPlikter = melding.harForståttRettigheterOgPlikter,
         harBekreftetOpplysninger = melding.harBekreftetOpplysninger
     )

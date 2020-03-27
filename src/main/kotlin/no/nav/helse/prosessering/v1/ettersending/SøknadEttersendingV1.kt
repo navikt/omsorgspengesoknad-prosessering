@@ -15,8 +15,7 @@ data class SøknadEttersendingV1(
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val beskrivelse: String,
-    val søknadstype: Søknadstype,
-    val medlemskap: Medlemskap? //TODO: Fjerne optional
+    val søknadstype: Søknadstype
 )
 
 enum class Søknadstype() {
