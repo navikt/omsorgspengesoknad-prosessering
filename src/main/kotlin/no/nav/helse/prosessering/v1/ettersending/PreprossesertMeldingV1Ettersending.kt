@@ -19,7 +19,7 @@ data class PreprossesertMeldingV1Ettersending(
     val harBekreftetOpplysninger: Boolean,
     val beskrivelse: String,
     val søknadstype: Søknadstype,
-    val medlemskap: Medlemskap
+    val medlemskap: Medlemskap? //Todo fjerne optional
     ) {
     internal constructor(
         melding: SøknadEttersendingV1,

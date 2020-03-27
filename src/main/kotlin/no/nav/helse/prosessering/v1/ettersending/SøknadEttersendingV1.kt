@@ -11,12 +11,12 @@ data class SøknadEttersendingV1(
     val søknadId: String,
     val mottatt: ZonedDateTime,
     val språk: String,
-    @JsonProperty("vedlegg_urls") val vedleggUrls: List<URI>,
+    @JsonProperty("vedlegg_urls") val vedleggUrls: List<URI>, //TODO: Fjerne snake_case over til camelCase
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val beskrivelse: String,
     val søknadstype: Søknadstype,
-    val medlemskap: Medlemskap
+    val medlemskap: Medlemskap? //TODO: Fjerne optional
 )
 
 enum class Søknadstype() {
