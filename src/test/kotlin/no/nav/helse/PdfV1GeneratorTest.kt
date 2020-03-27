@@ -157,25 +157,6 @@ class PdfV1GeneratorTest {
             fødselsnummer = "29099012345",
             fødselsdato = fødselsdato
         ),
-        medlemskap = Medlemskap(
-            harBoddIUtlandetSiste12Mnd = true,
-            utenlandsoppholdSiste12Mnd = listOf(
-                Utenlandsopphold(
-                    LocalDate.of(2020, 1, 2),
-                    LocalDate.of(2020, 1, 3),
-                    "US", "USA"
-                )
-            ),
-            skalBoIUtlandetNeste12Mnd = true,
-            utenlandsoppholdNeste12Mnd = listOf(
-                Utenlandsopphold(
-                    fraOgMed = LocalDate.of(2020,2,1),
-                    tilOgMed = LocalDate.of(2020,2,24),
-                    landkode = "US",
-                    landnavn = "USA"
-                )
-            )
-        ),
         beskrivelse = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
                     "Sed accumsan erat cursus enim aliquet, ac auctor orci consequat. " +
                     "Etiam nec tellus sapien. Nam gravida massa id sagittis ultrices.",
