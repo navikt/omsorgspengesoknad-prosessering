@@ -1,5 +1,6 @@
 package no.nav.helse.prosessering.v1.ettersending
 
+import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.helse.prosessering.v1.Medlemskap
 import no.nav.helse.prosessering.v1.Søker
@@ -11,7 +12,9 @@ data class SøknadEttersendingV1(
     val søknadId: String,
     val mottatt: ZonedDateTime,
     val språk: String,
-    @JsonProperty("vedlegg_urls") val vedleggUrls: List<URI>, //TODO: Fjerne snake_case over til camelCase
+    @JsonProperty("vedlegg_urls")
+    @JsonAlias("vedlegg_urls","vedleggUrls")
+    val vedleggUrls: List<URI>, //TODO: Fjerne snake_case over til camelCase
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val beskrivelse: String,
