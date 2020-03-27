@@ -15,6 +15,7 @@ import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.net.URI
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -24,6 +25,7 @@ internal class PdfV1Generator {
         private const val ROOT = "handlebars"
         private const val SOKNAD = "soknad"
         private const val SOKNAD_OVERFOREDAGER = "soknadOverforeDager"
+        private const val SOKNAD_ETTERSENDING = "soknadEttersending"
 
         private val REGULAR_FONT = "$ROOT/fonts/SourceSansPro-Regular.ttf".fromResources().readBytes()
         private val BOLD_FONT = "$ROOT/fonts/SourceSansPro-Bold.ttf".fromResources().readBytes()
@@ -55,6 +57,7 @@ internal class PdfV1Generator {
 
         private val soknadTemplate = handlebars.compile(SOKNAD)
         private val soknadOverforeDagerTemplate = handlebars.compile(SOKNAD_OVERFOREDAGER)
+        private val soknadEttersendingTemplate = handlebars.compile(SOKNAD_ETTERSENDING)
 
         private val ZONE_ID = ZoneId.of("Europe/Oslo")
         private val DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy").withZone(ZONE_ID)
@@ -192,7 +195,7 @@ internal class PdfV1Generator {
     internal fun generateSoknadOppsummeringPdfEttersending(
         melding: SøknadEttersendingV1
     ): ByteArray {
-        soknadOverforeDagerTemplate.apply(
+        soknadEttersendingTemplate.apply(
             Context
                 .newBuilder(
                     mapOf(
@@ -203,6 +206,11 @@ internal class PdfV1Generator {
                             "navn" to melding.søker.formatertNavn(),
                             "fødselsnummer" to melding.søker.fødselsnummer
                         ),
+                        "beskrivelse" to melding.beskrivelse,
+                        "vedleggUrls" to mapOf(
+                            "vedlegg" to melding.vedleggUrls.somMapVedleggUrls()
+                        ),
+                        "søknadstype" to melding.søknadstype,
                         "samtykke" to mapOf(
                             "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
                             "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger
@@ -280,6 +288,14 @@ private fun List<Fosterbarn>.somMapFosterbarn(): List<Map<String, Any?>> {
             "fornavn" to it.fornavn,
             "etternavn" to it.etternavn,
             "fnr" to it.fødselsnummer
+        )
+    }
+}
+
+private fun List<URI>.somMapVedleggUrls(): List<Map<String, Any?>> {
+    return map {
+        mapOf(
+            "path" to it.toString()
         )
     }
 }

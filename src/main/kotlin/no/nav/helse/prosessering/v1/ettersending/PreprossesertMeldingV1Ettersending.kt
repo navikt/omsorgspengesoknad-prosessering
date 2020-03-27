@@ -2,6 +2,7 @@ package no.nav.helse.prosessering.v1.ettersending
 
 
 import no.nav.helse.aktoer.AktørId
+import no.nav.helse.prosessering.v1.Medlemskap
 import no.nav.helse.prosessering.v1.PreprossesertBarn
 import no.nav.helse.prosessering.v1.PreprossesertSøker
 import java.net.URI
@@ -17,8 +18,9 @@ data class PreprossesertMeldingV1Ettersending(
     val harForstattRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val beskrivelse: String,
-    val søknadstype: Søknadstype
-) {
+    val søknadstype: Søknadstype,
+    val medlemskap: Medlemskap
+    ) {
     internal constructor(
         melding: SøknadEttersendingV1,
         dokumentUrls: List<List<URI>>,
@@ -31,6 +33,7 @@ data class PreprossesertMeldingV1Ettersending(
         søker = PreprossesertSøker(melding.søker, sokerAktoerId),
         beskrivelse = melding.beskrivelse,
         søknadstype = melding.søknadstype,
+        medlemskap = melding.medlemskap,
         harForstattRettigheterOgPlikter = melding.harForståttRettigheterOgPlikter,
         harBekreftetOpplysninger = melding.harBekreftetOpplysninger
     )

@@ -480,7 +480,11 @@ class OmsorgspengesoknadProsesseringTest {
         harForståttRettigheterOgPlikter = true,
         beskrivelse = "Blablabla",
         søknadstype = Søknadstype.OMSORGSPENGER,
-        vedleggUrls = listOf(vedleggUrl)
+        vedleggUrls = listOf(vedleggUrl),
+        medlemskap = Medlemskap(
+            harBoddIUtlandetSiste12Mnd = false,
+            skalBoIUtlandetNeste12Mnd = false
+        )
     )
 
     private fun ventPaaAtRetryMekanismeIStreamProsessering() = runBlocking { delay(Duration.ofSeconds(30)) }

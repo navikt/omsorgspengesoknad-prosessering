@@ -1,6 +1,7 @@
 package no.nav.helse.prosessering.v1.ettersending
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import no.nav.helse.prosessering.v1.Medlemskap
 import no.nav.helse.prosessering.v1.Søker
 import java.net.URI
 import java.time.ZonedDateTime
@@ -14,7 +15,8 @@ data class SøknadEttersendingV1(
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val beskrivelse: String,
-    val søknadstype: Søknadstype
+    val søknadstype: Søknadstype,
+    val medlemskap: Medlemskap
 )
 
 enum class Søknadstype() {

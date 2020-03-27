@@ -61,7 +61,7 @@ internal class JournalføringStreamEttersending(
 
                         val dokumenter = entry.data.dokumentUrls
                         logger.info("Journalfører dokumenter: {}", dokumenter)
-                        val journaPostId = joarkGateway.journalfør(
+                        val journaPostId = joarkGateway.journalførEttersending(
                             mottatt = entry.data.mottatt,
                             aktørId = AktørId(entry.data.søker.aktørId),
                             norskIdent = entry.data.søker.fødselsnummer,
