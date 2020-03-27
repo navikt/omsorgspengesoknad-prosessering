@@ -12,6 +12,7 @@ import no.nav.helse.prosessering.v1.ettersending.PreprossesertMeldingV1Ettersend
 import no.nav.helse.prosessering.v1.ettersending.SøknadEttersendingV1
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertMeldingV1OverforeDager
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
+import no.nav.k9.ettersendelse.Ettersendelse
 import no.nav.k9.søknad.omsorgspenger.OmsorgspengerSøknad
 import no.nav.k9.søknad.omsorgspenger.overføring.OmsorgspengerOverføringSøknad
 import org.apache.kafka.common.serialization.Deserializer
@@ -27,7 +28,7 @@ data class CleanupEttersending(val metadata: Metadata, val melding: Preprosseser
 
 data class Journalfort(val journalpostId: String, val søknad: OmsorgspengerSøknad)
 data class JournalfortOverforeDager(val journalpostId: String, val søknad: OmsorgspengerOverføringSøknad)
-data class JournalfortEttersending(val journalpostId: String, val søknad: OmsorgspengerSøknad)//TODO:Egen søknad for ettersending
+data class JournalfortEttersending(val journalpostId: String, val søknad: Ettersendelse)//TODO:Egen søknad for ettersending
 
 internal data class Topic<V>(
     val name: String,

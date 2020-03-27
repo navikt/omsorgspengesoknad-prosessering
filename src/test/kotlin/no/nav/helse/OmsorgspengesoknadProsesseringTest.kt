@@ -21,7 +21,6 @@ import no.nav.helse.k9.assertUtvidetAntallDagerFormat
 import no.nav.helse.prosessering.v1.*
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import no.nav.helse.prosessering.v1.ettersending.SøknadEttersendingV1
-import no.nav.helse.prosessering.v1.ettersending.Søknadstype
 import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
 import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
@@ -148,7 +147,6 @@ class OmsorgspengesoknadProsesseringTest {
     }
 
     @Test
-    @Ignore
     fun`Gyldig søknad for ettersending blir prosessert av journalføringkonsumer`(){
         val søknad = gyldigMeldingEttersending(
             fødselsnummerSoker = gyldigFodselsnummerA,
@@ -479,7 +477,7 @@ class OmsorgspengesoknadProsesseringTest {
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true,
         beskrivelse = "Blablabla",
-        søknadstype = Søknadstype.OMSORGSPENGER,
+        søknadstype = "omsorgspenger",
         vedleggUrls = listOf(vedleggUrl)
     )
 

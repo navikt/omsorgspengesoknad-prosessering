@@ -1,5 +1,6 @@
 package no.nav.helse.k9
 
+import no.nav.k9.ettersendelse.Ettersendelse
 import no.nav.k9.søknad.omsorgspenger.overføring.OmsorgspengerOverføringSøknad
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
@@ -16,10 +17,10 @@ internal fun String.assertEttersendeFormat() {
     assertNotNull(data.getString("journalpostId"))
     val søknad = assertNotNull(data.getJSONObject("søknad"))
 
-    val rekonstruertSøknad = OmsorgspengerOverføringSøknad
+    val rekonstruertSøknad = Ettersendelse
         .builder()
         .json(søknad.toString())
         .build()
 
-    JSONAssert.assertEquals(søknad.toString(), OmsorgspengerOverføringSøknad.SerDes.serialize(rekonstruertSøknad), true)
+    JSONAssert.assertEquals(søknad.toString(), Ettersendelse.SerDes.serialize(rekonstruertSøknad), true)
 }

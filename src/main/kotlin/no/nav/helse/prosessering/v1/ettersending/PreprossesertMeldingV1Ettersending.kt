@@ -18,7 +18,7 @@ data class PreprossesertMeldingV1Ettersending(
     val harForstattRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val beskrivelse: String,
-    val søknadstype: Søknadstype
+    val søknadstype: String
     ) {
     internal constructor(
         melding: SøknadEttersendingV1,

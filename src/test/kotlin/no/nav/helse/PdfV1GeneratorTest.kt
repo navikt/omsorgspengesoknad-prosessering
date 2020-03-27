@@ -3,7 +3,6 @@ package no.nav.helse
 import no.nav.helse.aktoer.Fodselsnummer
 import no.nav.helse.prosessering.v1.*
 import no.nav.helse.prosessering.v1.ettersending.SøknadEttersendingV1
-import no.nav.helse.prosessering.v1.ettersending.Søknadstype
 import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
 import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
@@ -160,7 +159,7 @@ class PdfV1GeneratorTest {
         beskrivelse = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
                     "Sed accumsan erat cursus enim aliquet, ac auctor orci consequat. " +
                     "Etiam nec tellus sapien. Nam gravida massa id sagittis ultrices.",
-        søknadstype = Søknadstype.OMSORGSPENGER,
+        søknadstype = "Omsorgspenger",
         vedleggUrls = listOf(URI("http://localhost:8081/vedlegg1"),
                                 URI("http://localhost:8081/vedlegg2"),
                                 URI("http://localhost:8081/vedlegg3"))

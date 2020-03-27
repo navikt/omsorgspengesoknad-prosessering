@@ -15,6 +15,7 @@ import no.nav.helse.prosessering.v1.PreprossesertBarn
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertSøker
 import no.nav.helse.prosessering.v1.ettersending.PreprossesertMeldingV1Ettersending
+import no.nav.k9.ettersendelse.Ettersendelse
 import no.nav.k9.søknad.felles.Barn
 import no.nav.k9.søknad.felles.NorskIdentitetsnummer
 import no.nav.k9.søknad.felles.Søker
@@ -71,7 +72,7 @@ internal class JournalføringStreamEttersending(
                         logger.info("Dokumenter journalført med ID = ${journaPostId.journalpostId}.")
                         val journalfort = JournalfortEttersending(
                             journalpostId = journaPostId.journalpostId,
-                            søknad = entry.data.tilK9OmsorgspengesøknadEttersending()//TODO:Egen søknad for ettersending
+                            søknad = entry.data.tilK9Ettersendelse()//TODO:Egen søknad for ettersending
                         )
                         CleanupEttersending(
                             metadata = entry.metadata,
@@ -89,7 +90,7 @@ internal class JournalføringStreamEttersending(
     internal fun stop() = stream.stop(becauseOfError = false)
 }
 
-private fun PreprossesertMeldingV1Ettersending.tilK9OmsorgspengesøknadEttersending(): OmsorgspengerSøknad = OmsorgspengerSøknad.builder() //TODO:Legge til egen søknad for ettersending
+private fun PreprossesertMeldingV1Ettersending.tilK9Ettersendelse(): Ettersendelse = Ettersendelse.builder() //TODO:Legge til egen søknad for ettersending
     .søknadId(SøknadId.of(soknadId))
     .mottattDato(mottatt)
     .søker(søker.tilK9Søker())
