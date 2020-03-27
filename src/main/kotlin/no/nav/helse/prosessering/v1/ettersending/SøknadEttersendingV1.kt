@@ -11,7 +11,7 @@ data class SøknadEttersendingV1(
     val søknadId: String,
     val mottatt: ZonedDateTime,
     val språk: String,
-    val vedleggUrls: List<URI>,
+    @JsonProperty("vedlegg_urls") val vedleggUrls: List<URI>,
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val beskrivelse: String,
