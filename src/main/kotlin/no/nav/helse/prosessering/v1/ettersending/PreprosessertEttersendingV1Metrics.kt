@@ -9,6 +9,6 @@ private val antallVedleggHistogram = Histogram.build()
     .register()
 
 internal fun PreprosessertEttersendingV1.reportMetrics() {
-    antallVedleggHistogram.observe(dokumentUrls.size.toDouble())
+    antallVedleggHistogram.observe(dokumentUrls.size.toDouble()-1)
 }
 
