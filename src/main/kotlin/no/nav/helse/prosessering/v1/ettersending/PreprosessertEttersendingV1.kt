@@ -5,7 +5,7 @@ import no.nav.helse.prosessering.v1.PreprossesertSøker
 import java.net.URI
 import java.time.ZonedDateTime
 
-data class PreprossesertMeldingV1Ettersending(
+data class PreprosessertEttersendingV1(
     val sprak: String?,
     val soknadId: String,
     val dokumentUrls: List<List<URI>>,

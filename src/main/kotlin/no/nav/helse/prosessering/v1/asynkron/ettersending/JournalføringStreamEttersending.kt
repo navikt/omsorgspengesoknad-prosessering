@@ -11,16 +11,12 @@ import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
-import no.nav.helse.prosessering.v1.PreprossesertBarn
-import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertSøker
-import no.nav.helse.prosessering.v1.ettersending.PreprossesertMeldingV1Ettersending
+import no.nav.helse.prosessering.v1.ettersending.PreprosessertEttersendingV1
 import no.nav.k9.ettersendelse.Ettersendelse
-import no.nav.k9.søknad.felles.Barn
 import no.nav.k9.søknad.felles.NorskIdentitetsnummer
 import no.nav.k9.søknad.felles.Søker
 import no.nav.k9.søknad.felles.SøknadId
-import no.nav.k9.søknad.omsorgspenger.OmsorgspengerSøknad
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
@@ -48,13 +44,13 @@ internal class JournalføringStreamEttersending(
 
         private fun topology(joarkGateway: JoarkGateway): Topology {
             val builder = StreamsBuilder()
-            val fraPreprossesert: Topic<TopicEntry<PreprossesertMeldingV1Ettersending>> = Topics.PREPROSSESERT_ETTERSENDING
+            val fraPreprossesertV1: Topic<TopicEntry<PreprosessertEttersendingV1>> = Topics.PREPROSSESERT_ETTERSENDING
             val tilCleanup: Topic<TopicEntry<CleanupEttersending>> = Topics.CLEANUP_ETTERSENDING
 
             val mapValues = builder
-                .stream<String, TopicEntry<PreprossesertMeldingV1Ettersending>>(
-                    fraPreprossesert.name,
-                    Consumed.with(fraPreprossesert.keySerde, fraPreprossesert.valueSerde)
+                .stream<String, TopicEntry<PreprosessertEttersendingV1>>(
+                    fraPreprossesertV1.name,
+                    Consumed.with(fraPreprossesertV1.keySerde, fraPreprossesertV1.valueSerde)
                 )
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
@@ -90,7 +86,7 @@ internal class JournalføringStreamEttersending(
     internal fun stop() = stream.stop(becauseOfError = false)
 }
 
-private fun PreprossesertMeldingV1Ettersending.tilK9Ettersendelse(): Ettersendelse = Ettersendelse.builder()
+private fun PreprosessertEttersendingV1.tilK9Ettersendelse(): Ettersendelse = Ettersendelse.builder()
     .søknadId(SøknadId.of(soknadId))
     .mottattDato(mottatt)
     .søker(søker.tilK9Søker())

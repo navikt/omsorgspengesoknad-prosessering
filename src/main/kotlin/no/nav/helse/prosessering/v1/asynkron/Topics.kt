@@ -8,7 +8,7 @@ import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
-import no.nav.helse.prosessering.v1.ettersending.PreprossesertMeldingV1Ettersending
+import no.nav.helse.prosessering.v1.ettersending.PreprosessertEttersendingV1
 import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertMeldingV1OverforeDager
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
@@ -24,7 +24,7 @@ data class TopicEntry<V>(val metadata: Metadata, val data: V)
 
 data class Cleanup(val metadata: Metadata, val melding: PreprossesertMeldingV1, val journalførtMelding: Journalfort)
 data class CleanupOverforeDager(val metadata: Metadata, val melding: PreprossesertMeldingV1OverforeDager, val journalførtMelding: JournalfortOverforeDager)
-data class CleanupEttersending(val metadata: Metadata, val melding: PreprossesertMeldingV1Ettersending, val journalførtMelding: JournalfortEttersending)
+data class CleanupEttersending(val metadata: Metadata, val melding: PreprosessertEttersendingV1, val journalførtMelding: JournalfortEttersending)
 
 data class Journalfort(val journalpostId: String, val søknad: OmsorgspengerSøknad)
 data class JournalfortOverforeDager(val journalpostId: String, val søknad: OmsorgspengerOverføringSøknad)
@@ -176,8 +176,8 @@ private class MottattSoknadSerDesEttersending: SerDes<TopicEntry<EttersendingV1>
     }
 }
 
-private class PreprossesertSerDesEttersending: SerDes<TopicEntry<PreprossesertMeldingV1Ettersending>>() {
-    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<PreprossesertMeldingV1Ettersending>? {
+private class PreprossesertSerDesEttersending: SerDes<TopicEntry<PreprosessertEttersendingV1>>() {
+    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<PreprosessertEttersendingV1>? {
         return data?.let {
             objectMapper.readValue(it)
         }

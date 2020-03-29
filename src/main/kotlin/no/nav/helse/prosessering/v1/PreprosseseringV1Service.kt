@@ -9,8 +9,9 @@ import no.nav.helse.barn.BarnOppslag
 import no.nav.helse.dokument.DokumentService
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.SoknadId
-import no.nav.helse.prosessering.v1.ettersending.PreprossesertMeldingV1Ettersending
+import no.nav.helse.prosessering.v1.ettersending.PreprosessertEttersendingV1
 import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
+import no.nav.helse.prosessering.v1.ettersending.reportMetrics
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertMeldingV1OverforeDager
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import no.nav.helse.prosessering.v1.overforeDager.reportMetrics
@@ -172,7 +173,7 @@ internal class PreprosseseringV1Service(
     internal suspend fun preprosseserEttersending(
         melding: EttersendingV1,
         metadata: Metadata
-    ): PreprossesertMeldingV1Ettersending {
+    ): PreprosessertEttersendingV1 {
         val søknadId = SoknadId(melding.søknadId)
         logger.info("Preprosseserer ettersending med søknadId: $søknadId")
 
@@ -219,13 +220,12 @@ internal class PreprosseseringV1Service(
         logger.info("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
 
 
-        val preprossesertMeldingV1 = PreprossesertMeldingV1Ettersending(
+        val preprossesertMeldingV1 = PreprosessertEttersendingV1(
             melding = melding,
             dokumentUrls = komplettDokumentUrls.toList(),
             sokerAktoerId = søkerAktørId
         )
-        //melding.reportMetrics() //TODO report metrics
-        //preprossesertMeldingV1.reportMetrics() //TODO
+        preprossesertMeldingV1.reportMetrics()
         return preprossesertMeldingV1
     }
 
