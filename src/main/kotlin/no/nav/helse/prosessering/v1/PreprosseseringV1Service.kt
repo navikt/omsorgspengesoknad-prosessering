@@ -72,7 +72,8 @@ internal class PreprosseseringV1Service(
         val soknadOppsummeringPdfUrl = dokumentService.lagreSoknadsOppsummeringPdf(
             pdf = soknadOppsummeringPdf,
             correlationId = correlationId,
-            aktørId = søkerAktørId
+            aktørId = søkerAktørId,
+            dokumentbeskrivelse = "Søknad om omsorgspenger"
         )
         logger.info("Mellomlagring av Oppsummerings-PDF OK")
 
@@ -134,7 +135,8 @@ internal class PreprosseseringV1Service(
         val soknadOppsummeringPdfUrl = dokumentService.lagreSoknadsOppsummeringPdf(
             pdf = soknadOppsummeringPdf,
             correlationId = correlationId,
-            aktørId = søkerAktørId
+            aktørId = søkerAktørId,
+            dokumentbeskrivelse = "Melding om overføring av omsorgsdager"
         )
         logger.info("Mellomlagring av Oppsummerings-PDF OK")
 
@@ -188,7 +190,8 @@ internal class PreprosseseringV1Service(
         val soknadOppsummeringPdfUrl = dokumentService.lagreSoknadsOppsummeringPdf(
             pdf = soknadOppsummeringPdf,
             correlationId = correlationId,
-            aktørId = søkerAktørId
+            aktørId = søkerAktørId,
+            dokumentbeskrivelse = "Ettersending av vedlegg"
         )
         logger.info("Mellomlagring av Oppsummerings-PDF OK")
 
