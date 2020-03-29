@@ -19,7 +19,7 @@ import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSSESERT
 import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSSESERT_ETTERSENDING
 import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSSESERT_OVERFOREDAGER
-import no.nav.helse.prosessering.v1.ettersending.SøknadEttersendingV1
+import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -286,7 +286,7 @@ fun KafkaProducer<String, TopicEntry<SøknadOverføreDagerV1>>.leggTilMottak(sok
     ).get()
 }
 
-fun KafkaProducer<String, TopicEntry<SøknadEttersendingV1>>.leggTilMottak(soknad: SøknadEttersendingV1) {
+fun KafkaProducer<String, TopicEntry<EttersendingV1>>.leggTilMottak(soknad: EttersendingV1) {
     send(
         ProducerRecord(
             MOTTATT_ETTERSENDING.name,

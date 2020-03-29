@@ -1,12 +1,8 @@
 package no.nav.helse.prosessering.v1.ettersending
 
-
 import no.nav.helse.aktoer.AktørId
-import no.nav.helse.prosessering.v1.Medlemskap
-import no.nav.helse.prosessering.v1.PreprossesertBarn
 import no.nav.helse.prosessering.v1.PreprossesertSøker
 import java.net.URI
-import java.time.LocalDate
 import java.time.ZonedDateTime
 
 data class PreprossesertMeldingV1Ettersending(
@@ -21,7 +17,7 @@ data class PreprossesertMeldingV1Ettersending(
     val søknadstype: String
     ) {
     internal constructor(
-        melding: SøknadEttersendingV1,
+        melding: EttersendingV1,
         dokumentUrls: List<List<URI>>,
         sokerAktoerId: AktørId
     ) : this(

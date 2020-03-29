@@ -10,7 +10,7 @@ import no.nav.helse.dokument.DokumentService
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.SoknadId
 import no.nav.helse.prosessering.v1.ettersending.PreprossesertMeldingV1Ettersending
-import no.nav.helse.prosessering.v1.ettersending.SøknadEttersendingV1
+import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertMeldingV1OverforeDager
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import no.nav.helse.prosessering.v1.overforeDager.reportMetrics
@@ -170,11 +170,11 @@ internal class PreprosseseringV1Service(
     }
 
     internal suspend fun preprosseserEttersending(
-        melding: SøknadEttersendingV1,
+        melding: EttersendingV1,
         metadata: Metadata
     ): PreprossesertMeldingV1Ettersending {
         val søknadId = SoknadId(melding.søknadId)
-        logger.info("Preprosseserer søknad for ettersending med søknadId: $søknadId")
+        logger.info("Preprosseserer ettersending med søknadId: $søknadId")
 
         val correlationId = CorrelationId(metadata.correlationId)
 
@@ -182,7 +182,7 @@ internal class PreprosseseringV1Service(
 
         logger.info("Søkerens AktørID = $søkerAktørId")
 
-        logger.info("Genererer Oppsummerings-PDF av søknaden for ettersending.")
+        logger.info("Genererer Oppsummerings-PDF av ettersending.")
         val soknadOppsummeringPdf = pdfV1Generator.generateSoknadOppsummeringPdfEttersending(melding)
         logger.info("Generering av Oppsummerings-PDF OK.")
 
@@ -225,7 +225,7 @@ internal class PreprosseseringV1Service(
             sokerAktoerId = søkerAktørId
         )
         //melding.reportMetrics() //TODO report metrics
-        //preprossesertMeldingV1.reportMetrics()
+        //preprossesertMeldingV1.reportMetrics() //TODO
         return preprossesertMeldingV1
     }
 

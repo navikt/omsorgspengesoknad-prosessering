@@ -4,12 +4,11 @@ import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
-import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.PreprosseseringV1Service
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import no.nav.helse.prosessering.v1.asynkron.Topics
 import no.nav.helse.prosessering.v1.asynkron.process
-import no.nav.helse.prosessering.v1.ettersending.SøknadEttersendingV1
+import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
@@ -41,19 +40,19 @@ internal class PreprosseseringStreamEttersending(
             val tilPreprossesert = Topics.PREPROSSESERT_ETTERSENDING
 
             builder
-                .stream<String, TopicEntry<SøknadEttersendingV1>>(
+                .stream<String, TopicEntry<EttersendingV1>>(
                     fromMottatt.name,
                     Consumed.with(fromMottatt.keySerde, fromMottatt.valueSerde)
                 )
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
-                        logger.info("Preprosesserer søknad for ettersending.")
+                        logger.info("Preprosesserer ettersending.")
                         val preprossesertMelding = preprosseseringV1Service.preprosseserEttersending(
                             melding = entry.data,
                             metadata = entry.metadata
                         )
-                        logger.info("Preprossesering av søknad for ettersending ferdig.")
+                        logger.info("Preprossesering av ettersending ferdig.")
                         preprossesertMelding
                     }
                 }

@@ -9,7 +9,7 @@ import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
 import no.nav.helse.prosessering.v1.ettersending.PreprossesertMeldingV1Ettersending
-import no.nav.helse.prosessering.v1.ettersending.SøknadEttersendingV1
+import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
 import no.nav.helse.prosessering.v1.overforeDager.PreprossesertMeldingV1OverforeDager
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import no.nav.k9.ettersendelse.Ettersendelse
@@ -168,10 +168,10 @@ private class JournalfortSerDesOverforeDager: SerDes<TopicEntry<JournalfortOverf
     }
 }
 
-private class MottattSoknadSerDesEttersending: SerDes<TopicEntry<SøknadEttersendingV1>>() {
-    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<SøknadEttersendingV1>? {
+private class MottattSoknadSerDesEttersending: SerDes<TopicEntry<EttersendingV1>>() {
+    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<EttersendingV1>? {
         return data?.let {
-            objectMapper.readValue<TopicEntry<SøknadEttersendingV1>>(it)
+            objectMapper.readValue<TopicEntry<EttersendingV1>>(it)
         }
     }
 }

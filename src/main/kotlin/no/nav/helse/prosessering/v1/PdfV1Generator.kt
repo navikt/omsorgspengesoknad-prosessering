@@ -9,7 +9,7 @@ import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import no.nav.helse.aktoer.NorskIdent
 import no.nav.helse.dusseldorf.ktor.core.fromResources
-import no.nav.helse.prosessering.v1.ettersending.SøknadEttersendingV1
+import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
 import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
 import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
@@ -193,7 +193,7 @@ internal class PdfV1Generator {
     }
 
     internal fun generateSoknadOppsummeringPdfEttersending(
-        melding: SøknadEttersendingV1
+        melding: EttersendingV1
     ): ByteArray {
         soknadEttersendingTemplate.apply(
             Context

@@ -2,7 +2,7 @@ package no.nav.helse
 
 import no.nav.helse.aktoer.Fodselsnummer
 import no.nav.helse.prosessering.v1.*
-import no.nav.helse.prosessering.v1.ettersending.SøknadEttersendingV1
+import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
 import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
 import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
@@ -142,7 +142,7 @@ class PdfV1GeneratorTest {
         )
     )
 
-    private fun gyldigEttersending() = SøknadEttersendingV1(
+    private fun gyldigEttersending() = EttersendingV1(
         språk = "nb",
         mottatt = ZonedDateTime.now(),
         harBekreftetOpplysninger = true,

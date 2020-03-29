@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.prosessering.v1.MeldingV1
-import no.nav.helse.prosessering.v1.ettersending.SøknadEttersendingV1
+import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 
 class Søknadsformat {
@@ -33,7 +33,7 @@ class Søknadsformat {
         }
 
         internal fun somJsonEttersending(
-            meldingV1: SøknadEttersendingV1
+            meldingV1: EttersendingV1
         ): ByteArray {
             val node = objectMapper.valueToTree<ObjectNode>(meldingV1)
             node.remove("vedlegg_urls")

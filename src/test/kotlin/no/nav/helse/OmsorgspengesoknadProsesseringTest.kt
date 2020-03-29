@@ -20,13 +20,12 @@ import no.nav.helse.k9.assertOverføreDagerFormat
 import no.nav.helse.k9.assertUtvidetAntallDagerFormat
 import no.nav.helse.prosessering.v1.*
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
-import no.nav.helse.prosessering.v1.ettersending.SøknadEttersendingV1
+import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
 import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
 import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.junit.Ignore
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -147,7 +146,7 @@ class OmsorgspengesoknadProsesseringTest {
     }
 
     @Test
-    fun`Gyldig søknad for ettersending blir prosessert av journalføringkonsumer`(){
+    fun`Gyldig ettersending blir prosessert av journalføringkonsumer`(){
         val søknad = gyldigMeldingEttersending(
             fødselsnummerSoker = gyldigFodselsnummerA,
             sprak = "nb"
@@ -462,7 +461,7 @@ class OmsorgspengesoknadProsesseringTest {
         fødselsnummerSoker: String,
         sprak: String,
         vedleggUrl: URI = URI("${wireMockServer.getK9DokumentBaseUrl()}/v1/dokument/${UUID.randomUUID()}")
-    ) : SøknadEttersendingV1 = SøknadEttersendingV1(
+    ) : EttersendingV1 = EttersendingV1(
         språk = sprak,
         søknadId = UUID.randomUUID().toString(),
         mottatt = ZonedDateTime.now(),
