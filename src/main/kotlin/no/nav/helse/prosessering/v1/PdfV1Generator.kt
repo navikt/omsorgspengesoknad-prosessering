@@ -295,7 +295,7 @@ private fun List<Fosterbarn>.somMapFosterbarn(): List<Map<String, Any?>> {
 private fun List<URI>.somMapVedleggUrls(): List<Map<String, Any?>> {
     return map {
         mapOf(
-            "path" to it.toString()
+            "navn" to it
         )
     }
 }
