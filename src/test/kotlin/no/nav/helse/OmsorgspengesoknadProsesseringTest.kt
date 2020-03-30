@@ -477,7 +477,8 @@ class OmsorgspengesoknadProsesseringTest {
         harForståttRettigheterOgPlikter = true,
         beskrivelse = "Blablabla",
         søknadstype = "omsorgspenger",
-        vedleggUrls = listOf(vedleggUrl)
+        vedleggUrls = listOf(vedleggUrl),
+        titler = listOf("Tittel")
     )
 
     private fun ventPaaAtRetryMekanismeIStreamProsessering() = runBlocking { delay(Duration.ofSeconds(30)) }

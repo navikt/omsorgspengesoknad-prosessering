@@ -15,7 +15,7 @@ data class PreprosessertEttersendingV1(
     val harBekreftetOpplysninger: Boolean,
     val beskrivelse: String,
     val søknadstype: String,
-    val titler: List<String>?
+    val titler: List<String>
     ) {
     internal constructor(
         melding: EttersendingV1,

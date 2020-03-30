@@ -14,5 +14,5 @@ data class EttersendingV1(
     val harBekreftetOpplysninger: Boolean,
     val beskrivelse: String,
     val søknadstype: String,
-    val titler: List<String>? = null
+    val titler: List<String>
 )

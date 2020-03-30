@@ -216,7 +216,7 @@ internal class PdfV1Generator {
                             "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger
                         ),
                         "titler" to mapOf(
-                            "tittel" to melding.titler?.somMapTitler()
+                            "vedlegg" to melding.titler?.somMapTitler()
                         ),
                         "hjelp" to mapOf(
                             "språk" to melding.språk?.sprakTilTekst()
