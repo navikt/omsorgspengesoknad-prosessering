@@ -215,6 +215,9 @@ internal class PdfV1Generator {
                             "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
                             "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger
                         ),
+                        "titler" to mapOf(
+                            "tittel" to melding.titler?.somMapTitler()
+                        ),
                         "hjelp" to mapOf(
                             "språk" to melding.språk?.sprakTilTekst()
                         )
@@ -299,6 +302,15 @@ private fun List<URI>.somMapVedleggUrls(): List<Map<String, Any?>> {
         )
     }
 }
+
+private fun List<String>.somMapTitler(): List<Map<String, Any?>> {
+    return map {
+        mapOf(
+            "tittel" to it
+        )
+    }
+}
+
 
 private fun Søker.formatertNavn() = if (mellomnavn != null) "$fornavn $mellomnavn $etternavn" else "$fornavn $etternavn"
 

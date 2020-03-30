@@ -162,7 +162,8 @@ class PdfV1GeneratorTest {
         søknadstype = "Omsorgspenger",
         vedleggUrls = listOf(URI("http://localhost:8081/vedlegg1"),
                                 URI("http://localhost:8081/vedlegg2"),
-                                URI("http://localhost:8081/vedlegg3"))
+                                URI("http://localhost:8081/vedlegg3")),
+        titler = listOf("vedlegg1", "vedlegg2")
 
     )
 

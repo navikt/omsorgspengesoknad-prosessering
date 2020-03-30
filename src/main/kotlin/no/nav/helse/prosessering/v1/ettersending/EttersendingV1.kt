@@ -13,5 +13,6 @@ data class EttersendingV1(
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
     val beskrivelse: String,
-    val søknadstype: String
+    val søknadstype: String,
+    val titler: List<String>? = null
 )
