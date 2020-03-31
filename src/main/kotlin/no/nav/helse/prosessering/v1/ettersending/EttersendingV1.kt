@@ -8,7 +8,7 @@ data class EttersendingV1(
     val søker : Søker,
     val søknadId: String,
     val mottatt: ZonedDateTime,
-    val språk: String,
+    val språk: String? = "nb",
     val vedleggUrls: List<URI>,
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,
