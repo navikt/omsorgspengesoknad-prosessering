@@ -12,7 +12,7 @@ import no.nav.helse.prosessering.SoknadId
 import no.nav.helse.prosessering.v1.ettersending.PreprosessertEttersendingV1
 import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
 import no.nav.helse.prosessering.v1.ettersending.reportMetrics
-import no.nav.helse.prosessering.v1.overforeDager.PreprossesertMeldingV1OverforeDager
+import no.nav.helse.prosessering.v1.overforeDager.PreprossesertOverforeDagerV1
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import no.nav.helse.prosessering.v1.overforeDager.reportMetrics
 import no.nav.helse.tpsproxy.Ident
@@ -118,7 +118,7 @@ internal class PreprosseseringV1Service(
     internal suspend fun preprosseserOverforeDager(
         melding: SøknadOverføreDagerV1,
         metadata: Metadata
-    ): PreprossesertMeldingV1OverforeDager {
+    ): PreprossesertOverforeDagerV1 {
         val søknadId = SoknadId(melding.søknadId)
         logger.info("Preprosseserer søknad om overføring av omsorgsdager med søknadsId: $søknadId")
 
@@ -160,7 +160,7 @@ internal class PreprosseseringV1Service(
         logger.info("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
 
         val preprossesertMeldingV1OverforeDager =
-            PreprossesertMeldingV1OverforeDager(
+            PreprossesertOverforeDagerV1(
                 melding = melding,
                 søkerAktørId = søkerAktørId,
                 dokumentUrls = komplettDokumentUrls.toList()

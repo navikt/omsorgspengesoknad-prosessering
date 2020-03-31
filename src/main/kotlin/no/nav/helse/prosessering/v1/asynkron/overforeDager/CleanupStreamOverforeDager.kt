@@ -49,8 +49,8 @@ internal class CleanupStreamOverforeDager(
                     process(NAME, soknadId, entry) {
                         logger.info("Sletter overfore dager dokumenter.")
                         dokumentService.slettDokumeter(
-                            urlBolks = entry.data.melding.dokumentUrls,
-                            aktørId = AktørId(entry.data.melding.søker.aktørId),
+                            urlBolks = entry.data.meldingV1.dokumentUrls,
+                            aktørId = AktørId(entry.data.meldingV1.søker.aktørId),
                             correlationId = CorrelationId(entry.metadata.correlationId)
                         )
                         logger.info("Dokumenter slettet.")

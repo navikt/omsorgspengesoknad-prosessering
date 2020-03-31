@@ -34,7 +34,7 @@ private val medlemskapMedUtenlandsopphold = Counter.build()
     .labelNames("har_bodd_i_utlandet_siste_12_mnd", "utenlandsopphold")
     .register()
 
-internal fun PreprossesertMeldingV1OverforeDager.reportMetrics() {
+internal fun PreprossesertOverforeDagerV1.reportMetrics() {
 
     jaNeiCounter.labels("har_bodd_i_utlandet_siste_12_mnd", medlemskap.harBoddIUtlandetSiste12Mnd.tilJaEllerNei()).inc()
 

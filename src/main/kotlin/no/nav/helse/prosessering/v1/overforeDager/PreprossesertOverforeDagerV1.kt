@@ -5,7 +5,7 @@ import no.nav.helse.prosessering.v1.*
 import java.net.URI
 import java.time.ZonedDateTime
 
-data class PreprossesertMeldingV1OverforeDager(
+data class PreprossesertOverforeDagerV1(
     val soknadId: String,
     val mottatt: ZonedDateTime,
     val søker: PreprossesertSøker,

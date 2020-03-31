@@ -10,7 +10,7 @@ import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
 import no.nav.helse.prosessering.v1.ettersending.PreprosessertEttersendingV1
 import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
-import no.nav.helse.prosessering.v1.overforeDager.PreprossesertMeldingV1OverforeDager
+import no.nav.helse.prosessering.v1.overforeDager.PreprossesertOverforeDagerV1
 import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import no.nav.k9.ettersendelse.Ettersendelse
 import no.nav.k9.søknad.omsorgspenger.OmsorgspengerSøknad
@@ -23,12 +23,12 @@ import org.apache.kafka.common.serialization.StringSerializer
 data class TopicEntry<V>(val metadata: Metadata, val data: V)
 
 data class Cleanup(val metadata: Metadata, val melding: PreprossesertMeldingV1, val journalførtMelding: Journalfort)
-data class CleanupOverforeDager(val metadata: Metadata, val melding: PreprossesertMeldingV1OverforeDager, val journalførtMelding: JournalfortOverforeDager)
+data class CleanupOverforeDager(val metadata: Metadata, val meldingV1: PreprossesertOverforeDagerV1, val journalførtMelding: JournalfortOverforeDager)
 data class CleanupEttersending(val metadata: Metadata, val melding: PreprosessertEttersendingV1, val journalførtMelding: JournalfortEttersending)
 
 data class Journalfort(val journalpostId: String, val søknad: OmsorgspengerSøknad)
 data class JournalfortOverforeDager(val journalpostId: String, val søknad: OmsorgspengerOverføringSøknad)
-data class JournalfortEttersending(val journalpostId: String, val søknad: Ettersendelse)//TODO:Egen søknad for ettersending
+data class JournalfortEttersending(val journalpostId: String, val søknad: Ettersendelse)
 
 internal data class Topic<V>(
     val name: String,
@@ -144,8 +144,8 @@ private class MottattSoknadSerDesOverforeDager: SerDes<TopicEntry<SøknadOverfø
     }
 }
 
-private class PreprossesertSerDesOverforeDager: SerDes<TopicEntry<PreprossesertMeldingV1OverforeDager>>() {
-    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<PreprossesertMeldingV1OverforeDager>? {
+private class PreprossesertSerDesOverforeDager: SerDes<TopicEntry<PreprossesertOverforeDagerV1>>() {
+    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<PreprossesertOverforeDagerV1>? {
         return data?.let {
             objectMapper.readValue(it)
         }

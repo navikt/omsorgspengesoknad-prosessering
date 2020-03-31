@@ -7,7 +7,7 @@ import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
-import no.nav.helse.prosessering.v1.overforeDager.PreprossesertMeldingV1OverforeDager
+import no.nav.helse.prosessering.v1.overforeDager.PreprossesertOverforeDagerV1
 import no.nav.helse.prosessering.v1.PreprossesertSøker
 import no.nav.helse.prosessering.v1.asynkron.*
 import no.nav.helse.prosessering.v1.asynkron.Topic
@@ -47,13 +47,13 @@ internal class JournalforingsStreamOverforeDager(
 
         private fun topology(joarkGateway: JoarkGateway): Topology {
             val builder = StreamsBuilder()
-            val fraPreprossesert: Topic<TopicEntry<PreprossesertMeldingV1OverforeDager>> = Topics.PREPROSSESERT_OVERFOREDAGER
+            val fraPreprossesertV1: Topic<TopicEntry<PreprossesertOverforeDagerV1>> = Topics.PREPROSSESERT_OVERFOREDAGER
             val tilCleanup: Topic<TopicEntry<CleanupOverforeDager>> = Topics.CLEANUP_OVERFOREDAGER
 
             val mapValues = builder
-                .stream<String, TopicEntry<PreprossesertMeldingV1OverforeDager>>(
-                    fraPreprossesert.name,
-                    Consumed.with(fraPreprossesert.keySerde, fraPreprossesert.valueSerde)
+                .stream<String, TopicEntry<PreprossesertOverforeDagerV1>>(
+                    fraPreprossesertV1.name,
+                    Consumed.with(fraPreprossesertV1.keySerde, fraPreprossesertV1.valueSerde)
                 )
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
@@ -77,7 +77,7 @@ internal class JournalforingsStreamOverforeDager(
 
                         CleanupOverforeDager(
                             metadata = entry.metadata,
-                            melding = entry.data,
+                            meldingV1 = entry.data,
                             journalførtMelding = journalfort
                         )
                     }
@@ -91,7 +91,7 @@ internal class JournalforingsStreamOverforeDager(
     internal fun stop() = stream.stop(becauseOfError = false)
 }
 
-private fun PreprossesertMeldingV1OverforeDager.tilK9OmsorgspengerOverføringSøknad(): OmsorgspengerOverføringSøknad {
+private fun PreprossesertOverforeDagerV1.tilK9OmsorgspengerOverføringSøknad(): OmsorgspengerOverføringSøknad {
     val builder = OmsorgspengerOverføringSøknad.builder()
         .søknadId(SøknadId.of(soknadId))
         .mottattDato(mottatt)

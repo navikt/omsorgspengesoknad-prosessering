@@ -68,7 +68,7 @@ internal class JournalføringStreamEttersending(
                         logger.info("Dokumenter journalført med ID = ${journaPostId.journalpostId}.")
                         val journalfort = JournalfortEttersending(
                             journalpostId = journaPostId.journalpostId,
-                            søknad = entry.data.tilK9Ettersendelse()//TODO:Egen søknad for ettersending
+                            søknad = entry.data.tilK9Ettersendelse()
                         )
                         CleanupEttersending(
                             metadata = entry.metadata,

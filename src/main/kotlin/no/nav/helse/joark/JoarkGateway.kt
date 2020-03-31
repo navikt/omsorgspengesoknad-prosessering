@@ -47,7 +47,6 @@ class JoarkGateway(
         pathParts = listOf("v1", "omsorgsdageroverforing", "journalforing")
     ).toString()
 
-    //TODO: Egen url for ettersending til joark
 
     private val objectMapper = configuredObjectMapper()
     private val cachedAccessTokenClient = CachedAccessTokenClient(accessTokenClient)
