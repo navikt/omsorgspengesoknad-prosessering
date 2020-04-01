@@ -84,7 +84,7 @@ class DokumentService(
             dokument = DokumentGateway.Dokument(
                 content = Søknadsformat.somJsonEttersending(melding),
                 contentType = "application/json",
-                title = "Ettersending av vedlegg som JSON"
+                title = "Ettersendelse omsorgspenger som JSON"
             ),
             aktørId = aktørId,
             correlationId = correlationId

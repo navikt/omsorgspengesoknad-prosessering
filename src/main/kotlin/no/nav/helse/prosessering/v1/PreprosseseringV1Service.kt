@@ -192,7 +192,7 @@ internal class PreprosseseringV1Service(
             pdf = soknadOppsummeringPdf,
             correlationId = correlationId,
             aktørId = søkerAktørId,
-            dokumentbeskrivelse = "Ettersending av vedlegg"
+            dokumentbeskrivelse = "Ettersendelse omsorgspenger"
         )
         logger.info("Mellomlagring av Oppsummerings-PDF OK")
 
