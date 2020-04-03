@@ -14,6 +14,7 @@ import no.nav.helse.kafka.ManagedStreamReady
 import no.nav.helse.prosessering.v1.PreprossesertSøker
 import no.nav.helse.prosessering.v1.ettersending.PreprosessertEttersendingV1
 import no.nav.k9.ettersendelse.Ettersendelse
+import no.nav.k9.ettersendelse.Ytelse
 import no.nav.k9.søknad.felles.NorskIdentitetsnummer
 import no.nav.k9.søknad.felles.Søker
 import no.nav.k9.søknad.felles.SøknadId
@@ -87,9 +88,9 @@ internal class JournalføringStreamEttersending(
 }
 
 private fun PreprosessertEttersendingV1.tilK9Ettersendelse(): Ettersendelse = Ettersendelse.builder()
-    .søknadId(SøknadId.of(soknadId))
     .mottattDato(mottatt)
     .søker(søker.tilK9Søker())
+    .ytelse(Ytelse.OMSORGSPENGER)
     .build()
 
 private fun PreprossesertSøker.tilK9Søker(): Søker = Søker.builder()
