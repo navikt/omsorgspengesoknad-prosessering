@@ -39,9 +39,7 @@ data class SøknadOverføreDagerV1 (
 )
 
 data class Fosterbarn(
-    val fødselsnummer: String,
-    val fornavn: String,
-    val etternavn: String
+    val fødselsnummer: String
 )
 
 enum class Arbeidssituasjon(val utskriftvennlig: String) {

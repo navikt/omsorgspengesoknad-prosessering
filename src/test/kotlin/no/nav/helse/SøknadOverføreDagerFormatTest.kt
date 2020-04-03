@@ -41,9 +41,7 @@ class SøknadOverføreDagerFormatTest {
                   "harForståttRettigheterOgPlikter": true,
                   "fosterbarn" : [
                     {
-                    "fødselsnummer": "123456789",
-                    "fornavn": "fornavn",
-                    "etternavn": "etternavn"
+                    "fødselsnummer": "123456789"
                     }
                   ]
                 }
@@ -76,7 +74,7 @@ class SøknadOverføreDagerFormatTest {
         antallDager = 10,
         fnrMottaker = "123456789",
         fosterbarn = listOf(
-            Fosterbarn("123456789", "fornavn","etternavn")
+            Fosterbarn("123456789")
         )
     )
 }
