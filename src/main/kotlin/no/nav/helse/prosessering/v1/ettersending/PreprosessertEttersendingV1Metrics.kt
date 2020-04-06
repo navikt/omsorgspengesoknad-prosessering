@@ -11,4 +11,3 @@ private val antallVedleggHistogram = Histogram.build()
 internal fun PreprosessertEttersendingV1.reportMetrics() {
     antallVedleggHistogram.observe(dokumentUrls.size.toDouble()-1) //Minus 1 fordi også oppsummeringPDF blir lagt i dokumentUrls
 }
-
