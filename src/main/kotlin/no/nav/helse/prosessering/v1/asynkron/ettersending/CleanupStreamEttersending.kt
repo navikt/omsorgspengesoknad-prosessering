@@ -1,4 +1,4 @@
-package no.nav.helse.prosessering.v1.asynkron
+package no.nav.helse.prosessering.v1.asynkron.ettersending
 
 import no.nav.helse.CorrelationId
 import no.nav.helse.aktoer.AktørId
@@ -7,14 +7,17 @@ import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
+import no.nav.helse.prosessering.v1.asynkron.*
+import no.nav.helse.prosessering.v1.asynkron.Topic
+import no.nav.helse.prosessering.v1.asynkron.Topics
+import no.nav.helse.prosessering.v1.asynkron.process
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.slf4j.LoggerFactory
-import java.net.URI
 
-internal class CleanupStreamOverforeDager(
+internal class CleanupStreamEttersending(
     kafkaConfig: KafkaConfig,
     dokumentService: DokumentService
 ) {
@@ -29,29 +32,29 @@ internal class CleanupStreamOverforeDager(
     internal val healthy = ManagedStreamHealthy(stream)
 
     private companion object {
-        private const val NAME = "CleanupV1OverforeDager"
+        private const val NAME = "CleanupV1Ettersending"
         private val logger = LoggerFactory.getLogger("no.nav.$NAME.topology")
 
         private fun topology(dokumentService: DokumentService): Topology {
             val builder = StreamsBuilder()
-            val fraCleanup: Topic<TopicEntry<CleanupOverforeDager>> = Topics.CLEANUP_OVERFOREDAGER
-            val tilJournalfort: Topic<TopicEntry<JournalfortOverforeDager>> = Topics.JOURNALFORT_OVERFOREDAGER
+            val fraCleanup: Topic<TopicEntry<CleanupEttersending>> = Topics.CLEANUP_ETTERSENDING
+            val tilJournalfort: Topic<TopicEntry<JournalfortEttersending>> = Topics.JOURNALFORT_ETTERSENDING
 
             builder
-                .stream<String, TopicEntry<CleanupOverforeDager>>(
+                .stream<String, TopicEntry<CleanupEttersending>>(
                     fraCleanup.name, Consumed.with(fraCleanup.keySerde, fraCleanup.valueSerde)
                 )
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
-                        logger.info("Sletter overfore dager dokumenter.")
+                        logger.info("Sletter ettersending dokumenter.")
                         dokumentService.slettDokumeter(
                             urlBolks = entry.data.melding.dokumentUrls,
                             aktørId = AktørId(entry.data.melding.søker.aktørId),
                             correlationId = CorrelationId(entry.metadata.correlationId)
                         )
                         logger.info("Dokumenter slettet.")
-                        logger.info("Videresender journalført overføre dager melding")
+                        logger.info("Videresender journalført ettersending melding")
                         entry.data.journalførtMelding
                     }
                 }

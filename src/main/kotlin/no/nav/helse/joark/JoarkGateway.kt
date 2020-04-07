@@ -154,6 +154,53 @@ class JoarkGateway(
         )
     }
 
+    suspend fun journalførEttersending(
+        aktørId: AktørId,
+        norskIdent: String,
+        mottatt: ZonedDateTime,
+        dokumenter: List<List<URI>>,
+        correlationId: CorrelationId
+    ): JournalPostId {
+
+        val authorizationHeader = cachedAccessTokenClient.getAccessToken(journalforeScopes).asAuthoriationHeader()
+
+        val joarkRequest = JoarkRequest(
+            aktoerId = aktørId.id,
+            norskIdent = norskIdent,
+            mottatt = mottatt,
+            dokumenter = dokumenter
+        )
+
+        val body = objectMapper.writeValueAsBytes(joarkRequest)
+        val contentStream = { ByteArrayInputStream(body) }
+
+        val httpRequest = completeUrl
+            .httpPost()
+            .body(contentStream)
+            .header(
+                HttpHeaders.XCorrelationId to correlationId.value,
+                HttpHeaders.Authorization to authorizationHeader,
+                HttpHeaders.ContentType to "application/json",
+                HttpHeaders.Accept to "application/json"
+            )
+
+        val (request, response, result) = Operation.monitored(
+            app = "omsorgspengesoknad-prosessering",
+            operation = JOURNALFORING_OPERATION,
+            resultResolver = { 201 == it.second.statusCode }
+        ) { httpRequest.awaitStringResponseResult() }
+
+        return result.fold(
+            { success -> objectMapper.readValue(success) },
+            { error ->
+                logger.error("Error response = '${error.response.body().asString("text/plain")}' fra '${request.url}'")
+                logger.error(error.toString())
+                throw HttpError(response.statusCode, "Feil ved jorunalføring.")
+            }
+        )
+    }
+
+
     private fun configuredObjectMapper(): ObjectMapper {
         val objectMapper = jacksonObjectMapper()
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val dusseldorfKtorVersion = "1.3.2.4e29fb7"
-val k9FormatVersion = "3.0.0.3794ec7"
+val k9FormatVersion = "3.0.0.f5ec313"
 val ktorVersion = ext.get("ktorVersion").toString()
 val slf4jVersion = ext.get("slf4jVersion").toString()
 val kotlinxCoroutinesVersion = ext.get("kotlinxCoroutinesVersion").toString()
@@ -33,6 +33,7 @@ dependencies {
     implementation ( "no.nav.helse:dusseldorf-ktor-auth:$dusseldorfKtorVersion")
     implementation ( "no.nav.k9:soknad-omsorgspenger:$k9FormatVersion")
     implementation ( "no.nav.k9:soknad-omsorgspenger-overforing:$k9FormatVersion")
+    implementation ( "no.nav.k9:ettersendelse:$k9FormatVersion")
 
     implementation ( "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$kotlinxCoroutinesVersion")
     

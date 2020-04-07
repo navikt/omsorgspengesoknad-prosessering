@@ -24,30 +24,6 @@ data class MeldingV1(
     val harForståttRettigheterOgPlikter: Boolean
 )
 
-data class SøknadOverføreDagerV1 (
-    val søknadId: String,
-    val mottatt: ZonedDateTime,
-    val søker: Søker,
-    val språk: String? = "nb",
-    val antallDager: Int,
-    val fnrMottaker: String,
-    val medlemskap: Medlemskap,
-    val harForståttRettigheterOgPlikter: Boolean,
-    val harBekreftetOpplysninger: Boolean,
-    val arbeidssituasjon: List<Arbeidssituasjon>,
-    val fosterbarn: List<Fosterbarn>? = listOf()
-)
-
-data class Fosterbarn(
-    val fødselsnummer: String
-)
-
-enum class Arbeidssituasjon(val utskriftvennlig: String) {
-    @JsonProperty("arbeidstaker") ARBEIDSTAKER("Arbeidstaker"),
-    @JsonProperty("selvstendigNæringsdrivende") SELVSTENDIGNÆRINGSDRIVENDE("Selvstendig næringsdrivende"),
-    @JsonProperty("frilanser") FRILANSER("Frilanser")
-}
-
 data class Søker(
     val fødselsnummer: String,
     val fornavn: String,

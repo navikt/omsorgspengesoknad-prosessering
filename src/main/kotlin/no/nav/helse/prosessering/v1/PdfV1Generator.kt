@@ -9,8 +9,13 @@ import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import no.nav.helse.aktoer.NorskIdent
 import no.nav.helse.dusseldorf.ktor.core.fromResources
+import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
+import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
+import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
+import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.net.URI
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -20,6 +25,7 @@ internal class PdfV1Generator {
         private const val ROOT = "handlebars"
         private const val SOKNAD = "soknad"
         private const val SOKNAD_OVERFOREDAGER = "soknadOverforeDager"
+        private const val SOKNAD_ETTERSENDING = "soknadEttersending"
 
         private val REGULAR_FONT = "$ROOT/fonts/SourceSansPro-Regular.ttf".fromResources().readBytes()
         private val BOLD_FONT = "$ROOT/fonts/SourceSansPro-Bold.ttf".fromResources().readBytes()
@@ -51,6 +57,7 @@ internal class PdfV1Generator {
 
         private val soknadTemplate = handlebars.compile(SOKNAD)
         private val soknadOverforeDagerTemplate = handlebars.compile(SOKNAD_OVERFOREDAGER)
+        private val soknadEttersendingTemplate = handlebars.compile(SOKNAD_ETTERSENDING)
 
         private val ZONE_ID = ZoneId.of("Europe/Oslo")
         private val DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy").withZone(ZONE_ID)
@@ -185,6 +192,56 @@ internal class PdfV1Generator {
         }
     }
 
+    internal fun generateSoknadOppsummeringPdfEttersending(
+        melding: EttersendingV1
+    ): ByteArray {
+        soknadEttersendingTemplate.apply(
+            Context
+                .newBuilder(
+                    mapOf(
+                        "soknad_id" to melding.søknadId,
+                        "soknad_mottatt_dag" to melding.mottatt.withZoneSameInstant(ZONE_ID).norskDag(),
+                        "soknad_mottatt" to DATE_TIME_FORMATTER.format(melding.mottatt),
+                        "søker" to mapOf(
+                            "navn" to melding.søker.formatertNavn(),
+                            "fødselsnummer" to melding.søker.fødselsnummer
+                        ),
+                        "beskrivelse" to melding.beskrivelse,
+                        "vedleggUrls" to mapOf(
+                            "vedlegg" to melding.vedleggUrls.somMapVedleggUrls()
+                        ),
+                        "søknadstype" to melding.søknadstype,
+                        "samtykke" to mapOf(
+                            "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
+                            "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger
+                        ),
+                        "titler" to mapOf(
+                            "vedlegg" to melding.titler?.somMapTitler()
+                        ),
+                        "hjelp" to mapOf(
+                            "språk" to melding.språk?.sprakTilTekst()
+                        )
+                    )
+                )
+                .resolver(MapValueResolver.INSTANCE)
+                .build()
+        ).let { html ->
+            val outputStream = ByteArrayOutputStream()
+
+            PdfRendererBuilder()
+                .useFastMode()
+                .withHtmlContent(html, "")
+                .medFonter()
+                .toStream(outputStream)
+                .buildPdfRenderer()
+                .createPDF()
+
+            return outputStream.use {
+                it.toByteArray()
+            }
+        }
+    }
+
     private fun PdfRendererBuilder.medFonter() =
         useFont(
             { ByteArrayInputStream(REGULAR_FONT) },
@@ -235,6 +292,23 @@ private fun List<Fosterbarn>.somMapFosterbarn(): List<Map<String, Any?>> {
         )
     }
 }
+
+private fun List<URI>.somMapVedleggUrls(): List<Map<String, Any?>> {
+    return map {
+        mapOf(
+            "navn" to it
+        )
+    }
+}
+
+private fun List<String>.somMapTitler(): List<Map<String, Any?>> {
+    return map {
+        mapOf(
+            "tittel" to it
+        )
+    }
+}
+
 
 private fun Søker.formatertNavn() = if (mellomnavn != null) "$fornavn $mellomnavn $etternavn" else "$fornavn $etternavn"
 
