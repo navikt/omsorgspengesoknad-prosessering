@@ -288,8 +288,6 @@ private fun List<Utenlandsopphold>.somMapUtenlandsopphold(): List<Map<String, An
 private fun List<Fosterbarn>.somMapFosterbarn(): List<Map<String, Any?>> {
     return map {
         mapOf(
-            "fornavn" to it.fornavn,
-            "etternavn" to it.etternavn,
             "fnr" to it.fødselsnummer
         )
     }

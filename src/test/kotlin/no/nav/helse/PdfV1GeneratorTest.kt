@@ -137,8 +137,8 @@ class PdfV1GeneratorTest {
             fødselsdato = fødselsdato
         ),
         fosterbarn = listOf(
-            Fosterbarn("29099012345","Kjell","Olsen"),
-            Fosterbarn("02119970078","Torkel","Olsen")
+            Fosterbarn("29099012345"),
+            Fosterbarn("02119970078")
         )
     )
 
