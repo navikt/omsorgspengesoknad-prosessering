@@ -451,6 +451,7 @@ class OmsorgspengesoknadProsesseringTest {
         ),
         antallDager = 5,
         fnrMottaker = gyldigFodselsnummerB,
+        navnMottaker = "Navn På Mottaker",
         fosterbarn = listOf(
             Fosterbarn("29099012345"),
             Fosterbarn("02119970078")

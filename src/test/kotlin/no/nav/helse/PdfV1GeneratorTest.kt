@@ -127,6 +127,7 @@ class PdfV1GeneratorTest {
             )
         ),
         fnrMottaker = "123456789",
+        navnMottaker = null,
         mottatt = ZonedDateTime.now(),
         søker = Søker(
             aktørId = "123456",
@@ -168,6 +169,10 @@ class PdfV1GeneratorTest {
     )
 
     private fun genererOppsummeringsPdfer(writeBytes: Boolean) {
+
+        val outputDirectory = File("out")
+        if (! outputDirectory.exists()) outputDirectory.mkdir()
+
         var id = "1-full-søknad"
         var pdf = generator.generateSoknadOppsummeringPdf(
             melding = fullGyldigMelding(soknadsId = id),
@@ -198,7 +203,7 @@ class PdfV1GeneratorTest {
 
     }
 
-    private fun pdfPath(soknadId: String) = "${System.getProperty("user.dir")}/generated-pdf-$soknadId.pdf"
+    private fun pdfPath(soknadId: String) = "${System.getProperty("user.dir")}/out/generated-pdf-$soknadId.pdf"
 
     @Test
     fun `generering av oppsummerings-PDF fungerer`() {
@@ -206,7 +211,6 @@ class PdfV1GeneratorTest {
     }
 
     @Test
-    @Ignore
     fun `opprett lesbar oppsummerings-PDF`() {
         genererOppsummeringsPdfer(true)
     }

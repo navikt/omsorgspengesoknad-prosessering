@@ -51,6 +51,9 @@
     <!-- SØKNAD -->
     <h2><span>Melding</span></h2>
     <p><b>Hvem skal dagene overføres til?</b> {{fnrMottaker}}</p>
+    {{#if navnMottaker}}
+    <p><b>Navn på den som dagene skal overføres til:</b> {{navnMottaker}}</p>
+    {{/if}}
     <p><b>Hvor mange dager skal overføres?</b> {{antallDager}}</p>
 
     <!-- Fosterbarn -->

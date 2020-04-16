@@ -12,6 +12,7 @@ data class SøknadOverføreDagerV1 (
     val språk: String? = "nb",
     val antallDager: Int,
     val fnrMottaker: String,
+    val navnMottaker: String?,
     val medlemskap: Medlemskap,
     val harForståttRettigheterOgPlikter: Boolean,
     val harBekreftetOpplysninger: Boolean,

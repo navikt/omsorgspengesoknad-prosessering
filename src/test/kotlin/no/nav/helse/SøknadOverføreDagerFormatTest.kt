@@ -34,6 +34,7 @@ class SøknadOverføreDagerFormatTest {
                   },
                   "antallDager": 10,
                   "fnrMottaker": "123456789",
+                  "navnMottaker": "Navn På Mottaker",
                   "medlemskap": {
                     "harBoddIUtlandetSiste12Mnd": true,
                     "utenlandsoppholdSiste12Mnd": [],
@@ -76,6 +77,7 @@ class SøknadOverføreDagerFormatTest {
         harForståttRettigheterOgPlikter = true,
         antallDager = 10,
         fnrMottaker = "123456789",
+        navnMottaker = "Navn På Mottaker",
         fosterbarn = listOf(
             Fosterbarn("123456789")
         )
