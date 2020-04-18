@@ -155,6 +155,7 @@ internal class PdfV1Generator {
                         "arbeidssituasjon" to melding.arbeidssituasjon.somMapUtskriftvennlig(),
                         "antallDager" to melding.antallDager,
                         "fnrMottaker" to melding.fnrMottaker,
+                        "navnMottaker" to melding.navnMottaker,
                         "medlemskap" to mapOf(
                             "har_bodd_i_utlandet_siste_12_mnd" to melding.medlemskap.harBoddIUtlandetSiste12Mnd,
                             "utenlandsopphold_siste_12_mnd" to melding.medlemskap.utenlandsoppholdSiste12Mnd.somMapUtenlandsopphold(),
