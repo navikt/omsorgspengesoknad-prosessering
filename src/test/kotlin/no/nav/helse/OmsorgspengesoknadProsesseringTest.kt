@@ -15,11 +15,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.time.delay
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
-import no.nav.helse.k9.assertEttersendeFormat
 import no.nav.helse.k9.assertUtvidetAntallDagerFormat
 import no.nav.helse.prosessering.v1.*
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
-import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.slf4j.Logger
@@ -56,10 +54,8 @@ class OmsorgspengesoknadProsesseringTest {
 
         private val kafkaEnvironment = KafkaWrapper.bootstrap()
         private val kafkaTestProducer = kafkaEnvironment.meldingsProducer()
-        private val kafkaTestProducerEttersending = kafkaEnvironment.meldingEttersendingProducer()
 
         private val journalføringsKonsumer = kafkaEnvironment.journalføringsKonsumer()
-        private val journalføringsKonsumerEttersending = kafkaEnvironment.journalføringsKonsumerEttersending()
 
 
         private val cleanupKonsumer = kafkaEnvironment.cleanupKonsumer()
@@ -135,19 +131,6 @@ class OmsorgspengesoknadProsesseringTest {
                 }
             }
         }
-    }
-
-    @Test
-    fun`Gyldig ettersending blir prosessert av journalføringkonsumer`(){
-        val søknad = gyldigMeldingEttersending(
-            fødselsnummerSoker = gyldigFodselsnummerA,
-            sprak = "nb"
-        )
-
-        kafkaTestProducerEttersending.leggTilMottak(søknad)
-        journalføringsKonsumerEttersending
-            .hentJournalførtMeldingEttersending(søknad.søknadId)
-            .assertEttersendeFormat()
     }
 
     @Test
@@ -404,30 +387,6 @@ class OmsorgspengesoknadProsesseringTest {
             harBoddIUtlandetSiste12Mnd = true,
             skalBoIUtlandetNeste12Mnd = true
         )
-    )
-
-    private fun gyldigMeldingEttersending(
-        fødselsnummerSoker: String,
-        sprak: String,
-        vedleggUrl: URI = URI("${wireMockServer.getK9DokumentBaseUrl()}/v1/dokument/${UUID.randomUUID()}")
-    ) : EttersendingV1 = EttersendingV1(
-        språk = sprak,
-        søknadId = UUID.randomUUID().toString(),
-        mottatt = ZonedDateTime.now(),
-        søker = Søker(
-            aktørId = "123456",
-            fødselsnummer = fødselsnummerSoker,
-            fødselsdato = LocalDate.now().minusDays(1000),
-            etternavn = "Nordmann",
-            mellomnavn = "Mellomnavn",
-            fornavn = "Ola"
-        ),
-        harBekreftetOpplysninger = true,
-        harForståttRettigheterOgPlikter = true,
-        beskrivelse = "Blablabla",
-        søknadstype = "omsorgspenger",
-        vedleggUrls = listOf(vedleggUrl),
-        titler = listOf("Tittel")
     )
 
     private fun ventPaaAtRetryMekanismeIStreamProsessering() = runBlocking { delay(Duration.ofSeconds(30)) }
