@@ -33,7 +33,6 @@ dependencies {
     implementation ( "no.nav.helse:dusseldorf-ktor-auth:$dusseldorfKtorVersion")
     implementation ( "no.nav.k9:soknad-omsorgspenger:$k9FormatVersion")
     implementation ( "no.nav.k9:soknad-omsorgspenger-overforing:$k9FormatVersion")
-    implementation ( "no.nav.k9:ettersendelse:$k9FormatVersion")
 
     implementation ( "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$kotlinxCoroutinesVersion")
     
