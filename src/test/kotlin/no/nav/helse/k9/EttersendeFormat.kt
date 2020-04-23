@@ -1,7 +1,6 @@
 package no.nav.helse.k9
 
 import no.nav.k9.ettersendelse.Ettersendelse
-import no.nav.k9.søknad.omsorgspenger.overføring.OmsorgspengerOverføringSøknad
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
 import kotlin.test.assertNotNull
