@@ -37,13 +37,13 @@ internal class AsynkronProsesseringV1Service(
     private val healthChecks = setOf(
         preprosseseringStream.healthy,
         journalforingsStream.healthy,
-        cleanupStream.healthy,
+        cleanupStream.healthy
     )
 
     private val isReadyChecks = setOf(
         preprosseseringStream.ready,
         journalforingsStream.ready,
-        cleanupStream.ready,
+        cleanupStream.ready
     )
 
     internal fun stop() {
