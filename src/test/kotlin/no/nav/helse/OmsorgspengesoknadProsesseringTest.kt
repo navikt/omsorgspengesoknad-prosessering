@@ -16,14 +16,10 @@ import kotlinx.coroutines.time.delay
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.helse.k9.assertEttersendeFormat
-import no.nav.helse.k9.assertOverføreDagerFormat
 import no.nav.helse.k9.assertUtvidetAntallDagerFormat
 import no.nav.helse.prosessering.v1.*
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
-import no.nav.helse.prosessering.v1.overforeDager.Arbeidssituasjon
-import no.nav.helse.prosessering.v1.overforeDager.Fosterbarn
-import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.slf4j.Logger
@@ -60,11 +56,9 @@ class OmsorgspengesoknadProsesseringTest {
 
         private val kafkaEnvironment = KafkaWrapper.bootstrap()
         private val kafkaTestProducer = kafkaEnvironment.meldingsProducer()
-        private val kafkaTestProducerOverforeDager = kafkaEnvironment.meldingOverforeDagersProducer()
         private val kafkaTestProducerEttersending = kafkaEnvironment.meldingEttersendingProducer()
 
         private val journalføringsKonsumer = kafkaEnvironment.journalføringsKonsumer()
-        private val journalføringsKonsumerOverforeDager = kafkaEnvironment.journalføringsKonsumerOverforeDager()
         private val journalføringsKonsumerEttersending = kafkaEnvironment.journalføringsKonsumerEttersending()
 
 
@@ -118,9 +112,7 @@ class OmsorgspengesoknadProsesseringTest {
             logger.info("Tearing down")
             wireMockServer.stop()
             journalføringsKonsumer.close()
-            journalføringsKonsumerOverforeDager.close()
             kafkaTestProducer.close()
-            kafkaTestProducerOverforeDager.close()
             stopEngine()
             kafkaEnvironment.tearDown()
             logger.info("Tear down complete")
@@ -156,19 +148,6 @@ class OmsorgspengesoknadProsesseringTest {
         journalføringsKonsumerEttersending
             .hentJournalførtMeldingEttersending(søknad.søknadId)
             .assertEttersendeFormat()
-    }
-
-    @Test
-    fun`Gyldig søknad for overføring av dager blir prosessert av journalføringkonsumer`(){
-        val søknad = gyldigMeldingOverforeDager(
-            fødselsnummerSoker = gyldigFodselsnummerA,
-            sprak = "nb"
-        )
-
-        kafkaTestProducerOverforeDager.leggTilMottak(søknad)
-        journalføringsKonsumerOverforeDager
-            .hentJournalførtMeldingOverforeDager(søknad.søknadId)
-            .assertOverføreDagerFormat()
     }
 
     @Test
@@ -424,37 +403,6 @@ class OmsorgspengesoknadProsesseringTest {
         medlemskap = Medlemskap(
             harBoddIUtlandetSiste12Mnd = true,
             skalBoIUtlandetNeste12Mnd = true
-        )
-    )
-
-    private fun gyldigMeldingOverforeDager(
-        fødselsnummerSoker: String,
-        sprak: String
-    ) : SøknadOverføreDagerV1 = SøknadOverføreDagerV1(
-        språk = sprak,
-        søknadId = UUID.randomUUID().toString(),
-        mottatt = ZonedDateTime.now(),
-        søker = Søker(
-            aktørId = "123456",
-            fødselsnummer = fødselsnummerSoker,
-            fødselsdato = LocalDate.now().minusDays(1000),
-            etternavn = "Nordmann",
-            mellomnavn = "Mellomnavn",
-            fornavn = "Ola"
-        ),
-        arbeidssituasjon = listOf(Arbeidssituasjon.ARBEIDSTAKER),
-        harBekreftetOpplysninger = true,
-        harForståttRettigheterOgPlikter = true,
-        medlemskap = Medlemskap(
-            harBoddIUtlandetSiste12Mnd = true,
-            skalBoIUtlandetNeste12Mnd = true
-        ),
-        antallDager = 5,
-        fnrMottaker = gyldigFodselsnummerB,
-        navnMottaker = "Navn På Mottaker",
-        fosterbarn = listOf(
-            Fosterbarn("29099012345"),
-            Fosterbarn("02119970078")
         )
     )
 

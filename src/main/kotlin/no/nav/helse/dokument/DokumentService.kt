@@ -4,7 +4,6 @@ import no.nav.helse.CorrelationId
 import no.nav.helse.aktoer.AktørId
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.ettersending.EttersendingV1
-import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -53,22 +52,6 @@ class DokumentService(
                 content = Søknadsformat.somJson(melding),
                 contentType = "application/json",
                 title = "Søknad om omsorgspenger som JSON"
-            ),
-            aktørId = aktørId,
-            correlationId = correlationId
-        )
-    }
-
-    internal suspend fun lagreSoknadOverforeDagerMelding(
-        melding: SøknadOverføreDagerV1,
-        aktørId: AktørId,
-        correlationId: CorrelationId
-    ) : URI {
-        return lagreDokument(
-            dokument = DokumentGateway.Dokument(
-                content = Søknadsformat.somJsonOverforeDager(melding),
-                contentType = "application/json",
-                title = "Melding om overføring av dager som JSON"
             ),
             aktørId = aktørId,
             correlationId = correlationId
