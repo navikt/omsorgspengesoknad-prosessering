@@ -8,14 +8,10 @@ import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
 import no.nav.helse.prosessering.v1.asynkron.Cleanup
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP
-import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT
-import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT
-import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT_OVERFOREDAGER
 import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSSESERT
-import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSSESERT_OVERFOREDAGER
-import no.nav.helse.prosessering.v1.overforeDager.SøknadOverføreDagerV1
+
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
@@ -42,11 +38,7 @@ object KafkaWrapper {
                 MOTTATT.name,
                 PREPROSSESERT.name,
                 JOURNALFORT.name,
-                CLEANUP.name,
-                MOTTATT_OVERFOREDAGER.name,
-                PREPROSSESERT_OVERFOREDAGER.name,
-                JOURNALFORT_OVERFOREDAGER.name,
-                CLEANUP_OVERFOREDAGER.name
+                CLEANUP.name
             )
         )
         return kafkaEnvironment
@@ -90,16 +82,6 @@ fun KafkaEnvironment.journalføringsKonsumer(): KafkaConsumer<String, String> {
     return consumer
 }
 
-fun KafkaEnvironment.journalføringsKonsumerOverforeDager(): KafkaConsumer<String, String> {
-    val consumer = KafkaConsumer(
-        testConsumerProperties("OverforeDagerKonsumer"),
-        StringDeserializer(),
-        StringDeserializer()
-    )
-    consumer.subscribe(listOf(JOURNALFORT_OVERFOREDAGER.name))
-    return consumer
-}
-
 fun KafkaEnvironment.cleanupKonsumer(): KafkaConsumer<String, TopicEntry<Cleanup>> {
     val consumer = KafkaConsumer(
         testConsumerProperties("OmsorgspengesøknadCleanupKonsumer"),
@@ -126,12 +108,6 @@ fun KafkaEnvironment.meldingsProducer() = KafkaProducer(
     MOTTATT.serDes
 )
 
-fun KafkaEnvironment.meldingOverforeDagersProducer() = KafkaProducer(
-    testProducerProperties("OmsorgspengesoknadOverføreDagerProsesseringTestProducer"),
-    MOTTATT_OVERFOREDAGER.keySerializer,
-    MOTTATT_OVERFOREDAGER.serDes
-)
-
 fun KafkaConsumer<String, String>.hentJournalførtMelding(
     soknadId: String,
     maxWaitInSeconds: Long = 20
@@ -141,25 +117,6 @@ fun KafkaConsumer<String, String>.hentJournalførtMelding(
         seekToBeginning(assignment())
         val entries = poll(Duration.ofSeconds(1))
             .records(JOURNALFORT.name)
-            .filter { it.key() == soknadId }
-
-        if (entries.isNotEmpty()) {
-            assertEquals(1, entries.size)
-            return entries.first().value()
-        }
-    }
-    throw IllegalStateException("Fant ikke opprettet oppgave for søknad $soknadId etter $maxWaitInSeconds sekunder.")
-}
-
-fun KafkaConsumer<String, String>.hentJournalførtMeldingOverforeDager(
-    soknadId: String,
-    maxWaitInSeconds: Long = 20
-): String {
-    val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
-    while (System.currentTimeMillis() < end) {
-        seekToBeginning(assignment())
-        val entries = poll(Duration.ofSeconds(1))
-            .records(JOURNALFORT_OVERFOREDAGER.name)
             .filter { it.key() == soknadId }
 
         if (entries.isNotEmpty()) {
@@ -212,23 +169,6 @@ fun KafkaProducer<String, TopicEntry<MeldingV1>>.leggTilMottak(soknad: MeldingV1
     send(
         ProducerRecord(
             MOTTATT.name,
-            soknad.søknadId,
-            TopicEntry(
-                metadata = Metadata(
-                    version = 1,
-                    correlationId = UUID.randomUUID().toString(),
-                    requestId = UUID.randomUUID().toString()
-                ),
-                data = soknad
-            )
-        )
-    ).get()
-}
-
-fun KafkaProducer<String, TopicEntry<SøknadOverføreDagerV1>>.leggTilMottak(soknad: SøknadOverføreDagerV1) {
-    send(
-        ProducerRecord(
-            MOTTATT_OVERFOREDAGER.name,
             soknad.søknadId,
             TopicEntry(
                 metadata = Metadata(
