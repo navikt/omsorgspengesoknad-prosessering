@@ -107,7 +107,8 @@ internal class PdfV1Generator {
                         ),
                         "hjelp" to mapOf(
                             "språk" to melding.språk?.sprakTilTekst()
-                        )
+                        ),
+                        "harIkkeLastetOppLegeerklæring" to melding.harIkkeLastetOppLegeerklæring()
                     )
                 )
                 .resolver(MapValueResolver.INSTANCE)
@@ -173,3 +174,5 @@ private fun String.sprakTilTekst() = when (this.toLowerCase()) {
     "nn" -> "nynorsk"
     else -> this
 }
+
+private fun MeldingV1.harIkkeLastetOppLegeerklæring() : Boolean = !legeerklæring.isNotEmpty()
