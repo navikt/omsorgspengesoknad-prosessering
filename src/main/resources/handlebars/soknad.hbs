@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Søknad om ekstra omsorgsdager</title>
-    {{#block 'style' }}
+    {{#block 'style-common' }}
     {{/block}}
 </head>
 
@@ -12,47 +12,46 @@
     <h1 id="header">
         Søknad om ekstra omsorgsdager
     </h1>
-    <div class="container">
-        <div id="container_top">
-            <p class="nokkelinfo">
-                <strong>Sendt til NAV</strong>
-                {{soknad_mottatt_dag}} {{ soknad_mottatt }}
+    <p class="nokkelinfo">
+        <strong>Sendt til NAV</strong>
+        {{soknad_mottatt_dag}} {{ soknad_mottatt }}
+    </p>
+
+    <div class="innholdscontainer">
+        <div class="person">
+            {{#if søker.relasjonTilBarnet}}
+            <p>
+                {{søker.relasjonTilBarnet}} til barnet.
             </p>
-            <div class="personBlock">
-                {{#if søker.relasjonTilBarnet}}
-                <p>
-                    {{søker.relasjonTilBarnet}} til barnet.
-                </p>
-                {{/if}}
-                <p class="navn">
-                    {{ søker.navn }}
-                </p>
-                <p class="id">
-                    {{ søker.fødselsnummer }}<br />
-                </p>
-            </div>
-            <div class="personBlock">
-                <p>Barn</p>
-                <p class="navn">
-                    {{# if barn.navn }}
-                    {{ barn.navn }}
-                    {{else}}
-                    <span class="ikke_satt">Navn ikke angitt</span>
-                    {{/if}}
-                </p>
-                <p class="id">
-                    {{# if barn.fødselsdato }}
-                    {{ barn.fødselsdato }} <br />
-                    {{/if}}
-                    {{# if barn.id }}
-                    {{ barn.id }}
-                    {{else}}
-                    <span class="ikke_satt">ID ikke angitt</span>
-                    {{/if}}
-                </p>
-            </div>
+            {{/if}}
+            <p class="navn">
+                {{ søker.navn }}
+            </p>
+            <p>
+                {{ søker.fødselsnummer }}<br />
+            </p>
         </div>
-        <!-- SAMTYKKE -->
+        <div class="person">
+            <p>Barn</p>
+            <p class="navn">
+                {{# if barn.navn }}
+                {{ barn.navn }}
+                {{else}}
+                <span class="ikke_satt">Navn ikke angitt</span>
+                {{/if}}
+            </p>
+            <p>
+                {{# if barn.fødselsdato }}
+                {{ barn.fødselsdato }} <br />
+                {{/if}}
+                {{# if barn.id }}
+                {{ barn.id }}
+                {{else}}
+                <span class="ikke_satt">ID ikke angitt</span>
+                {{/if}}
+            </p>
+        </div>
+
         <section>
             <h2>Kronisk eller funksjonshemming</h2>
             <p class="sporsmalstekst">Har barnet kronisk sykdom eller funksjonshemming?</p>
