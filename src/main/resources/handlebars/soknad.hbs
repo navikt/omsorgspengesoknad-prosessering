@@ -4,6 +4,24 @@
 <head>
     <meta charset="UTF-8" />
     <title>Søknad om ekstra omsorgsdager</title>
+    <meta name="subject" content="Søknad om ekstra omsorgsdager" />
+    <meta name="author" content="nav.no" />
+    <meta name="description"
+        content="Søknad om ekstra omsorgsdager mottatt {{soknad_mottatt_dag}} {{ soknad_mottatt }}" />
+    <bookmarks>
+        <bookmark name="Søker" href="#søker" />
+        <bookmark name="Barn" href="#søknad" />
+        <bookmark name="Svar i søknaden" id="søknad">
+            <bookmark name="Kronisk eller funksjonshemming" href="#funksjonshemming" />
+            <bookmark name="Arbeidssituasjon" href="#arbeidssituasjon" />
+            <bookmark name="Samme adresse" href="#adresse" />
+            <bookmark name="Medlemskap" href="#medlemskap" />
+            {{#if harIkkeLastetOppLegeerklæring}}
+            <bookmark name="Legeerklæring" href="#legeerklæring" />
+            {{/if}}
+            <bookmark name="Samtykke" href="#samtykke" />
+        </bookmark>
+    </bookmarks>
     {{#block 'style-common' }}
     {{/block}}
 </head>
@@ -52,13 +70,13 @@
             </p>
         </div>
 
-        <section>
+        <section id="funksjonshemming">
             <h2>Kronisk eller funksjonshemming</h2>
             <p class="sporsmalstekst">Har barnet kronisk sykdom eller funksjonshemming?</p>
             <p>{{ jaNeiSvar kroniskEllerFunksjonshemming }}</p>
         </section>
 
-        <section>
+        <section id="arbeidssituasjon">
             <h2>Arbeidssituasjon</h2>
             {{#if arbeidssituasjon}}
             {{#each arbeidssituasjon as |situasjon|~}}
@@ -69,14 +87,14 @@
             {{/if}}
         </section>
 
-        <section>
+        <section id="adresse">
             <h2>Bor på samme adresse</h2>
             <p class="sporsmalstekst">Bor på samme adresse som barnet?</p>
             <p>{{ jaNeiSvar sammeAddresse }}</p>
         </section>
 
         <!-- MEDLEMSKAP -->
-        <section>
+        <section id="medlemskap">
             <h2>Medlemskap</h2>
             <p class="sporsmalstekst">Har bodd i utlandet siste 12 månedene?</p>
             {{# if medlemskap.har_bodd_i_utlandet_siste_12_mnd }}
@@ -108,14 +126,14 @@
 
         <!-- Info om har ikke lastet opp vedlegg -->
         {{#if harIkkeLastetOppLegeerklæring}}
-        <section>
+        <section id="legeerklæring">
             <h2>Legeerklæring</h2>
             <p>Ingen vedlegg er lastet opp.</p>
         </section>
         {{/if}}
 
         <!-- SAMTYKKE -->
-        <section>
+        <section id="samtykke">
             <h2>Samtykke</h2>
             <p class="sporsmalstekst">Har forstått rettigheter og plikter?</p>
             <p>{{ jaNeiSvar samtykke.harForståttRettigheterOgPlikter }}</p>
