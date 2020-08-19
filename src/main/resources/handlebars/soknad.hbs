@@ -1,174 +1,136 @@
 <!DOCTYPE html>
-<html>
+<html lang="NO">
+
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" />
     <title>Søknad om ekstra omsorgsdager</title>
     {{#block 'style' }}
     {{/block}}
 </head>
+
 <body>
-<div id="header">
-    <img class="navlogo" src="{{ image "Navlogo.png" }}"/>
-    <h1 class="title">Søknad om ekstra omsorgsdager</h1>
-</div>
-<div class="container">
-    <div id="container_top">
-        <div class="nokkeldata">
-            <br/><br/>
-            <p>
-                <span class="nokkeldata__overskrift">Sendt til NAV</span><br/>
+    <h1 id="header">
+        Søknad om ekstra omsorgsdager
+    </h1>
+    <div class="container">
+        <div id="container_top">
+            <p class="nokkelinfo">
+                <strong>Sendt til NAV</strong>
                 {{soknad_mottatt_dag}} {{ soknad_mottatt }}
             </p>
-        </div>
-        <div class="personinfo">
-            <div class="persontekst">
-                <div class="persontekst__sidetopp">
-                    <img class="ikon" src="{{ image "Personikon.png" }}"/>
-                    <div class="persontekst__personalia">
-                        {{#if søker.relasjonTilBarnet}}
-                            <p>
-                                {{søker.relasjonTilBarnet}} til barnet.
-                            </p>
-                        {{/if}}
-                        <p class="navn">
-                            {{ søker.navn }}
-                        </p>
-                        <p class="id">
-                            {{ søker.fødselsnummer }}<br/>
-                        </p>
-                    </div>
-                    <br/>
-                    <img class="ikon" src="{{ image "Personikon.png" }}"/>
-                    <div class="persontekst__personalia">
-                        <p>Barn</p>
-                        <p class="navn">
-                            {{# if barn.navn }}
-                                {{ barn.navn }}
-                            {{else}}
-                                <span class="ikke_satt">Navn ikke angitt</span>
-                            {{/if}}
-                        </p>
-                        <p class="id">
-                            {{# if barn.fødselsdato }}
-                                {{ barn.fødselsdato }} <br />
-                            {{/if}}
-                            {{# if barn.id }}
-                                {{ barn.id }}
-                            {{else}}
-                                <span class="ikke_satt">ID ikke angitt</span>
-                            {{/if}}
-                        </p>
-                    </div>
-                </div>
+            <div class="personBlock">
+                {{#if søker.relasjonTilBarnet}}
+                <p>
+                    {{søker.relasjonTilBarnet}} til barnet.
+                </p>
+                {{/if}}
+                <p class="navn">
+                    {{ søker.navn }}
+                </p>
+                <p class="id">
+                    {{ søker.fødselsnummer }}<br />
+                </p>
+            </div>
+            <div class="personBlock">
+                <p>Barn</p>
+                <p class="navn">
+                    {{# if barn.navn }}
+                    {{ barn.navn }}
+                    {{else}}
+                    <span class="ikke_satt">Navn ikke angitt</span>
+                    {{/if}}
+                </p>
+                <p class="id">
+                    {{# if barn.fødselsdato }}
+                    {{ barn.fødselsdato }} <br />
+                    {{/if}}
+                    {{# if barn.id }}
+                    {{ barn.id }}
+                    {{else}}
+                    <span class="ikke_satt">ID ikke angitt</span>
+                    {{/if}}
+                </p>
             </div>
         </div>
-    </div>
-    <!-- SAMTYKKE -->
-    <br/>
-    <br/>
-    <h2><span>Kronisk eller funksjonshemming</span></h2>
+        <!-- SAMTYKKE -->
+        <section>
+            <h2>Kronisk eller funksjonshemming</h2>
+            <p class="sporsmalstekst">Har barnet kronisk sykdom eller funksjonshemming?</p>
+            <p>{{ jaNeiSvar kroniskEllerFunksjonshemming }}</p>
+        </section>
 
-    <p class="sporsmalstekst">Har barnet kronisk sykdom eller funksjonshemming</p>
-    {{# if kroniskEllerFunksjonshemming }}
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
-    {{else}}
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
-    {{/if}}
-
-    <h2><span>Arbeidssituasjon</span></h2>
-    {{#if arbeidssituasjon}}
-        {{#each arbeidssituasjon as |situasjon|~}}
+        <section>
+            <h2>Arbeidssituasjon</h2>
+            {{#if arbeidssituasjon}}
+            {{#each arbeidssituasjon as |situasjon|~}}
             <ul>
                 <li>{{situasjon}}</li>
             </ul>
-        {{/each}}
-    {{/if}}
+            {{/each}}
+            {{/if}}
+        </section>
 
-    <h2><span>Bor på samme adresse</span></h2>
-    <p class="sporsmalstekst">Bor på samme adresse som barnet</p>
-    {{# if sammeAddresse }}
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
-    {{else}}
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
-    {{/if}}
+        <section>
+            <h2>Bor på samme adresse</h2>
+            <p class="sporsmalstekst">Bor på samme adresse som barnet?</p>
+            <p>{{ jaNeiSvar sammeAddresse }}</p>
+        </section>
 
-    <!-- MEDLEMSKAP -->
-    <h2><span>Medlemskap</span></h2>
-
-    <p class="sporsmalstekst">Har bodd i utlandet siste 12 månedene?</p>
-    {{# if medlemskap.har_bodd_i_utlandet_siste_12_mnd }}
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
-        <ul>
-            {{# each medlemskap.utenlandsopphold_siste_12_mnd as |opphold|~}}
+        <!-- MEDLEMSKAP -->
+        <section>
+            <h2>Medlemskap</h2>
+            <p class="sporsmalstekst">Har bodd i utlandet siste 12 månedene?</p>
+            {{# if medlemskap.har_bodd_i_utlandet_siste_12_mnd }}
+            <p>Ja</p>
+            {{# if medlemskap.utenlandsopphold_siste_12_mnd.length}}<ul>
+                {{# each medlemskap.utenlandsopphold_siste_12_mnd as |opphold|~}}
                 <li>
                     {{opphold.landnavn}} ({{opphold.fraOgMed}} - {{opphold.tilOgMed}})
                 </li>
-            {{/each}}
-        </ul>
-    {{else}}
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
-    {{/if}}
-    <hr/>
-    <p class="sporsmalstekst">Skal bo i utlandet de neste 12 månedene?</p>
-    {{# if medlemskap.skal_bo_i_utlandet_neste_12_mnd }}
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
-        <ul>
-            {{# each medlemskap.utenlandsopphold_neste_12_mnd as |opphold|~}}
+                {{/each}}
+            </ul>
+            {{/if}}
+            {{else}}
+            <p>Nei</p>{{/if}}
+            <hr />
+            <p class="sporsmalstekst">Skal bo i utlandet de neste 12 månedene?</p>
+            {{# if medlemskap.skal_bo_i_utlandet_neste_12_mnd }}
+            <p>Ja</p>
+            <ul>
+                {{# each medlemskap.utenlandsopphold_neste_12_mnd as |opphold|~}}
                 <li>
                     {{opphold.landnavn}} ({{opphold.fraOgMed}} - {{opphold.tilOgMed}})
                 </li>
-            {{/each}}
-        </ul>
-    {{else}}
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
-    {{/if}}
+                {{/each}}
+            </ul>
+            {{else}}
+            <p>Nei</p>{{/if}}
+        </section>
 
-    <!-- Info om har ikke lastet opp vedlegg -->
-    {{#if harIkkeLastetOppLegeerklæring}}
-        <h2>
-        <span>
-            Legeerklæring
-        </span>
-        </h2>
-        <p>Ingen vedlegg er lastet opp.</p>
-    {{/if}}
+        <!-- Info om har ikke lastet opp vedlegg -->
+        {{#if harIkkeLastetOppLegeerklæring}}
+        <section>
+            <h2>Legeerklæring</h2>
+            <p>Ingen vedlegg er lastet opp.</p>
+        </section>
+        {{/if}}
 
-    <!-- SAMTYKKE -->
-    <br/>
-    <br/>
-    <h2><span>Samtykke</span></h2>
+        <!-- SAMTYKKE -->
+        <section>
+            <h2>Samtykke</h2>
+            <p class="sporsmalstekst">Har forstått rettigheter og plikter?</p>
+            <p>{{ jaNeiSvar samtykke.harForståttRettigheterOgPlikter }}</p>
+            <hr />
+            <p class="sporsmalstekst">Har bekreftet opplysninger?</p>
+            <p>{{ jaNeiSvar samtykke.harBekreftetOpplysninger }}</p>
+        </section>
+    </div>
 
-    <p class="sporsmalstekst">Har forstått rettigheter og plikter?</p>
-    {{# if samtykke.harForståttRettigheterOgPlikter }}
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
-    {{else}}
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
-    {{/if}}
-    <hr/>
-    <p class="sporsmalstekst">Har bekreftet opplysninger?</p>
-    {{# if samtykke.harBekreftetOpplysninger }}
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Nei
-    {{else}}
-        <img class="checkbox" src="{{ image "Checkbox_off.png" }}"/> Ja
-        <img class="checkbox" src="{{ image "Checkbox_on.png" }}"/> Nei
-    {{/if}}
-</div>
-
-<!-- FOOTER -->
-<div id="footer">
-    <span class="soknadsid">{{ soknad_id }}</span>
-    <span class="sidetall">side <span id="pagenumber"></span> av <span id="pagecount"></span></span>
-</div>
+    <!-- FOOTER -->
+    <p id="footer">
+        <span class="soknadsid">{{ soknad_id }}</span>
+        <span class="sidetall">side <span id="pagenumber"></span> av <span id="pagecount"></span></span>
+    </p>
 </body>
+
 </html>
