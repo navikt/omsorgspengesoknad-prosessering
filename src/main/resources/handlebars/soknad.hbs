@@ -11,16 +11,14 @@
     <bookmarks>
         <bookmark name="Søker" href="#søker" />
         <bookmark name="Barn" href="#søknad" />
-        <bookmark name="Svar i søknaden" id="søknad">
-            <bookmark name="Kronisk eller funksjonshemming" href="#funksjonshemming" />
-            <bookmark name="Arbeidssituasjon" href="#arbeidssituasjon" />
-            <bookmark name="Samme adresse" href="#adresse" />
-            <bookmark name="Medlemskap" href="#medlemskap" />
-            {{#if harIkkeLastetOppLegeerklæring}}
-            <bookmark name="Legeerklæring" href="#legeerklæring" />
-            {{/if}}
-            <bookmark name="Samtykke" href="#samtykke" />
-        </bookmark>
+        <bookmark name="Kronisk eller funksjonshemming" href="#funksjonshemming" />
+        <bookmark name="Arbeidssituasjon" href="#arbeidssituasjon" />
+        <bookmark name="Samme adresse" href="#adresse" />
+        <bookmark name="Medlemskap" href="#medlemskap" />
+        {{#if harIkkeLastetOppLegeerklæring}}
+        <bookmark name="Legeerklæring" href="#legeerklæring" />
+        {{/if}}
+        <bookmark name="Samtykke" href="#samtykke" />
     </bookmarks>
     {{#block 'style-common' }}
     {{/block}}
@@ -35,7 +33,7 @@
         {{soknad_mottatt_dag}} {{ soknad_mottatt }}
     </p>
 
-    <div class="innholdscontainer" id="søknad">
+    <div class="innholdscontainer">
         <div class="person" id="søker">
             {{#if søker.relasjonTilBarnet}}
             <p>
@@ -70,82 +68,80 @@
             </p>
         </div>
 
-        <div id="søknad">
+        <section id="funksjonshemming">
+            <h2>Kronisk eller funksjonshemming</h2>
+            <p class="sporsmalstekst">Har barnet kronisk sykdom eller funksjonshemming?</p>
+            <p>{{ jaNeiSvar kroniskEllerFunksjonshemming }}</p>
+        </section>
 
-            <section id="funksjonshemming">
-                <h2>Kronisk eller funksjonshemming</h2>
-                <p class="sporsmalstekst">Har barnet kronisk sykdom eller funksjonshemming?</p>
-                <p>{{ jaNeiSvar kroniskEllerFunksjonshemming }}</p>
-            </section>
-
-            <section id="arbeidssituasjon">
-                <h2>Arbeidssituasjon</h2>
-                {{#if arbeidssituasjon}}
-                {{#each arbeidssituasjon as |situasjon|~}}
-                <ul>
-                    <li>{{situasjon}}</li>
-                </ul>
-                {{/each}}
-                {{/if}}
-            </section>
-
-            <section id="adresse">
-                <h2>Bor på samme adresse</h2>
-                <p class="sporsmalstekst">Bor på samme adresse som barnet?</p>
-                <p>{{ jaNeiSvar sammeAddresse }}</p>
-            </section>
-
-            <!-- MEDLEMSKAP -->
-            <section id="medlemskap">
-                <h2>Medlemskap</h2>
-                <p class="sporsmalstekst">Har bodd i utlandet siste 12 månedene?</p>
-                {{# if medlemskap.har_bodd_i_utlandet_siste_12_mnd }}
-                <p>Ja</p>
-                {{# if medlemskap.utenlandsopphold_siste_12_mnd.length}}<ul>
-                    {{# each medlemskap.utenlandsopphold_siste_12_mnd as |opphold|~}}
-                    <li>
-                        {{opphold.landnavn}} ({{opphold.fraOgMed}} - {{opphold.tilOgMed}})
-                    </li>
-                    {{/each}}
-                </ul>
-                {{/if}}
-                {{else}}
-                <p>Nei</p>{{/if}}
-                <hr />
-                <p class="sporsmalstekst">Skal bo i utlandet de neste 12 månedene?</p>
-                {{# if medlemskap.skal_bo_i_utlandet_neste_12_mnd }}
-                <p>Ja</p>
-                <ul>
-                    {{# each medlemskap.utenlandsopphold_neste_12_mnd as |opphold|~}}
-                    <li>
-                        {{opphold.landnavn}} ({{opphold.fraOgMed}} - {{opphold.tilOgMed}})
-                    </li>
-                    {{/each}}
-                </ul>
-                {{else}}
-                <p>Nei</p>{{/if}}
-            </section>
-
-            <!-- Info om har ikke lastet opp vedlegg -->
-            {{#if harIkkeLastetOppLegeerklæring}}
-            <section id="legeerklæring">
-                <h2>Legeerklæring</h2>
-                <p>Ingen vedlegg er lastet opp.</p>
-            </section>
+        <section id="arbeidssituasjon">
+            <h2>Arbeidssituasjon</h2>
+            {{#if arbeidssituasjon}}
+            {{#each arbeidssituasjon as |situasjon|~}}
+            <ul>
+                <li>{{situasjon}}</li>
+            </ul>
+            {{/each}}
             {{/if}}
+        </section>
 
-            <!-- SAMTYKKE -->
-            <section id="samtykke">
-                <h2>Samtykke</h2>
-                <p class="sporsmalstekst">Har forstått rettigheter og plikter?</p>
-                <p>{{ jaNeiSvar samtykke.harForståttRettigheterOgPlikter }}</p>
-                <hr />
-                <p class="sporsmalstekst">Har bekreftet opplysninger?</p>
-                <p>{{ jaNeiSvar samtykke.harBekreftetOpplysninger }}</p>
-            </section>
-        </div>
+        <section id="adresse">
+            <h2>Bor på samme adresse</h2>
+            <p class="sporsmalstekst">Bor på samme adresse som barnet?</p>
+            <p>{{ jaNeiSvar sammeAddresse }}</p>
+        </section>
+
+        <!-- MEDLEMSKAP -->
+        <section id="medlemskap">
+            <h2>Medlemskap</h2>
+            <p class="sporsmalstekst">Har bodd i utlandet siste 12 månedene?</p>
+            {{# if medlemskap.har_bodd_i_utlandet_siste_12_mnd }}
+            <p>Ja</p>
+            {{# if medlemskap.utenlandsopphold_siste_12_mnd.length}}<ul>
+                {{# each medlemskap.utenlandsopphold_siste_12_mnd as |opphold|~}}
+                <li>
+                    {{opphold.landnavn}} ({{opphold.fraOgMed}} - {{opphold.tilOgMed}})
+                </li>
+                {{/each}}
+            </ul>
+            {{/if}}
+            {{else}}
+            <p>Nei</p>{{/if}}
+            <hr />
+            <p class="sporsmalstekst">Skal bo i utlandet de neste 12 månedene?</p>
+            {{# if medlemskap.skal_bo_i_utlandet_neste_12_mnd }}
+            <p>Ja</p>
+            <ul>
+                {{# each medlemskap.utenlandsopphold_neste_12_mnd as |opphold|~}}
+                <li>
+                    {{opphold.landnavn}} ({{opphold.fraOgMed}} - {{opphold.tilOgMed}})
+                </li>
+                {{/each}}
+            </ul>
+            {{else}}
+            <p>Nei</p>{{/if}}
+        </section>
+
+        <!-- Info om har ikke lastet opp vedlegg -->
+        {{#if harIkkeLastetOppLegeerklæring}}
+        <section id="legeerklæring">
+            <h2>Legeerklæring</h2>
+            <p>Ingen vedlegg er lastet opp.</p>
+        </section>
+        {{/if}}
+
+        <!-- SAMTYKKE -->
+        <section id="samtykke">
+            <h2>Samtykke</h2>
+            <p class="sporsmalstekst">Har forstått rettigheter og plikter?</p>
+            <p>{{ jaNeiSvar samtykke.harForståttRettigheterOgPlikter }}</p>
+            <hr />
+            <p class="sporsmalstekst">Har bekreftet opplysninger?</p>
+            <p>{{ jaNeiSvar samtykke.harBekreftetOpplysninger }}</p>
+        </section>
     </div>
-    
+
+
     <!-- FOOTER -->
     <p id="footer">
         <span class="soknadsid">{{ soknad_id }}</span>
