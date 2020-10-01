@@ -97,7 +97,7 @@
             <p class="sporsmalstekst">Har bodd i utlandet siste 12 månedene?</p>
             {{# if medlemskap.har_bodd_i_utlandet_siste_12_mnd }}
             <p>Ja</p>
-            {{# if medlemskap.utenlandsopphold_siste_12_mnd.length}}<ul>
+            {{# if medlemskap.utenlandsopphold_siste_12_mnd}}<ul>
                 {{# each medlemskap.utenlandsopphold_siste_12_mnd as |opphold|~}}
                 <li>
                     {{opphold.landnavn}} ({{opphold.fraOgMed}} - {{opphold.tilOgMed}})
