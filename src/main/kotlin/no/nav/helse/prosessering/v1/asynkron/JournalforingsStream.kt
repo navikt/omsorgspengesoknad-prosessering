@@ -3,6 +3,7 @@ package no.nav.helse.prosessering.v1.asynkron
 import no.nav.helse.CorrelationId
 import no.nav.helse.aktoer.AktørId
 import no.nav.helse.joark.JoarkGateway
+import no.nav.helse.joark.Navn
 import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
@@ -61,7 +62,12 @@ internal class JournalforingsStream(
                             aktørId = AktørId(entry.data.søker.aktørId),
                             norskIdent = entry.data.søker.fødselsnummer,
                             correlationId = CorrelationId(entry.metadata.correlationId),
-                            dokumenter = dokumenter
+                            dokumenter = dokumenter,
+                            navn = Navn(
+                                fornavn = entry.data.søker.fornavn,
+                                mellomnavn = entry.data.søker.mellomnavn,
+                                etternavn = entry.data.søker.etternavn
+                            )
                         )
                         logger.info("Dokumenter journalført med ID = ${journaPostId.journalpostId}.")
                         val journalfort = Journalfort(
