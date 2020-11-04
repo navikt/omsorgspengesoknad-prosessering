@@ -87,8 +87,7 @@ internal class PdfV1Generator {
                         "soknad_mottatt" to DATE_TIME_FORMATTER.format(melding.mottatt),
                         "søker" to mapOf(
                             "navn" to melding.søker.formatertNavn(),
-                            "fødselsnummer" to melding.søker.fødselsnummer,
-                            "relasjonTilBarnet" to melding.relasjonTilBarnet
+                            "fødselsnummer" to melding.søker.fødselsnummer
                         ),
                         "barn" to mapOf(
                             "navn" to barnetsNavn,

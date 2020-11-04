@@ -15,7 +15,7 @@ data class MeldingV1(
     val arbeidssituasjon: List<String>,
     val barn: Barn,
     val søker: Søker,
-    val relasjonTilBarnet: String? = null,
+    val relasjonTilBarnet: String? = null, //TODO Kan fjernes? Brukes ikke i PDF lenger
     val sammeAdresse: Boolean = false,
     val medlemskap: Medlemskap,
     var legeerklæring: List<URI> = listOf(),

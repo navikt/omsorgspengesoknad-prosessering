@@ -40,7 +40,7 @@ class PdfV1GeneratorTest {
                 navn = barnetsNavn
             ),
             relasjonTilBarnet = "Mor",
-            arbeidssituasjon = listOf("Arbeidstaker", "Frilans", "Selvstendig Næringsdrivende"),
+            arbeidssituasjon = listOf("Arbeidstaker", "Frilans", "Selvstendig næringsdrivende"),
             medlemskap = Medlemskap(
                 harBoddIUtlandetSiste12Mnd = true,
                 utenlandsoppholdSiste12Mnd = listOf(
@@ -93,7 +93,6 @@ class PdfV1GeneratorTest {
     }
 
     @Test
-
     fun `opprett lesbar oppsummerings-PDF`() {
         genererOppsummeringsPdfer(true)
     }
