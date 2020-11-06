@@ -39,6 +39,7 @@ import no.nav.helse.tpsproxy.TpsProxyV1Gateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
+import java.time.ZonedDateTime
 
 private val logger: Logger = LoggerFactory.getLogger("nav.OmsorgspengesoknadProsessering")
 
@@ -98,7 +99,8 @@ fun Application.omsorgspengesoknadProsessering() {
         kafkaConfig = configuration.getKafkaConfig(),
         preprosseseringV1Service = preprosseseringV1Service,
         joarkGateway = joarkGateway,
-        dokumentService = dokumentService
+        dokumentService = dokumentService,
+        datoMottattEtter = configuration.soknadDatoMottattEtter()
     )
 
     environment.monitor.subscribe(ApplicationStopping) {
@@ -139,5 +141,7 @@ fun Application.omsorgspengesoknadProsessering() {
         )
     }
 }
+
+fun ZonedDateTime.erEtter(zonedDateTime: ZonedDateTime): Boolean = this.isAfter(zonedDateTime)
 
 private fun Url.Companion.healthURL(baseUrl: URI) = Url.buildURL(baseUrl = baseUrl, pathParts = listOf("health"))
