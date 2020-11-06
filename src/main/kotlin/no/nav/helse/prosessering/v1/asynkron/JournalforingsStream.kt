@@ -44,6 +44,18 @@ internal class JournalforingsStream(
         private const val NAME = "JournalforingV1"
         private val logger = LoggerFactory.getLogger("no.nav.$NAME.topology")
 
+        private val dissalowedCorrelationIds = listOf(
+            "generated-d9484337-d647-4430-b4bd-173101dc68d7",
+            "generated-2760518d-7e75-400f-8766-08f2a3e06747",
+            "generated-ae916ab1-031c-4484-9b93-8b4d54553ec1",
+            "generated-9ba3a09f-aff5-4b61-93db-e81a8a9c165f",
+            "generated-47ffb18c-495f-44f1-b45e-0595f14f316d",
+            "generated-0ac0a2b0-8f6e-41a4-81b2-0d32df183603",
+            "generated-a0d30068-841a-4001-a2f5-38c14efac6ec",
+            "generated-e7a35e83-bd31-4f6e-9f90-8496b2c39ce0",
+            "generated-46b331a1-881e-4d9d-a102-74f81e191fb4"
+        )
+
         private fun topology(joarkGateway: JoarkGateway, gittDato: ZonedDateTime): Topology {
             val builder = StreamsBuilder()
             val fraPreprossesert: Topic<TopicEntry<PreprossesertMeldingV1>> = Topics.PREPROSSESERT
@@ -55,6 +67,7 @@ internal class JournalforingsStream(
                     Consumed.with(fraPreprossesert.keySerde, fraPreprossesert.valueSerde)
                 )
                 .filter { _, entry -> entry.data.mottatt.erEtter(gittDato) }
+                .filter { _, entry -> !dissalowedCorrelationIds.contains(entry.metadata.correlationId) }
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
