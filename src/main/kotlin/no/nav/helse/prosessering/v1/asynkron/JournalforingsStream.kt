@@ -44,7 +44,7 @@ internal class JournalforingsStream(
         private const val NAME = "JournalforingV1"
         private val logger = LoggerFactory.getLogger("no.nav.$NAME.topology")
 
-        private val dissalowedCorrelationIds = listOf(
+        private val dissalowedCorrelationIds = mutableListOf(
             "generated-d9484337-d647-4430-b4bd-173101dc68d7",
             "generated-2760518d-7e75-400f-8766-08f2a3e06747",
             "generated-ae916ab1-031c-4484-9b93-8b4d54553ec1",
@@ -93,6 +93,9 @@ internal class JournalforingsStream(
                             journalpostId = journaPostId.journalpostId,
                             søknad = entry.data.tilK9Omsorgspengesøknad()
                         )
+
+                        dissalowedCorrelationIds.add(entry.metadata.correlationId)
+
                         Cleanup(
                             metadata = entry.metadata,
                             melding = entry.data,
