@@ -2,6 +2,7 @@ package no.nav.helse.prosessering.v1.asynkron
 
 import no.nav.helse.CorrelationId
 import no.nav.helse.aktoer.AktørId
+import no.nav.helse.erEtter
 import no.nav.helse.joark.JoarkGateway
 import no.nav.helse.joark.Navn
 import no.nav.helse.kafka.KafkaConfig
@@ -21,16 +22,18 @@ import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.slf4j.LoggerFactory
+import java.time.ZonedDateTime
 
 internal class JournalforingsStream(
     joarkGateway: JoarkGateway,
-    kafkaConfig: KafkaConfig
+    kafkaConfig: KafkaConfig,
+    søknadMottattEtter: ZonedDateTime
 ) {
 
     private val stream = ManagedKafkaStreams(
         name = NAME,
         properties = kafkaConfig.stream(NAME),
-        topology = topology(joarkGateway),
+        topology = topology(joarkGateway, søknadMottattEtter),
         unreadyAfterStreamStoppedIn = kafkaConfig.unreadyAfterStreamStoppedIn
     )
 
@@ -41,7 +44,7 @@ internal class JournalforingsStream(
         private const val NAME = "JournalforingV1"
         private val logger = LoggerFactory.getLogger("no.nav.$NAME.topology")
 
-        private fun topology(joarkGateway: JoarkGateway): Topology {
+        private fun topology(joarkGateway: JoarkGateway, gittDato: ZonedDateTime): Topology {
             val builder = StreamsBuilder()
             val fraPreprossesert: Topic<TopicEntry<PreprossesertMeldingV1>> = Topics.PREPROSSESERT
             val tilCleanup: Topic<TopicEntry<Cleanup>> = Topics.CLEANUP
@@ -51,6 +54,7 @@ internal class JournalforingsStream(
                     fraPreprossesert.name,
                     Consumed.with(fraPreprossesert.keySerde, fraPreprossesert.valueSerde)
                 )
+                .filter { _, entry -> entry.data.mottatt.erEtter(gittDato) }
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
