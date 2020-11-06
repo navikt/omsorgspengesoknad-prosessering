@@ -54,7 +54,8 @@ internal class JournalforingsStream(
             "generated-a0d30068-841a-4001-a2f5-38c14efac6ec",
             "generated-e7a35e83-bd31-4f6e-9f90-8496b2c39ce0",
             "generated-46b331a1-881e-4d9d-a102-74f81e191fb4",
-            "generated-bf1b1140-c77f-4c10-80fd-65a33b4c9f16"
+            "generated-bf1b1140-c77f-4c10-80fd-65a33b4c9f16",
+            "generated-a24e80d6-259c-433c-8456-d311557178ba"
         )
 
         private fun topology(joarkGateway: JoarkGateway, gittDato: ZonedDateTime): Topology {
