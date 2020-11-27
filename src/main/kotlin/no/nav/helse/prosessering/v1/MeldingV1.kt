@@ -1,5 +1,6 @@
 package no.nav.helse.prosessering.v1
 
+import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.net.URI
@@ -12,7 +13,7 @@ data class MeldingV1(
     val mottatt: ZonedDateTime,
     val språk: String? = "nb",
     val kroniskEllerFunksjonshemming: Boolean = false,
-    val arbeidssituasjon: List<String>,
+    val arbeidssituasjon: List<Arbeidssituasjon>,
     val barn: Barn,
     val søker: Søker,
     val relasjonTilBarnet: String? = null, //TODO Kan fjernes? Brukes ikke i PDF lenger
@@ -63,5 +64,19 @@ data class Utenlandsopphold(
 ) {
     override fun toString(): String {
         return "Utenlandsopphold(fraOgMed=$fraOgMed, tilOgMed=$tilOgMed, landkode='$landkode', landnavn='$landnavn')"
+    }
+}
+
+enum class Arbeidssituasjon(val utskriftsvennlig: String){
+    @JsonAlias("selvstendigNæringsdrivende") SELVSTENDIG_NÆRINGSDRIVENDE("Selvstendig næringsdrivende"),
+    @JsonAlias("arbeidstaker") ARBEIDSTAKER("Arbeidstaker"),
+    @JsonAlias("frilanser") FRILANSER("Frilanser");
+}
+
+internal fun List<Arbeidssituasjon>.somMapTilPDF(): List<Map<String, Any?>> {
+    return map {
+        mapOf<String, Any?>(
+            "utskriftsvennlig" to it.utskriftsvennlig
+        )
     }
 }

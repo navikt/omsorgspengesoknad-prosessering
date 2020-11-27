@@ -40,7 +40,7 @@ class PdfV1GeneratorTest {
                 navn = barnetsNavn
             ),
             relasjonTilBarnet = "Mor",
-            arbeidssituasjon = listOf("Arbeidstaker", "Frilans", "Selvstendig næringsdrivende"),
+            arbeidssituasjon = listOf(Arbeidssituasjon.SELVSTENDIG_NÆRINGSDRIVENDE, Arbeidssituasjon.FRILANSER),
             medlemskap = Medlemskap(
                 harBoddIUtlandetSiste12Mnd = true,
                 utenlandsoppholdSiste12Mnd = listOf(

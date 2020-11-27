@@ -1,10 +1,7 @@
 package no.nav.helse
 
 import no.nav.helse.dokument.Søknadsformat
-import no.nav.helse.prosessering.v1.Barn
-import no.nav.helse.prosessering.v1.Medlemskap
-import no.nav.helse.prosessering.v1.MeldingV1
-import no.nav.helse.prosessering.v1.Søker
+import no.nav.helse.prosessering.v1.*
 import org.skyscreamer.jsonassert.JSONAssert
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -25,7 +22,7 @@ class SøknadsformatTest {
                   "mottatt": "2018-01-02T03:04:05.000000006Z",
                   "språk": "nb",
                   "kroniskEllerFunksjonshemming": false,
-                  "arbeidssituasjon": ["Arbeidstaker", "Frilans", "Selvstendig Næringsdrivende"],
+                  "arbeidssituasjon": ["SELVSTENDIG_NÆRINGSDRIVENDE", "FRILANSER", "ARBEIDSTAKER"],
                   "barn": {
                     "navn": "Kari",
                     "norskIdentifikator": "2323",
@@ -75,7 +72,7 @@ class SøknadsformatTest {
             aktørId = null
         ),
         relasjonTilBarnet = "Mor",
-        arbeidssituasjon = listOf("Arbeidstaker", "Frilans", "Selvstendig Næringsdrivende"),
+        arbeidssituasjon = listOf(Arbeidssituasjon.SELVSTENDIG_NÆRINGSDRIVENDE, Arbeidssituasjon.FRILANSER, Arbeidssituasjon.ARBEIDSTAKER),
         medlemskap = Medlemskap(
             harBoddIUtlandetSiste12Mnd = true,
             skalBoIUtlandetNeste12Mnd = true,

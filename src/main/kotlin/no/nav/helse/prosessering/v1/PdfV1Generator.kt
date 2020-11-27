@@ -96,7 +96,7 @@ internal class PdfV1Generator {
                         ),
                         "sammeAddresse" to melding.sammeAdresse,
                         "kroniskEllerFunksjonshemming" to melding.kroniskEllerFunksjonshemming,
-                        "arbeidssituasjon" to melding.arbeidssituasjon,
+                        "arbeidssituasjon" to melding.arbeidssituasjon.somMapTilPDF(),
                         "medlemskap" to mapOf(
                             "har_bodd_i_utlandet_siste_12_mnd" to melding.medlemskap.harBoddIUtlandetSiste12Mnd,
                             "utenlandsopphold_siste_12_mnd" to melding.medlemskap.utenlandsoppholdSiste12Mnd.somMapUtenlandsopphold(),
