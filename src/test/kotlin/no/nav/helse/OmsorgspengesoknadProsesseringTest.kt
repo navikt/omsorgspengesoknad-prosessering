@@ -200,6 +200,7 @@ class OmsorgspengesoknadProsesseringTest {
             barnetsFødselsdato = null,
             barnetsNavn = "kari"
         )
+        println(melding)
 
         kafkaTestProducer.leggTilMottak(melding)
         journalføringsKonsumer

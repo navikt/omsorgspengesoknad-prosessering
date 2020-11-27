@@ -2,7 +2,6 @@ package no.nav.helse.prosessering.v1
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonFormat
-import com.fasterxml.jackson.annotation.JsonProperty
 import java.net.URI
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -13,7 +12,7 @@ data class MeldingV1(
     val mottatt: ZonedDateTime,
     val språk: String? = "nb",
     val kroniskEllerFunksjonshemming: Boolean = false,
-    val arbeidssituasjon: List<Arbeidssituasjon>,
+    @JsonFormat(shape = JsonFormat.Shape.ARRAY) val arbeidssituasjon: List<Arbeidssituasjon>, // Test med egen deserialiseringtest Prøv å oppdatere ktordusseldorf version
     val barn: Barn,
     val søker: Søker,
     val relasjonTilBarnet: String? = null, //TODO Kan fjernes? Brukes ikke i PDF lenger
