@@ -12,7 +12,7 @@ data class MeldingV1(
     val mottatt: ZonedDateTime,
     val språk: String? = "nb",
     val kroniskEllerFunksjonshemming: Boolean = false,
-    val arbeidssituasjon: List<Arbeidssituasjon>, // Prøv å oppdatere ktordusseldorf version
+    val arbeidssituasjon: List<Arbeidssituasjon>,
     val barn: Barn,
     val søker: Søker,
     val relasjonTilBarnet: String? = null, //TODO Kan fjernes? Brukes ikke i PDF lenger
