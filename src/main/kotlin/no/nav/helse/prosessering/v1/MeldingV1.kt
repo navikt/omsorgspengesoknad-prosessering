@@ -67,9 +67,9 @@ data class Utenlandsopphold(
 }
 
 enum class Arbeidssituasjon(val utskriftsvennlig: String){
-    @JsonAlias("selvstendigNæringsdrivende") SELVSTENDIG_NÆRINGSDRIVENDE("Selvstendig næringsdrivende"),
-    @JsonAlias("arbeidstaker") ARBEIDSTAKER("Arbeidstaker"),
-    @JsonAlias("frilanser") FRILANSER("Frilanser");
+    SELVSTENDIG_NÆRINGSDRIVENDE("Selvstendig næringsdrivende"),
+    ARBEIDSTAKER("Arbeidstaker"),
+    FRILANSER("Frilanser")
 }
 
 internal fun List<Arbeidssituasjon>.somMapTilPDF(): List<Map<String, Any?>> {
