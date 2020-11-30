@@ -13,7 +13,7 @@ data class PreprossesertMeldingV1(
     val språk: String?,
     val dokumentUrls: List<List<URI>>,
     val kroniskEllerFunksjonshemming: Boolean,
-    val arbeidssituasjon: List<String>,
+    val arbeidssituasjon: List<Arbeidssituasjon>,
     val barn: PreprossesertBarn,
     val søker: PreprossesertSøker,
     val relasjonTilBarnet: String? = null,

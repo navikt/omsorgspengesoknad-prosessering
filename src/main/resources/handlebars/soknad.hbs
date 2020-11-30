@@ -10,7 +10,7 @@
         content="Søknad om ekstra omsorgsdager mottatt {{soknad_mottatt_dag}} {{ soknad_mottatt }}" />
     <bookmarks>
         <bookmark name="Søker" href="#søker" />
-        <bookmark name="Barn" href="#søknad" />
+        <bookmark name="Barn" href="#barn" />
         <bookmark name="Kronisk eller funksjonshemming" href="#funksjonshemming" />
         <bookmark name="Arbeidssituasjon" href="#arbeidssituasjon" />
         <bookmark name="Samme adresse" href="#adresse" />
@@ -70,11 +70,11 @@
             <h2>Din arbeidssituasjon</h2>
             <p>Du opplyser at du er</p>
             {{#if arbeidssituasjon}}
-            {{#each arbeidssituasjon as |situasjon|~}}
-            <ul>
-                <li>{{situasjon}}</li>
-            </ul>
-            {{/each}}
+                {{#each arbeidssituasjon as |situasjon|~}}
+                <ul>
+                    <li>{{situasjon.utskriftsvennlig}}</li>
+                </ul>
+                {{/each}}
             {{/if}}
         </section>
 
