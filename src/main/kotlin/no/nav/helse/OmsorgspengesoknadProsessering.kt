@@ -100,7 +100,8 @@ fun Application.omsorgspengesoknadProsessering() {
         preprosseseringV1Service = preprosseseringV1Service,
         joarkGateway = joarkGateway,
         dokumentService = dokumentService,
-        datoMottattEtter = configuration.soknadDatoMottattEtter()
+        datoMottattEtter = configuration.soknadDatoMottattEtter(),
+        datoMottattEtterCleanup = configuration.soknadDatoMottattEtterCleanup()
     )
 
     environment.monitor.subscribe(ApplicationStopping) {

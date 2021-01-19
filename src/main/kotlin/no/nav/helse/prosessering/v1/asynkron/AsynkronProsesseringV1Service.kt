@@ -13,7 +13,8 @@ internal class AsynkronProsesseringV1Service(
     preprosseseringV1Service: PreprosseseringV1Service,
     joarkGateway: JoarkGateway,
     dokumentService: DokumentService,
-    datoMottattEtter: ZonedDateTime
+    datoMottattEtter: ZonedDateTime,
+    datoMottattEtterCleanup: ZonedDateTime
 ) {
 
     private companion object {
@@ -36,7 +37,7 @@ internal class AsynkronProsesseringV1Service(
     private val cleanupStream = CleanupStream(
         kafkaConfig = kafkaConfig,
         dokumentService = dokumentService,
-        søknadMottattEtter = datoMottattEtter
+        søknadMottattEtter = datoMottattEtterCleanup
     )
 
     private val healthChecks = setOf(
