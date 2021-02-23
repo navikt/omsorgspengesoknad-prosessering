@@ -79,17 +79,17 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
         }
     }
     idTypePaaBarnCounter.labels(barn.idType()).inc()
-    jaNeiCounter.labels("har_bodd_i_utlandet_siste_12_mnd", medlemskap.harBoddIUtlandetSiste12Mnd.tilJaEllerNei()).inc()
-    jaNeiCounter.labels("skal_bo_i_utlandet_neste_12_mnd", medlemskap.skalBoIUtlandetNeste12Mnd.tilJaEllerNei()).inc()
+    jaNeiCounter.labels("har_bodd_i_utlandet_siste_12_mnd", medlemskap?.harBoddIUtlandetSiste12Mnd?.tilJaEllerNei()).inc() //TODO 23.02.2021 - Fjernes når frontend er prodsatt
+    jaNeiCounter.labels("skal_bo_i_utlandet_neste_12_mnd", medlemskap?.skalBoIUtlandetNeste12Mnd?.tilJaEllerNei()).inc() //TODO 23.02.2021 - Fjernes når frontend er prodsatt
 
-    medlemskapMedUtenlandsopphold.labels(
-        medlemskap.harBoddIUtlandetSiste12Mnd.tilJaEllerNei(),
-        medlemskap.utenlandsoppholdSiste12Mnd.size.toString()
+    medlemskapMedUtenlandsopphold.labels( //TODO 23.02.2021 - Fjernes når frontend er prodsatt
+        medlemskap?.harBoddIUtlandetSiste12Mnd?.tilJaEllerNei(),
+        medlemskap?.utenlandsoppholdSiste12Mnd?.size.toString()
     ).inc()
 
-    medlemskapMedUtenlandsopphold.labels(
-        medlemskap.skalBoIUtlandetNeste12Mnd.tilJaEllerNei(),
-        medlemskap.utenlandsoppholdNeste12Mnd.size.toString()
+    medlemskapMedUtenlandsopphold.labels( //TODO 23.02.2021 - Fjernes når frontend er prodsatt
+        medlemskap?.skalBoIUtlandetNeste12Mnd?.tilJaEllerNei(),
+        medlemskap?.utenlandsoppholdNeste12Mnd?.size.toString()
     ).inc()
 
     if (relasjonTilBarnet != null) {
@@ -97,8 +97,8 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
         relasjonPåSammeAdresse.labels(relasjonTilBarnet, sammeAdresse.tilJaEllerNei()).inc()
     }
 
-    if (arbeidssituasjon.isNotEmpty()) {
-        antallArbeidsSituasjonerCounter.labels(arbeidssituasjon.size.toString()).inc()
+    if (arbeidssituasjon != null && arbeidssituasjon.isNotEmpty()) { //TODO 23.02.2021 - Fjernes når frontend er prodsatt
+        antallArbeidsSituasjonerCounter.labels(arbeidssituasjon?.size.toString()).inc()
         val arbeidsSituasjonerSomString = arbeidssituasjon.sortedDescending().joinToString(" & ")
         arbeidsSituasjonCounter.labels(arbeidsSituasjonerSomString).inc()
     }

@@ -43,19 +43,19 @@
             <p>Barn</p>
             <p class="navn">
                 {{# if barn.navn }}
-                {{ barn.navn }}
+                    {{ barn.navn }}
                 {{else}}
-                <span class="ikke_satt">Navn ikke angitt</span>
+                    <span class="ikke_satt">Navn ikke angitt</span>
                 {{/if}}
             </p>
             <p>
                 {{# if barn.fødselsdato }}
-                {{ barn.fødselsdato }} <br />
+                    {{ barn.fødselsdato }} <br />
                 {{/if}}
                 {{# if barn.id }}
-                {{ barn.id }}
+                    {{ barn.id }}
                 {{else}}
-                <span class="ikke_satt">ID ikke angitt</span>
+                    <span class="ikke_satt">ID ikke angitt</span>
                 {{/if}}
             </p>
         </div>
@@ -66,15 +66,18 @@
             <p>{{ jaNeiSvar kroniskEllerFunksjonshemming }}</p>
         </section>
 
+        <!--OBS: FJERNES NÅR FRONTEND ER PRODSATT-->
         <section id="arbeidssituasjon">
-            <h2>Din arbeidssituasjon</h2>
-            <p>Du opplyser at du er</p>
-            {{#if arbeidssituasjon}}
-                {{#each arbeidssituasjon as |situasjon|~}}
-                <ul>
-                    <li>{{situasjon.utskriftsvennlig}}</li>
-                </ul>
-                {{/each}}
+            {{#if hjelp.arbeidssituasjonSatt}}
+                <h2>Din arbeidssituasjon</h2>
+                <p>Du opplyser at du er</p>
+                {{#if arbeidssituasjon}}
+                    {{#each arbeidssituasjon as |situasjon|~}}
+                        <ul>
+                            <li>{{situasjon.utskriftsvennlig}}</li>
+                        </ul>
+                    {{/each}}
+                {{/if}}
             {{/if}}
         </section>
 
@@ -84,32 +87,34 @@
             <p>{{ jaNeiSvar sammeAddresse }}</p>
         </section>
 
-        <!-- MEDLEMSKAP -->
+        <!-- MEDLEMSKAP OBS: FJERNES NÅR FRONTEND ER PRODSATT-->
         <section id="medlemskap">
-            <h2>Medlemskap i folketrygden</h2>
-            <p class="sporsmalstekst">Har du bodd i utlandet siste 12 månedene?</p>
-            {{# if medlemskap.har_bodd_i_utlandet_siste_12_mnd }}
-            <p>Ja</p>
-            {{# if medlemskap.utenlandsopphold_siste_12_mnd}}
-                <ul>
-                    {{# each medlemskap.utenlandsopphold_siste_12_mnd as |opphold|~}}
-                    <li>{{opphold.landnavn}} ({{opphold.fraOgMed}} - {{opphold.tilOgMed}})</li>
-                    {{/each}}
-                </ul>
+            {{#if hjelp.medlemskapSatt}}
+                <h2>Medlemskap i folketrygden</h2>
+                <p class="sporsmalstekst">Har du bodd i utlandet siste 12 månedene?</p>
+                {{# if medlemskap.har_bodd_i_utlandet_siste_12_mnd }}
+                    <p>Ja</p>
+                    {{# if medlemskap.utenlandsopphold_siste_12_mnd}}
+                        <ul>
+                            {{# each medlemskap.utenlandsopphold_siste_12_mnd as |opphold|~}}
+                                <li>{{opphold.landnavn}} ({{opphold.fraOgMed}} - {{opphold.tilOgMed}})</li>
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+                {{else}}
+                    <p>Nei</p>{{/if}}
+                <hr />
+                <p class="sporsmalstekst">Skal du bo i utlandet de neste 12 månedene?</p>
+                {{# if medlemskap.skal_bo_i_utlandet_neste_12_mnd }}
+                    <p>Ja</p>
+                    <ul>
+                        {{# each medlemskap.utenlandsopphold_neste_12_mnd as |opphold|~}}
+                            <li>{{opphold.landnavn}} ({{opphold.fraOgMed}} - {{opphold.tilOgMed}})</li>
+                        {{/each}}
+                    </ul>
+                {{else}}
+                    <p>Nei</p>{{/if}}
             {{/if}}
-            {{else}}
-            <p>Nei</p>{{/if}}
-            <hr />
-            <p class="sporsmalstekst">Skal du bo i utlandet de neste 12 månedene?</p>
-            {{# if medlemskap.skal_bo_i_utlandet_neste_12_mnd }}
-            <p>Ja</p>
-            <ul>
-                {{# each medlemskap.utenlandsopphold_neste_12_mnd as |opphold|~}}
-                <li>{{opphold.landnavn}} ({{opphold.fraOgMed}} - {{opphold.tilOgMed}})</li>
-                {{/each}}
-            </ul>
-            {{else}}
-            <p>Nei</p>{{/if}}
         </section>
 
         <!-- Info om har ikke lastet opp vedlegg -->
