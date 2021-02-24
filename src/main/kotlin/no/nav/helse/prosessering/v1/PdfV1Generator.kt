@@ -135,8 +135,6 @@ internal class PdfV1Generator {
         }
     }
 
-
-
     private fun PdfRendererBuilder.medFonter() =
         useFont(
             { ByteArrayInputStream(REGULAR_FONT) },
@@ -161,7 +159,7 @@ internal class PdfV1Generator {
             )
 }
 
-private fun List<Utenlandsopphold>.somMapUtenlandsopphold(): List<Map<String, Any?>> {
+private fun List<Utenlandsopphold>.somMapUtenlandsopphold(): List<Map<String, Any?>> { //TODO 24.02.2021 - Fjernes når frontend er prodsatt
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withZone(ZoneId.of("Europe/Oslo"))
     return map {
         mapOf<String, Any?>(

@@ -382,13 +382,8 @@ class OmsorgspengesoknadProsesseringTest {
             URI("http://localhost:8080/vedlegg/4")
         ),
         relasjonTilBarnet = "Mor",
-        arbeidssituasjon = listOf(Arbeidssituasjon.SELVSTENDIG_NÆRINGSDRIVENDE, Arbeidssituasjon.FRILANSER),
         harBekreftetOpplysninger = true,
-        harForståttRettigheterOgPlikter = true,
-        medlemskap = Medlemskap(
-            harBoddIUtlandetSiste12Mnd = true,
-            skalBoIUtlandetNeste12Mnd = true
-        )
+        harForståttRettigheterOgPlikter = true
     )
 
     private fun ventPaaAtRetryMekanismeIStreamProsessering() = runBlocking { delay(Duration.ofSeconds(30)) }
