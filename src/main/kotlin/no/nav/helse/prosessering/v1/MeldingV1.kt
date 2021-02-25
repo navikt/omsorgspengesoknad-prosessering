@@ -39,7 +39,7 @@ data class Søker(
 data class Barn(
     val navn: String?,
     val norskIdentifikator: String?,
-    @JsonFormat(pattern = "yyyy-MM-dd") val fødselsdato: LocalDate? = null, //TODO 23.02.2021 - Fjernes når frontend er prodsatt
+    @JsonFormat(pattern = "yyyy-MM-dd") val fødselsdato: LocalDate? = null,
     val aktørId: String?
 ) {
     override fun toString(): String {
