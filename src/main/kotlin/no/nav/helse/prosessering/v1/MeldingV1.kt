@@ -14,7 +14,7 @@ data class MeldingV1(
     val arbeidssituasjon: List<Arbeidssituasjon>? = null, //TODO 23.02.2021 - Fjernes når frontend er prodsatt
     val barn: Barn,
     val søker: Søker,
-    val relasjonTilBarnet: String? = null, //TODO Kan fjernes? Brukes ikke i PDF lenger
+    val relasjonTilBarnet: String? = null,
     val sammeAdresse: Boolean = false,
     val medlemskap: Medlemskap? = null, //TODO 23.02.2021 - Fjernes når frontend er prodsatt
     var legeerklæring: List<URI> = listOf(),

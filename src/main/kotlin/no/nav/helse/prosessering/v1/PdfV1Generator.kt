@@ -94,6 +94,7 @@ internal class PdfV1Generator {
                             "id" to barnetsIdent?.getValue(),
                             "fødselsdato" to melding.barn.fødselsdato
                         ),
+                        "relasjonTilBarnet" to melding.relasjonTilBarnet,
                         "sammeAddresse" to melding.sammeAdresse,
                         "kroniskEllerFunksjonshemming" to melding.kroniskEllerFunksjonshemming,
                         "arbeidssituasjon" to melding.arbeidssituasjon?.somMapTilPDF(), //TODO 23.02.2021 - Fjernes når frontend er prodsatt

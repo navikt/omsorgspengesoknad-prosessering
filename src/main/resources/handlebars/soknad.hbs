@@ -11,10 +11,9 @@
     <bookmarks>
         <bookmark name="Søker" href="#søker" />
         <bookmark name="Barn" href="#barn" />
-        <bookmark name="Kronisk eller funksjonshemming" href="#funksjonshemming" />
         <bookmark name="Arbeidssituasjon" href="#arbeidssituasjon" />
-        <bookmark name="Samme adresse" href="#adresse" />
         <bookmark name="Medlemskap" href="#medlemskap" />
+        <bookmark name="Om barnet" href="#omBarnet" />
         {{#if harIkkeLastetOppLegeerklæring}}
         <bookmark name="Legeerklæring" href="#legeerklæring" />
         {{/if}}
@@ -60,10 +59,17 @@
             </p>
         </div>
 
-        <section id="funksjonshemming">
-            <h2>Kronisk sykdom eller funksjonshemming</h2>
+        <section id="omBarnet">
+            <h2>Om barnet</h2>
+
             <p class="sporsmalstekst">Har barnet en kronisk sykdom eller funksjonshemming?</p>
             <p>{{ jaNeiSvar kroniskEllerFunksjonshemming }}</p>
+
+            <p class="sporsmalstekst">Din relasjon til barnet:</p>
+            <p>{{relasjonTilBarnet}}</p>
+
+            <p class="sporsmalstekst">Bor du og barnet på samme folkeregistrerte adresse?</p>
+            <p>{{ jaNeiSvar sammeAddresse }}</p>
         </section>
 
         <!--OBS: FJERNES NÅR FRONTEND ER PRODSATT-->
@@ -79,12 +85,6 @@
                     {{/each}}
                 {{/if}}
             {{/if}}
-        </section>
-
-        <section id="adresse">
-            <h2>Barnets bosted</h2>
-            <p class="sporsmalstekst">Bor du og barnet på samme folkeregistrerte adresse?</p>
-            <p>{{ jaNeiSvar sammeAddresse }}</p>
         </section>
 
         <!-- MEDLEMSKAP OBS: FJERNES NÅR FRONTEND ER PRODSATT-->

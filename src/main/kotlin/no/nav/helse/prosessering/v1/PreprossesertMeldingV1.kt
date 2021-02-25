@@ -64,7 +64,7 @@ data class PreprossesertSøker(
 
 data class PreprossesertBarn(
     val norskIdentifikator: String?,
-    val fødselsDato: LocalDate? = null, //TODO 23.02.2021 - Fjernes når frontend er prodsatt
+    val fødselsDato: LocalDate? = null,
     val navn: String?,
     val aktoerId: String?
 ) {
