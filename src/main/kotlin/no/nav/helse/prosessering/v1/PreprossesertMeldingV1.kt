@@ -16,7 +16,7 @@ data class PreprossesertMeldingV1(
     val arbeidssituasjon: List<Arbeidssituasjon>? = null, //TODO 23.02.2021 - Fjernes når frontend er prodsatt
     val barn: PreprossesertBarn,
     val søker: PreprossesertSøker,
-    val relasjonTilBarnet: String? = null,
+    val relasjonTilBarnet: SøkerBarnRelasjon? = null,
     val sammeAdresse: Boolean = false,
     val medlemskap: Medlemskap? = null, //TODO 23.02.2021 - Fjernes når frontend er prodsatt
     val harBekreftetOpplysninger: Boolean,

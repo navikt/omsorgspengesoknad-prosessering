@@ -63,8 +63,8 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
     idTypePaaBarnCounter.labels(barn.idType()).inc()
 
     if (relasjonTilBarnet != null) {
-        søkersRelasjonTilBarnetCounter.labels(relasjonTilBarnet).inc()
-        relasjonPåSammeAdresse.labels(relasjonTilBarnet, sammeAdresse.tilJaEllerNei()).inc()
+        søkersRelasjonTilBarnetCounter.labels(relasjonTilBarnet.utskriftsvennlig).inc()
+        relasjonPåSammeAdresse.labels(relasjonTilBarnet.utskriftsvennlig, sammeAdresse.tilJaEllerNei()).inc()
     }
 
     sammeAdreseCounter.labels("sammeAdresse", sammeAdresse.tilJaEllerNei()).inc()

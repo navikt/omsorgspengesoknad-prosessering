@@ -1,5 +1,6 @@
 package no.nav.helse.prosessering.v1
 
+import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonFormat
 import java.net.URI
 import java.time.LocalDate
@@ -14,7 +15,7 @@ data class MeldingV1(
     val arbeidssituasjon: List<Arbeidssituasjon>? = null, //TODO 23.02.2021 - Fjernes når frontend er prodsatt
     val barn: Barn,
     val søker: Søker,
-    val relasjonTilBarnet: String? = null,
+    val relasjonTilBarnet: SøkerBarnRelasjon? = null,
     val sammeAdresse: Boolean = false,
     val medlemskap: Medlemskap? = null, //TODO 23.02.2021 - Fjernes når frontend er prodsatt
     var legeerklæring: List<URI> = listOf(),
@@ -45,6 +46,13 @@ data class Barn(
     override fun toString(): String {
         return "Barn(navn=$navn, aktørId=$aktørId)"
     }
+}
+
+enum class SøkerBarnRelasjon(val utskriftsvennlig: String) {
+    @JsonAlias("mor") MOR("Mor"), //TODO 25.02.2021 - Alias kan fjernes når api og prosessering har vært prodsatt en liten stund.
+    @JsonAlias("far") FAR("Far"),
+    @JsonAlias("adoptivforelder") ADOPTIVFORELDER("Adoptivforelder"),
+    @JsonAlias("fosterforelder") FOSTERFORELDER("Fosterforelder")
 }
 
 data class Medlemskap( //TODO 23.02.2021 - Fjernes når frontend er prodsatt

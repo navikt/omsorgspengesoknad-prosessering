@@ -381,7 +381,7 @@ class OmsorgspengesoknadProsesseringTest {
             URI("http://localhost:8080/vedlegg/3"),
             URI("http://localhost:8080/vedlegg/4")
         ),
-        relasjonTilBarnet = "Mor",
+        relasjonTilBarnet = SøkerBarnRelasjon.MOR,
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true
     )
