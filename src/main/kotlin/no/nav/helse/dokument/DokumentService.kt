@@ -2,7 +2,7 @@ package no.nav.helse.dokument
 
 import no.nav.helse.CorrelationId
 import no.nav.helse.aktoer.AktørId
-import no.nav.helse.prosessering.v1.MeldingV1
+import no.nav.k9.søknad.Søknad
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -42,13 +42,13 @@ class DokumentService(
     }
 
     internal suspend fun lagreSoknadsMelding(
-        melding: MeldingV1,
+        k9FormatSøknad: Søknad,
         aktørId: AktørId,
         correlationId: CorrelationId
     ) : URI {
         return lagreDokument(
             dokument = DokumentGateway.Dokument(
-                content = Søknadsformat.somJson(melding),
+                content = Søknadsformat.somJson(k9FormatSøknad),
                 contentType = "application/json",
                 title = "Søknad om omsorgspenger som JSON"
             ),

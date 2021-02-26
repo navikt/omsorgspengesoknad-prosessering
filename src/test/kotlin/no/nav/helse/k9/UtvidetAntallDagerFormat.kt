@@ -1,6 +1,7 @@
 package no.nav.helse.k9
 
-import no.nav.k9.søknad.omsorgspenger.OmsorgspengerSøknad
+import no.nav.k9.søknad.JsonUtils
+import no.nav.k9.søknad.Søknad
 import org.json.JSONObject
 import org.skyscreamer.jsonassert.JSONAssert
 import kotlin.test.assertNotNull
@@ -12,14 +13,12 @@ internal fun String.assertUtvidetAntallDagerFormat() {
     assertNotNull(metadata.getString("correlationId"))
 
     val data = assertNotNull(rawJson.getJSONObject("data"))
+    assertNotNull(data.getJSONObject("journalførtMelding").getString("journalpostId"))
 
-    assertNotNull(data.getString("journalpostId"))
-    val søknad = assertNotNull(data.getJSONObject("søknad"))
+    val søknad = assertNotNull(data.getJSONObject("melding")).getJSONObject("k9FormatSøknad")
 
-    val rekonstruertSøknad = OmsorgspengerSøknad
-        .builder()
-        .json(søknad.toString())
-        .build()
+    val rekonstruertSøknad = JsonUtils.fromString(søknad.toString(), Søknad::class.java)
 
-    JSONAssert.assertEquals(søknad.toString(), OmsorgspengerSøknad.SerDes.serialize(rekonstruertSøknad), true)
+    val rekonstruertSøknadSomString = JsonUtils.toString(rekonstruertSøknad)
+    JSONAssert.assertEquals(søknad.toString(), rekonstruertSøknadSomString, true)
 }

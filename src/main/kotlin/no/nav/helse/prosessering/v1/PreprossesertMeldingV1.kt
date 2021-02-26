@@ -3,6 +3,7 @@ package no.nav.helse.prosessering.v1
 import no.nav.helse.aktoer.AktørId
 import no.nav.helse.aktoer.Fodselsnummer
 import no.nav.helse.aktoer.NorskIdent
+import no.nav.k9.søknad.Søknad
 import java.net.URI
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -20,7 +21,8 @@ data class PreprossesertMeldingV1(
     val sammeAdresse: Boolean = false,
     val medlemskap: Medlemskap? = null, //TODO 23.02.2021 - Fjernes når frontend er prodsatt
     val harBekreftetOpplysninger: Boolean,
-    val harForståttRettigheterOgPlikter: Boolean
+    val harForståttRettigheterOgPlikter: Boolean,
+    val k9FormatSøknad: Søknad? = null
 ) {
     internal constructor(
         melding: MeldingV1,
@@ -28,7 +30,8 @@ data class PreprossesertMeldingV1(
         søkerAktørId: AktørId,
         barnAktørId: AktørId?,
         barnetsNavn: String?,
-        barnetsNorskeIdent: NorskIdent?
+        barnetsNorskeIdent: NorskIdent?,
+        k9FormatSøknad: Søknad? = null
     ) : this(
         språk = melding.språk,
         soknadId = melding.søknadId,
@@ -42,7 +45,8 @@ data class PreprossesertMeldingV1(
         relasjonTilBarnet = melding.relasjonTilBarnet,
         medlemskap = melding.medlemskap,
         harForståttRettigheterOgPlikter = melding.harForståttRettigheterOgPlikter,
-        harBekreftetOpplysninger = melding.harBekreftetOpplysninger
+        harBekreftetOpplysninger = melding.harBekreftetOpplysninger,
+        k9FormatSøknad = melding.k9FormatSøknad ?: k9FormatSøknad
     )
 }
 

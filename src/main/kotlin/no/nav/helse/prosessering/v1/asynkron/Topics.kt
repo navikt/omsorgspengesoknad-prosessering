@@ -1,6 +1,6 @@
 package no.nav.helse.prosessering.v1.asynkron
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -8,7 +8,7 @@ import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
-import no.nav.k9.søknad.omsorgspenger.OmsorgspengerSøknad
+import no.nav.k9.søknad.Søknad
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.common.serialization.Serializer
@@ -18,7 +18,7 @@ data class TopicEntry<V>(val metadata: Metadata, val data: V)
 
 data class Cleanup(val metadata: Metadata, val melding: PreprossesertMeldingV1, val journalførtMelding: Journalfort)
 
-data class Journalfort(val journalpostId: String, val søknad: OmsorgspengerSøknad)
+data class Journalfort(val journalpostId: String, val søknad: Søknad)
 
 internal data class Topic<V>(
     val name: String,
@@ -42,17 +42,12 @@ internal object Topics {
         name = "privat-omsorgspengesoknad-cleanup",
         serDes = CleanupSerDes()
     )
-    val JOURNALFORT = Topic(
-        name = "privat-omsorgspengesoknad-journalfort",
-        serDes = JournalfortSerDes()
-    )
-
 }
 
 internal abstract class SerDes<V> : Serializer<V>, Deserializer<V> {
     protected val objectMapper = jacksonObjectMapper()
         .dusseldorfConfigured()
-        .setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
+        .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
         .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
     override fun serialize(topic: String?, data: V): ByteArray? {
         return data?.let {
@@ -81,14 +76,6 @@ private class PreprossesertSerDes: SerDes<TopicEntry<PreprossesertMeldingV1>>() 
 
 private class CleanupSerDes: SerDes<TopicEntry<Cleanup>>() {
     override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<Cleanup>? {
-        return data?.let {
-            objectMapper.readValue(it)
-        }
-    }
-}
-
-private class JournalfortSerDes: SerDes<TopicEntry<Journalfort>>() {
-    override fun deserialize(topic: String?, data: ByteArray?): TopicEntry<Journalfort>? {
         return data?.let {
             objectMapper.readValue(it)
         }

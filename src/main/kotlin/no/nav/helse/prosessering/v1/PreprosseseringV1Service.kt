@@ -7,10 +7,13 @@ import no.nav.helse.aktoer.Fodselsnummer
 import no.nav.helse.aktoer.NorskIdent
 import no.nav.helse.barn.BarnOppslag
 import no.nav.helse.dokument.DokumentService
+import no.nav.helse.k9format.tilK9Format
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.SoknadId
 import no.nav.helse.tpsproxy.Ident
 import no.nav.helse.tpsproxy.TpsNavn
+import no.nav.k9.søknad.JsonUtils
+import no.nav.k9.søknad.Søknad
 import org.slf4j.LoggerFactory
 
 internal class PreprosseseringV1Service(
@@ -74,8 +77,16 @@ internal class PreprosseseringV1Service(
 
         logger.info("Mellomlagrer Oppsummerings-JSON")
 
+        val k9FormatSøknad: Søknad = melding.k9FormatSøknad?.let {
+            logger.info("Bruker k9Format fra api: {}", JsonUtils.toString(it)) // TODO: 26/02/2021 fjern før prodsetting
+            it
+        } ?: melding.tilK9Format().let {
+            logger.info("Mapper om k9Format fra melding: {}", JsonUtils.toString(it)) // TODO: 26/02/2021 fjern før prodsetting
+            it
+        }
+
         val soknadJsonUrl = dokumentService.lagreSoknadsMelding(
-            melding = melding,
+            k9FormatSøknad = k9FormatSøknad,
             aktørId = søkerAktørId,
             correlationId = correlationId
         )
@@ -102,7 +113,8 @@ internal class PreprosseseringV1Service(
             søkerAktørId = søkerAktørId,
             barnAktørId = barnAktørId,
             barnetsNavn = barnetsNavn,
-            barnetsNorskeIdent = barnetsIdent
+            barnetsNorskeIdent = barnetsIdent,
+            k9FormatSøknad = k9FormatSøknad
         )
         melding.reportMetrics()
         preprossesertMeldingV1.reportMetrics()

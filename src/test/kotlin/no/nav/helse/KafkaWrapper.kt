@@ -5,13 +5,10 @@ import no.nav.common.KafkaEnvironment
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
-import no.nav.helse.prosessering.v1.asynkron.Cleanup
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP
-import no.nav.helse.prosessering.v1.asynkron.Topics.JOURNALFORT
 import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT
 import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSSESERT
-
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
@@ -37,7 +34,6 @@ object KafkaWrapper {
             topicNames = listOf(
                 MOTTATT.name,
                 PREPROSSESERT.name,
-                JOURNALFORT.name,
                 CLEANUP.name
             )
         )
@@ -71,22 +67,11 @@ private fun KafkaEnvironment.testProducerProperties(clientId: String): MutableMa
     }
 }
 
-
-fun KafkaEnvironment.journalføringsKonsumer(): KafkaConsumer<String, String> {
-    val consumer = KafkaConsumer(
-        testConsumerProperties("K9FordelKonsumer"),
-        StringDeserializer(),
-        StringDeserializer()
-    )
-    consumer.subscribe(listOf(JOURNALFORT.name))
-    return consumer
-}
-
-fun KafkaEnvironment.cleanupKonsumer(): KafkaConsumer<String, TopicEntry<Cleanup>> {
+fun KafkaEnvironment.cleanupKonsumer(): KafkaConsumer<String, String> {
     val consumer = KafkaConsumer(
         testConsumerProperties("OmsorgspengesøknadCleanupKonsumer"),
         StringDeserializer(),
-        CLEANUP.serDes
+        StringDeserializer()
     )
     consumer.subscribe(listOf(CLEANUP.name))
     return consumer
@@ -108,25 +93,6 @@ fun KafkaEnvironment.meldingsProducer() = KafkaProducer(
     MOTTATT.serDes
 )
 
-fun KafkaConsumer<String, String>.hentJournalførtMelding(
-    soknadId: String,
-    maxWaitInSeconds: Long = 20
-): String {
-    val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
-    while (System.currentTimeMillis() < end) {
-        seekToBeginning(assignment())
-        val entries = poll(Duration.ofSeconds(1))
-            .records(JOURNALFORT.name)
-            .filter { it.key() == soknadId }
-
-        if (entries.isNotEmpty()) {
-            assertEquals(1, entries.size)
-            return entries.first().value()
-        }
-    }
-    throw IllegalStateException("Fant ikke opprettet oppgave for søknad $soknadId etter $maxWaitInSeconds sekunder.")
-}
-
 fun KafkaConsumer<String, TopicEntry<PreprossesertMeldingV1>>.hentPreprossesertMelding(
     soknadId: String,
     maxWaitInSeconds: Long = 20
@@ -146,10 +112,10 @@ fun KafkaConsumer<String, TopicEntry<PreprossesertMeldingV1>>.hentPreprossesertM
     throw IllegalStateException("Fant ikke opprettet oppgave for søknad $soknadId etter $maxWaitInSeconds sekunder.")
 }
 
-fun KafkaConsumer<String, TopicEntry<Cleanup>>.hentCleanupMelding(
+fun KafkaConsumer<String, String>.hentCleanupMelding(
     soknadId: String,
     maxWaitInSeconds: Long = 20
-): TopicEntry<Cleanup> {
+): String {
     val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
     while (System.currentTimeMillis() < end) {
         seekToBeginning(assignment())

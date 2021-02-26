@@ -1,9 +1,9 @@
 package no.nav.helse
 
+import no.nav.helse.SøknadUtils.Companion.melding
 import no.nav.helse.dokument.Søknadsformat
-import no.nav.helse.prosessering.v1.*
+import no.nav.helse.k9format.tilK9Format
 import org.skyscreamer.jsonassert.JSONAssert
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
 import kotlin.test.Test
@@ -13,73 +13,30 @@ class SøknadsformatTest {
     @Test
     fun `Soknaden journalfoeres som JSON uten vedlegg`() {
         val søknadId = UUID.randomUUID().toString()
-        val json = Søknadsformat.somJson(melding(søknadId))
+        val mottatt = ZonedDateTime.parse("2018-01-02T03:04:05.006Z")
+        val melding = melding.copy(søknadId = søknadId, mottatt = mottatt)
+        val json = Søknadsformat.somJson(melding.tilK9Format())
         println(String(json))
         JSONAssert.assertEquals(
+            //language=json
             """{
-                  "nyVersjon": false,
                   "søknadId": "$søknadId",
-                  "mottatt": "2018-01-02T03:04:05.000000006Z",
+                  "mottattDato": "2018-01-02T03:04:05.006Z",
                   "språk": "nb",
-                  "kroniskEllerFunksjonshemming": false,
-                  "arbeidssituasjon": ["SELVSTENDIG_NÆRINGSDRIVENDE", "FRILANSER", "ARBEIDSTAKER"],
-                  "barn": {
-                    "navn": "Kari",
-                    "norskIdentifikator": "2323",
-                    "fødselsdato": null,
-                    "aktørId": null
-                  },
+                  "versjon" : "1.0.0",
                   "søker": {
-                    "fødselsnummer": "1212",
-                    "fornavn": "Ola",
-                    "mellomnavn": "Mellomnavn",
-                    "etternavn": "Nordmann",
-                    "fødselsdato": null,
-                    "aktørId": "123456"
+                    "norskIdentitetsnummer": "26104500284"
                   },
-                  "relasjonTilBarnet": "MOR",
-                  "sammeAdresse": false,
-                  "medlemskap": {
-                    "harBoddIUtlandetSiste12Mnd": true,
-                    "utenlandsoppholdSiste12Mnd": [],
-                    "skalBoIUtlandetNeste12Mnd": true,
-                    "utenlandsoppholdNeste12Mnd": []
-                  },
-                  "harBekreftetOpplysninger": true,
-                  "harForståttRettigheterOgPlikter": true
-                }
-
+                  "ytelse" : {
+                      "type" : "OMP_UTV_KS",
+                      "kroniskEllerFunksjonshemming": false,
+                      "barn": {
+                          "norskIdentitetsnummer": "02119970078",
+                          "fødselsdato": "2020-01-01"
+                      }
+                  }
+              }
         """.trimIndent(), String(json), true
         )
-
     }
-
-    private fun melding(soknadId: String): MeldingV1 = MeldingV1(
-        søknadId = soknadId,
-        mottatt = ZonedDateTime.of(2018, 1, 2, 3, 4, 5, 6, ZoneId.of("UTC")),
-        søker = Søker(
-            aktørId = "123456",
-            fødselsnummer = "1212",
-            etternavn = "Nordmann",
-            mellomnavn = "Mellomnavn",
-            fornavn = "Ola",
-            fødselsdato = null
-        ),
-        barn = Barn(
-            navn = "Kari",
-            norskIdentifikator = "2323",
-            fødselsdato = null,
-            aktørId = null
-        ),
-        relasjonTilBarnet = SøkerBarnRelasjon.MOR,
-        arbeidssituasjon = listOf(Arbeidssituasjon.SELVSTENDIG_NÆRINGSDRIVENDE, Arbeidssituasjon.FRILANSER, Arbeidssituasjon.ARBEIDSTAKER),
-        medlemskap = Medlemskap(
-            harBoddIUtlandetSiste12Mnd = true,
-            skalBoIUtlandetNeste12Mnd = true,
-            utenlandsoppholdSiste12Mnd = listOf(),
-            utenlandsoppholdNeste12Mnd = listOf()
-        ),
-        harBekreftetOpplysninger = true,
-        harForståttRettigheterOgPlikter = true
-    )
 }

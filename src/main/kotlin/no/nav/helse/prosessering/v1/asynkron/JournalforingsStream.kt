@@ -5,18 +5,12 @@ import no.nav.helse.aktoer.AktørId
 import no.nav.helse.erEtter
 import no.nav.helse.joark.JoarkGateway
 import no.nav.helse.joark.Navn
+import no.nav.helse.k9format.tilK9Format
 import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
-import no.nav.helse.prosessering.v1.PreprossesertBarn
 import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
-import no.nav.helse.prosessering.v1.PreprossesertSøker
-import no.nav.k9.søknad.felles.Barn
-import no.nav.k9.søknad.felles.NorskIdentitetsnummer
-import no.nav.k9.søknad.felles.Søker
-import no.nav.k9.søknad.felles.SøknadId
-import no.nav.k9.søknad.omsorgspenger.OmsorgspengerSøknad
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.apache.kafka.streams.kstream.Consumed
@@ -76,7 +70,7 @@ internal class JournalforingsStream(
                         logger.info("Dokumenter journalført med ID = ${journaPostId.journalpostId}.")
                         val journalfort = Journalfort(
                             journalpostId = journaPostId.journalpostId,
-                            søknad = entry.data.tilK9Omsorgspengesøknad()
+                            søknad = entry.data.k9FormatSøknad?: entry.data.tilK9Format()
                         )
 
                         Cleanup(
@@ -93,27 +87,4 @@ internal class JournalforingsStream(
     }
 
     internal fun stop() = stream.stop(becauseOfError = false)
-}
-
-private fun PreprossesertMeldingV1.tilK9Omsorgspengesøknad(): OmsorgspengerSøknad = OmsorgspengerSøknad.builder()
-    .søknadId(SøknadId.of(soknadId))
-    .mottattDato(mottatt)
-    .barn(barn.tilK9Barn())
-    .søker(søker.tilK9Søker())
-    .build()
-
-private fun PreprossesertSøker.tilK9Søker(): Søker = Søker.builder()
-    .norskIdentitetsnummer(NorskIdentitetsnummer.of(fødselsnummer))
-    .build()
-
-private fun PreprossesertBarn.tilK9Barn(): Barn {
-    return when {
-        !norskIdentifikator.isNullOrBlank() -> Barn.builder().norskIdentitetsnummer(
-            NorskIdentitetsnummer.of(
-                norskIdentifikator
-            )
-        ).build()
-        fødselsDato != null -> Barn.builder().fødselsdato(fødselsDato).build()
-        else -> throw IllegalArgumentException("Ikke tillatt med barn som mangler både fødselsdato og fødselnummer.")
-    }
 }

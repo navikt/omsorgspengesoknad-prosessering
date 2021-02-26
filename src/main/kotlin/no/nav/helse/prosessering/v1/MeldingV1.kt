@@ -2,6 +2,7 @@ package no.nav.helse.prosessering.v1
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonFormat
+import no.nav.k9.søknad.Søknad
 import java.net.URI
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -21,7 +22,8 @@ data class MeldingV1(
     var legeerklæring: List<URI> = listOf(),
     var samværsavtale: List<URI> = listOf(),
     val harBekreftetOpplysninger: Boolean,
-    val harForståttRettigheterOgPlikter: Boolean
+    val harForståttRettigheterOgPlikter: Boolean,
+    val k9FormatSøknad: Søknad? = null
 )
 
 data class Søker(
