@@ -65,8 +65,10 @@
             <p class="sporsmalstekst">Har barnet en kronisk sykdom eller funksjonshemming?</p>
             <p>{{ jaNeiSvar kroniskEllerFunksjonshemming }}</p>
 
-            <p class="sporsmalstekst">Din relasjon til barnet:</p>
-            <p>{{relasjonTilBarnet}}</p>
+            {{#if relasjonTilBarnet}}
+                <p class="sporsmalstekst">Din relasjon til barnet:</p>
+                <p>{{relasjonTilBarnet}}</p>
+            {{/if}}
 
             <p class="sporsmalstekst">Bor du og barnet på samme folkeregistrerte adresse?</p>
             <p>{{ jaNeiSvar sammeAddresse }}</p>
