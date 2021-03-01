@@ -86,11 +86,11 @@ internal class PdfV1Generator {
                         "soknad_mottatt_dag" to melding.mottatt.withZoneSameInstant(ZONE_ID).norskDag(),
                         "soknad_mottatt" to DATE_TIME_FORMATTER.format(melding.mottatt),
                         "søker" to mapOf(
-                            "navn" to melding.søker.formatertNavn(),
+                            "navn" to melding.søker.formatertNavn().capitalizeName(),
                             "fødselsnummer" to melding.søker.fødselsnummer
                         ),
                         "barn" to mapOf(
-                            "navn" to barnetsNavn,
+                            "navn" to barnetsNavn?.capitalizeName(),
                             "id" to barnetsIdent?.getValue(),
                             "fødselsdato" to melding.barn.fødselsdato
                         ),
@@ -172,6 +172,7 @@ private fun List<Utenlandsopphold>.somMapUtenlandsopphold(): List<Map<String, An
 }
 
 private fun Søker.formatertNavn() = if (mellomnavn != null) "$fornavn $mellomnavn $etternavn" else "$fornavn $etternavn"
+fun String.capitalizeName(): String = split(" ").joinToString(" ") { it.toLowerCase().capitalize() }
 
 private fun String.sprakTilTekst() = when (this.toLowerCase()) {
     "nb" -> "bokmål"
