@@ -39,7 +39,7 @@ class PdfV1GeneratorTest {
                 aktørId = "123456",
                 navn = barnetsNavn
             ),
-            relasjonTilBarnet = "Mor",
+            relasjonTilBarnet = SøkerBarnRelasjon.MOR,
             arbeidssituasjon = listOf(Arbeidssituasjon.SELVSTENDIG_NÆRINGSDRIVENDE, Arbeidssituasjon.FRILANSER),
             medlemskap = Medlemskap(
                 harBoddIUtlandetSiste12Mnd = true,

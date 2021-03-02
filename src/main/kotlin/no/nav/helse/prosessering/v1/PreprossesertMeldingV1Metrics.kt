@@ -45,28 +45,10 @@ private val søkersRelasjonTilBarnetCounter = Counter.build()
     .labelNames("relasjon")
     .register()
 
-private val antallArbeidsSituasjonerCounter = Counter.build()
-    .name("antall_arbeidssituasjoner_counter")
-    .help("Teller for søkers antall arbeidssituasjoner")
-    .labelNames("antall_forhold")
-    .register()
-
-private val arbeidsSituasjonCounter = Counter.build()
-    .name("arbeidssituasjon_counter")
-    .help("Teller for søkers arbeidsforhold")
-    .labelNames("forhold")
-    .register()
-
 private val relasjonPåSammeAdresse = Counter.build()
     .name("relasjon_paa_samme_adresse")
     .help("Teller for søkere med relasjon på samme adresse som barnet.")
     .labelNames("relasjon", "sammeAdresse")
-    .register()
-
-private val medlemskapMedUtenlandsopphold = Counter.build()
-    .name("medlemskap_med_utenlandsopphold")
-    .help("Teller for søkere med utenlandsopphold.")
-    .labelNames("har_bodd_i_utlandet_siste_12_mnd", "utenlandsopphold")
     .register()
 
 internal fun PreprossesertMeldingV1.reportMetrics() {
@@ -79,28 +61,10 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
         }
     }
     idTypePaaBarnCounter.labels(barn.idType()).inc()
-    jaNeiCounter.labels("har_bodd_i_utlandet_siste_12_mnd", medlemskap.harBoddIUtlandetSiste12Mnd.tilJaEllerNei()).inc()
-    jaNeiCounter.labels("skal_bo_i_utlandet_neste_12_mnd", medlemskap.skalBoIUtlandetNeste12Mnd.tilJaEllerNei()).inc()
-
-    medlemskapMedUtenlandsopphold.labels(
-        medlemskap.harBoddIUtlandetSiste12Mnd.tilJaEllerNei(),
-        medlemskap.utenlandsoppholdSiste12Mnd.size.toString()
-    ).inc()
-
-    medlemskapMedUtenlandsopphold.labels(
-        medlemskap.skalBoIUtlandetNeste12Mnd.tilJaEllerNei(),
-        medlemskap.utenlandsoppholdNeste12Mnd.size.toString()
-    ).inc()
 
     if (relasjonTilBarnet != null) {
-        søkersRelasjonTilBarnetCounter.labels(relasjonTilBarnet).inc()
-        relasjonPåSammeAdresse.labels(relasjonTilBarnet, sammeAdresse.tilJaEllerNei()).inc()
-    }
-
-    if (arbeidssituasjon.isNotEmpty()) {
-        antallArbeidsSituasjonerCounter.labels(arbeidssituasjon.size.toString()).inc()
-        val arbeidsSituasjonerSomString = arbeidssituasjon.sortedDescending().joinToString(" & ")
-        arbeidsSituasjonCounter.labels(arbeidsSituasjonerSomString).inc()
+        søkersRelasjonTilBarnetCounter.labels(relasjonTilBarnet.utskriftsvennlig).inc()
+        relasjonPåSammeAdresse.labels(relasjonTilBarnet.utskriftsvennlig, sammeAdresse.tilJaEllerNei()).inc()
     }
 
     sammeAdreseCounter.labels("sammeAdresse", sammeAdresse.tilJaEllerNei()).inc()

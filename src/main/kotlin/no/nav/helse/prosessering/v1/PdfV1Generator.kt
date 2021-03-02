@@ -86,29 +86,32 @@ internal class PdfV1Generator {
                         "soknad_mottatt_dag" to melding.mottatt.withZoneSameInstant(ZONE_ID).norskDag(),
                         "soknad_mottatt" to DATE_TIME_FORMATTER.format(melding.mottatt),
                         "søker" to mapOf(
-                            "navn" to melding.søker.formatertNavn(),
+                            "navn" to melding.søker.formatertNavn().capitalizeName(),
                             "fødselsnummer" to melding.søker.fødselsnummer
                         ),
                         "barn" to mapOf(
-                            "navn" to barnetsNavn,
+                            "navn" to barnetsNavn?.capitalizeName(),
                             "id" to barnetsIdent?.getValue(),
                             "fødselsdato" to melding.barn.fødselsdato
                         ),
+                        "relasjonTilBarnet" to melding.relasjonTilBarnet?.utskriftsvennlig,
                         "sammeAddresse" to melding.sammeAdresse,
                         "kroniskEllerFunksjonshemming" to melding.kroniskEllerFunksjonshemming,
-                        "arbeidssituasjon" to melding.arbeidssituasjon.somMapTilPDF(),
-                        "medlemskap" to mapOf(
-                            "har_bodd_i_utlandet_siste_12_mnd" to melding.medlemskap.harBoddIUtlandetSiste12Mnd,
-                            "utenlandsopphold_siste_12_mnd" to melding.medlemskap.utenlandsoppholdSiste12Mnd.somMapUtenlandsopphold(),
-                            "skal_bo_i_utlandet_neste_12_mnd" to melding.medlemskap.skalBoIUtlandetNeste12Mnd,
-                            "utenlandsopphold_neste_12_mnd" to melding.medlemskap.utenlandsoppholdNeste12Mnd.somMapUtenlandsopphold()
+                        "arbeidssituasjon" to melding.arbeidssituasjon?.somMapTilPDF(), //TODO 23.02.2021 - Fjernes når frontend er prodsatt
+                        "medlemskap" to mapOf( //TODO 23.02.2021 - Fjernes når frontend er prodsatt
+                            "har_bodd_i_utlandet_siste_12_mnd" to melding.medlemskap?.harBoddIUtlandetSiste12Mnd,
+                            "utenlandsopphold_siste_12_mnd" to melding.medlemskap?.utenlandsoppholdSiste12Mnd?.somMapUtenlandsopphold(),
+                            "skal_bo_i_utlandet_neste_12_mnd" to melding.medlemskap?.skalBoIUtlandetNeste12Mnd,
+                            "utenlandsopphold_neste_12_mnd" to melding.medlemskap?.utenlandsoppholdNeste12Mnd?.somMapUtenlandsopphold()
                         ),
                         "samtykke" to mapOf(
                             "harForståttRettigheterOgPlikter" to melding.harForståttRettigheterOgPlikter,
                             "harBekreftetOpplysninger" to melding.harBekreftetOpplysninger
                         ),
                         "hjelp" to mapOf(
-                            "språk" to melding.språk?.sprakTilTekst()
+                            "språk" to melding.språk?.sprakTilTekst(),
+                            "medlemskapSatt" to (melding.medlemskap != null),
+                            "arbeidssituasjonSatt" to (melding.arbeidssituasjon != null)
                         ),
                         "harIkkeLastetOppLegeerklæring" to melding.harIkkeLastetOppLegeerklæring()
                     )
@@ -132,8 +135,6 @@ internal class PdfV1Generator {
             }
         }
     }
-
-
 
     private fun PdfRendererBuilder.medFonter() =
         useFont(
@@ -159,7 +160,7 @@ internal class PdfV1Generator {
             )
 }
 
-private fun List<Utenlandsopphold>.somMapUtenlandsopphold(): List<Map<String, Any?>> {
+private fun List<Utenlandsopphold>.somMapUtenlandsopphold(): List<Map<String, Any?>> { //TODO 24.02.2021 - Fjernes når frontend er prodsatt
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy").withZone(ZoneId.of("Europe/Oslo"))
     return map {
         mapOf<String, Any?>(
@@ -171,6 +172,7 @@ private fun List<Utenlandsopphold>.somMapUtenlandsopphold(): List<Map<String, An
 }
 
 private fun Søker.formatertNavn() = if (mellomnavn != null) "$fornavn $mellomnavn $etternavn" else "$fornavn $etternavn"
+fun String.capitalizeName(): String = split(" ").joinToString(" ") { it.toLowerCase().capitalize() }
 
 private fun String.sprakTilTekst() = when (this.toLowerCase()) {
     "nb" -> "bokmål"

@@ -37,7 +37,7 @@ class SøknadsformatTest {
                     "fødselsdato": null,
                     "aktørId": "123456"
                   },
-                  "relasjonTilBarnet": "Mor",
+                  "relasjonTilBarnet": "MOR",
                   "sammeAdresse": false,
                   "medlemskap": {
                     "harBoddIUtlandetSiste12Mnd": true,
@@ -71,7 +71,7 @@ class SøknadsformatTest {
             fødselsdato = null,
             aktørId = null
         ),
-        relasjonTilBarnet = "Mor",
+        relasjonTilBarnet = SøkerBarnRelasjon.MOR,
         arbeidssituasjon = listOf(Arbeidssituasjon.SELVSTENDIG_NÆRINGSDRIVENDE, Arbeidssituasjon.FRILANSER, Arbeidssituasjon.ARBEIDSTAKER),
         medlemskap = Medlemskap(
             harBoddIUtlandetSiste12Mnd = true,
