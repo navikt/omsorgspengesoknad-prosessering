@@ -24,6 +24,7 @@ fun MeldingV1.tilK9Format(): K9Søknad {
     )
 }
 
+
 fun PreprossesertMeldingV1.tilK9Format(): K9Søknad {
     return K9Søknad(
         SøknadId.of(soknadId),
