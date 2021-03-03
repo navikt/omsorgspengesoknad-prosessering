@@ -352,7 +352,7 @@ class OmsorgspengesoknadProsesseringTest {
         fødselsnummerSoker: String,
         fødselsnummerBarn: String?,
         barnetsNavn: String? = "kari",
-        barnetsFødselsdato: LocalDate? = LocalDate.now().minusDays(100),
+        barnetsFødselsdato: LocalDate? = LocalDate.parse("2020-01-01"),
         aktørIdBarn: String? = null,
         sprak: String? = null
     ): MeldingV1 = MeldingV1(
@@ -362,7 +362,7 @@ class OmsorgspengesoknadProsesseringTest {
         søker = Søker(
             aktørId = "123456",
             fødselsnummer = fødselsnummerSoker,
-            fødselsdato = LocalDate.now().minusDays(1000),
+            fødselsdato = LocalDate.parse("2000-01-01"),
             etternavn = "Nordmann",
             mellomnavn = "Mellomnavn",
             fornavn = "Ola"
