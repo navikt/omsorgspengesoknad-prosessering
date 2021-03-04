@@ -40,18 +40,6 @@ class PdfV1GeneratorTest {
                 navn = barnetsNavn
             ),
             relasjonTilBarnet = SøkerBarnRelasjon.MOR,
-            arbeidssituasjon = listOf(Arbeidssituasjon.SELVSTENDIG_NÆRINGSDRIVENDE, Arbeidssituasjon.FRILANSER),
-            medlemskap = Medlemskap(
-                harBoddIUtlandetSiste12Mnd = true,
-                utenlandsoppholdSiste12Mnd = listOf(
-                    Utenlandsopphold(
-                        LocalDate.of(2020, 1, 2),
-                        LocalDate.of(2020, 1, 3),
-                        "US", "USA"
-                    )
-                ),
-                skalBoIUtlandetNeste12Mnd = false
-            ),
             harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true
         )

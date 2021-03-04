@@ -13,12 +13,10 @@ data class PreprossesertMeldingV1(
     val språk: String?,
     val dokumentUrls: List<List<URI>>,
     val kroniskEllerFunksjonshemming: Boolean,
-    val arbeidssituasjon: List<Arbeidssituasjon>? = null, //TODO 23.02.2021 - Fjernes når frontend er prodsatt
     val barn: PreprossesertBarn,
     val søker: PreprossesertSøker,
     val relasjonTilBarnet: SøkerBarnRelasjon? = null,
     val sammeAdresse: Boolean = false,
-    val medlemskap: Medlemskap? = null, //TODO 23.02.2021 - Fjernes når frontend er prodsatt
     val harBekreftetOpplysninger: Boolean,
     val harForståttRettigheterOgPlikter: Boolean
 ) {
@@ -37,10 +35,8 @@ data class PreprossesertMeldingV1(
         kroniskEllerFunksjonshemming = melding.kroniskEllerFunksjonshemming,
         søker = PreprossesertSøker(melding.søker, søkerAktørId),
         sammeAdresse = melding.sammeAdresse,
-        arbeidssituasjon = melding.arbeidssituasjon,
         barn = PreprossesertBarn(melding.barn, melding.barn.fødselsdato, barnetsNavn, barnetsNorskeIdent, barnAktørId),
         relasjonTilBarnet = melding.relasjonTilBarnet,
-        medlemskap = melding.medlemskap,
         harForståttRettigheterOgPlikter = melding.harForståttRettigheterOgPlikter,
         harBekreftetOpplysninger = melding.harBekreftetOpplysninger
     )

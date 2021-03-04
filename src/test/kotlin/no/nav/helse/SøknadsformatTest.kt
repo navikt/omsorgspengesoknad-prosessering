@@ -22,7 +22,6 @@ class SøknadsformatTest {
                   "mottatt": "2018-01-02T03:04:05.000000006Z",
                   "språk": "nb",
                   "kroniskEllerFunksjonshemming": false,
-                  "arbeidssituasjon": ["SELVSTENDIG_NÆRINGSDRIVENDE", "FRILANSER", "ARBEIDSTAKER"],
                   "barn": {
                     "navn": "Kari",
                     "norskIdentifikator": "2323",
@@ -39,12 +38,6 @@ class SøknadsformatTest {
                   },
                   "relasjonTilBarnet": "MOR",
                   "sammeAdresse": false,
-                  "medlemskap": {
-                    "harBoddIUtlandetSiste12Mnd": true,
-                    "utenlandsoppholdSiste12Mnd": [],
-                    "skalBoIUtlandetNeste12Mnd": true,
-                    "utenlandsoppholdNeste12Mnd": []
-                  },
                   "harBekreftetOpplysninger": true,
                   "harForståttRettigheterOgPlikter": true
                 }
@@ -72,13 +65,6 @@ class SøknadsformatTest {
             aktørId = null
         ),
         relasjonTilBarnet = SøkerBarnRelasjon.MOR,
-        arbeidssituasjon = listOf(Arbeidssituasjon.SELVSTENDIG_NÆRINGSDRIVENDE, Arbeidssituasjon.FRILANSER, Arbeidssituasjon.ARBEIDSTAKER),
-        medlemskap = Medlemskap(
-            harBoddIUtlandetSiste12Mnd = true,
-            skalBoIUtlandetNeste12Mnd = true,
-            utenlandsoppholdSiste12Mnd = listOf(),
-            utenlandsoppholdNeste12Mnd = listOf()
-        ),
         harBekreftetOpplysninger = true,
         harForståttRettigheterOgPlikter = true
     )
