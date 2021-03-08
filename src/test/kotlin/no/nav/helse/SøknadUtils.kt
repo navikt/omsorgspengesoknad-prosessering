@@ -11,10 +11,9 @@ import no.nav.helse.prosessering.v1.Søker
 import no.nav.helse.prosessering.v1.SøkerBarnRelasjon
 import no.nav.k9.søknad.Søknad
 import no.nav.k9.søknad.felles.Versjon
+import no.nav.k9.søknad.felles.type.NorskIdentitetsnummer
 import no.nav.k9.søknad.felles.type.SøknadId
 import no.nav.k9.søknad.ytelse.omsorgspenger.utvidetrett.v1.OmsorgspengerKroniskSyktBarn
-import no.nav.helse.k9format.tilK9Barn
-import no.nav.helse.k9format.tilK9Søker
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.*
@@ -45,9 +44,11 @@ class SøknadUtils {
             SøknadId.of(søknadId),
             k9FormatVersjon,
             mottatt,
-            søker.tilK9Søker(),
+            no.nav.k9.søknad.felles.personopplysninger.Søker(
+                NorskIdentitetsnummer.of("26104500284")
+            ),
             OmsorgspengerKroniskSyktBarn(
-                barn.tilK9Barn(),
+                no.nav.k9.søknad.felles.personopplysninger.Barn(NorskIdentitetsnummer.of("02119970078"), null),
                 true
             )
         )

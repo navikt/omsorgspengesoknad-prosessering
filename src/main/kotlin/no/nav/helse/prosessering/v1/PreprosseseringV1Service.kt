@@ -7,13 +7,10 @@ import no.nav.helse.aktoer.Fodselsnummer
 import no.nav.helse.aktoer.NorskIdent
 import no.nav.helse.barn.BarnOppslag
 import no.nav.helse.dokument.DokumentService
-import no.nav.helse.k9format.tilK9Format
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.SoknadId
 import no.nav.helse.tpsproxy.Ident
 import no.nav.helse.tpsproxy.TpsNavn
-import no.nav.k9.søknad.JsonUtils
-import no.nav.k9.søknad.Søknad
 import org.slf4j.LoggerFactory
 
 internal class PreprosseseringV1Service(

@@ -5,7 +5,6 @@ import no.nav.helse.aktoer.AktørId
 import no.nav.helse.erEtter
 import no.nav.helse.joark.JoarkGateway
 import no.nav.helse.joark.Navn
-import no.nav.helse.k9format.tilK9Format
 import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
@@ -70,7 +69,7 @@ internal class JournalforingsStream(
                         logger.info("Dokumenter journalført med ID = ${journaPostId.journalpostId}.")
                         val journalfort = Journalfort(
                             journalpostId = journaPostId.journalpostId,
-                            søknad = entry.data.k9FormatSøknad?: entry.data.tilK9Format()
+                            søknad = entry.data.k9FormatSøknad
                         )
 
                         Cleanup(
