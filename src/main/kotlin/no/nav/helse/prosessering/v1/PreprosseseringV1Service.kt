@@ -77,16 +77,8 @@ internal class PreprosseseringV1Service(
 
         logger.info("Mellomlagrer Oppsummerings-JSON")
 
-        val k9FormatSøknad: Søknad = melding.k9FormatSøknad?.let {
-            logger.info("Bruker k9Format fra api: {}", JsonUtils.toString(it)) // TODO: 26/02/2021 fjern før prodsetting
-            it
-        } ?: melding.tilK9Format().let {
-            logger.info("Mapper om k9Format fra melding: {}", JsonUtils.toString(it)) // TODO: 26/02/2021 fjern før prodsetting
-            it
-        }
-
         val soknadJsonUrl = dokumentService.lagreSoknadsMelding(
-            k9FormatSøknad = k9FormatSøknad,
+            k9FormatSøknad = melding.k9FormatSøknad,
             aktørId = søkerAktørId,
             correlationId = correlationId
         )
@@ -113,8 +105,7 @@ internal class PreprosseseringV1Service(
             søkerAktørId = søkerAktørId,
             barnAktørId = barnAktørId,
             barnetsNavn = barnetsNavn,
-            barnetsNorskeIdent = barnetsIdent,
-            k9FormatSøknad = k9FormatSøknad
+            barnetsNorskeIdent = barnetsIdent
         )
         melding.reportMetrics()
         preprossesertMeldingV1.reportMetrics()

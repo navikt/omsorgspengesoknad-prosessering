@@ -20,7 +20,7 @@ data class PreprossesertMeldingV1(
     val sammeAdresse: Boolean = false,
     val harBekreftetOpplysninger: Boolean,
     val harForståttRettigheterOgPlikter: Boolean,
-    val k9FormatSøknad: Søknad? = null
+    val k9FormatSøknad: Søknad
 ) {
     internal constructor(
         melding: MeldingV1,
@@ -29,7 +29,6 @@ data class PreprossesertMeldingV1(
         barnAktørId: AktørId?,
         barnetsNavn: String?,
         barnetsNorskeIdent: NorskIdent?,
-        k9FormatSøknad: Søknad? = null
     ) : this(
         språk = melding.språk,
         soknadId = melding.søknadId,
@@ -42,7 +41,7 @@ data class PreprossesertMeldingV1(
         relasjonTilBarnet = melding.relasjonTilBarnet,
         harForståttRettigheterOgPlikter = melding.harForståttRettigheterOgPlikter,
         harBekreftetOpplysninger = melding.harBekreftetOpplysninger,
-        k9FormatSøknad = melding.k9FormatSøknad ?: k9FormatSøknad
+        k9FormatSøknad = melding.k9FormatSøknad
     )
 }
 

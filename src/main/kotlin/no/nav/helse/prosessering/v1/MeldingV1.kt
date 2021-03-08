@@ -20,7 +20,7 @@ data class MeldingV1(
     var samværsavtale: List<URI> = listOf(),
     val harBekreftetOpplysninger: Boolean,
     val harForståttRettigheterOgPlikter: Boolean,
-    val k9FormatSøknad: Søknad? = null
+    val k9FormatSøknad: Søknad
 )
 
 data class Søker(
