@@ -35,8 +35,6 @@ internal class PreprosseseringV1Service(
 
         val søkerAktørId = AktørId(melding.søker.aktørId)
 
-        logger.info("Søkerens AktørID = $søkerAktørId")
-
         logger.trace("Henter AktørID for barnet.")
         val barnAktørId: AktørId? = when {
             melding.barn.aktørId.isNullOrBlank() -> hentBarnetsAktoerId(
@@ -45,7 +43,6 @@ internal class PreprosseseringV1Service(
             )
             else -> AktørId(melding.barn.aktørId)
         }
-        logger.info("Barnets AktørID = $barnAktørId")
 
         val barnetsIdent: NorskIdent? = when {
             !melding.barn.norskIdentifikator.isNullOrBlank() -> Fodselsnummer(melding.barn.norskIdentifikator)

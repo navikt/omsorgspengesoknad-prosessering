@@ -21,7 +21,11 @@ data class MeldingV1(
     val harBekreftetOpplysninger: Boolean,
     val harForståttRettigheterOgPlikter: Boolean,
     val k9FormatSøknad: Søknad
-)
+) {
+    override fun toString(): String {
+        return "MeldingV1(søknadId='$søknadId', mottatt=$mottatt)"
+    }
+}
 
 data class Søker(
     val fødselsnummer: String,
@@ -32,7 +36,7 @@ data class Søker(
     val aktørId: String
 ) {
     override fun toString(): String {
-        return "Soker(fornavn='$fornavn', mellomnavn=$mellomnavn, etternavn='$etternavn', fødselsdato=$fødselsdato, aktørId='$aktørId')"
+        return "Soker()"
     }
 }
 
@@ -43,7 +47,7 @@ data class Barn(
     val aktørId: String?
 ) {
     override fun toString(): String {
-        return "Barn(navn=$navn, aktørId=$aktørId)"
+        return "Barn()"
     }
 }
 
