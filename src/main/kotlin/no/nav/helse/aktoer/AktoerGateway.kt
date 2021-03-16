@@ -131,7 +131,6 @@ class AktoerGateway(
         }
 
         val aktoerId = AktørId(identResponse.identer[0].ident)
-        logger.trace("Resolved AktørID $aktoerId")
         return aktoerId
     }
 
@@ -193,7 +192,6 @@ class AktoerGateway(
         }
 
         val aktoerId = AktørId(identResponse.identer[0].ident)
-        logger.trace("Resolved AktørID $aktoerId")
         return aktoerId.id
     }
 
