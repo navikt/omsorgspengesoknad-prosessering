@@ -19,7 +19,11 @@ data class MeldingV1(
     var samværsavtale: List<URI> = listOf(),
     val harBekreftetOpplysninger: Boolean,
     val harForståttRettigheterOgPlikter: Boolean
-)
+) {
+    override fun toString(): String {
+        return "MeldingV1(søknadId='$søknadId', mottatt=$mottatt)"
+    }
+}
 
 data class Søker(
     val fødselsnummer: String,
@@ -30,7 +34,7 @@ data class Søker(
     val aktørId: String
 ) {
     override fun toString(): String {
-        return "Soker(fornavn='$fornavn', mellomnavn=$mellomnavn, etternavn='$etternavn', fødselsdato=$fødselsdato, aktørId='$aktørId')"
+        return "Soker()"
     }
 }
 
@@ -41,7 +45,7 @@ data class Barn(
     val aktørId: String?
 ) {
     override fun toString(): String {
-        return "Barn(navn=$navn, aktørId=$aktørId)"
+        return "Barn()"
     }
 }
 

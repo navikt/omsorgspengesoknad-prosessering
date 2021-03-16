@@ -40,6 +40,11 @@ data class PreprossesertMeldingV1(
         harForståttRettigheterOgPlikter = melding.harForståttRettigheterOgPlikter,
         harBekreftetOpplysninger = melding.harBekreftetOpplysninger
     )
+
+    override fun toString(): String {
+        return "PreprossesertMeldingV1(soknadId='$soknadId', mottatt=$mottatt)"
+    }
+
 }
 
 data class PreprossesertSøker(
@@ -56,6 +61,11 @@ data class PreprossesertSøker(
         etternavn = søker.etternavn,
         aktørId = aktørId.id
     )
+
+    override fun toString(): String {
+        return "PreprossesertSøker()"
+    }
+
 }
 
 data class PreprossesertBarn(
@@ -79,6 +89,6 @@ data class PreprossesertBarn(
     )
 
     override fun toString(): String {
-        return "PreprossesertBarn(navn=$navn, aktoerId=$aktoerId)"
+        return "PreprossesertBarn()"
     }
 }
