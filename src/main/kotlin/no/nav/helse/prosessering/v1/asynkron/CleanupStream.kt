@@ -37,7 +37,6 @@ internal class CleanupStream(
         private fun topology(dokumentService: DokumentService, gittDato: ZonedDateTime): Topology {
             val builder = StreamsBuilder()
             val fraCleanup: Topic<TopicEntry<Cleanup>> = Topics.CLEANUP
-            val tilJournalfort: Topic<TopicEntry<Journalfort>> = Topics.JOURNALFORT
 
             builder
                 .stream<String, TopicEntry<Cleanup>>(
@@ -59,7 +58,6 @@ internal class CleanupStream(
                         entry.data.journalførtMelding
                     }
                 }
-                .to(tilJournalfort.name, Produced.with(tilJournalfort.keySerde, tilJournalfort.valueSerde))
             return builder.build()
         }
     }

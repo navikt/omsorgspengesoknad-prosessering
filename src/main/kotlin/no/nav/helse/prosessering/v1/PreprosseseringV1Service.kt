@@ -72,7 +72,7 @@ internal class PreprosseseringV1Service(
         logger.info("Mellomlagrer Oppsummerings-JSON")
 
         val soknadJsonUrl = dokumentService.lagreSoknadsMelding(
-            melding = melding,
+            k9FormatSøknad = melding.k9FormatSøknad,
             aktørId = søkerAktørId,
             correlationId = correlationId
         )

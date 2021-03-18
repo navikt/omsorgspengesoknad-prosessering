@@ -3,6 +3,7 @@ package no.nav.helse.prosessering.v1
 import no.nav.helse.aktoer.AktørId
 import no.nav.helse.aktoer.Fodselsnummer
 import no.nav.helse.aktoer.NorskIdent
+import no.nav.k9.søknad.Søknad
 import java.net.URI
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -18,7 +19,8 @@ data class PreprossesertMeldingV1(
     val relasjonTilBarnet: SøkerBarnRelasjon? = null,
     val sammeAdresse: Boolean = false,
     val harBekreftetOpplysninger: Boolean,
-    val harForståttRettigheterOgPlikter: Boolean
+    val harForståttRettigheterOgPlikter: Boolean,
+    val k9FormatSøknad: Søknad
 ) {
     internal constructor(
         melding: MeldingV1,
@@ -26,7 +28,7 @@ data class PreprossesertMeldingV1(
         søkerAktørId: AktørId,
         barnAktørId: AktørId?,
         barnetsNavn: String?,
-        barnetsNorskeIdent: NorskIdent?
+        barnetsNorskeIdent: NorskIdent?,
     ) : this(
         språk = melding.språk,
         soknadId = melding.søknadId,
@@ -38,7 +40,8 @@ data class PreprossesertMeldingV1(
         barn = PreprossesertBarn(melding.barn, melding.barn.fødselsdato, barnetsNavn, barnetsNorskeIdent, barnAktørId),
         relasjonTilBarnet = melding.relasjonTilBarnet,
         harForståttRettigheterOgPlikter = melding.harForståttRettigheterOgPlikter,
-        harBekreftetOpplysninger = melding.harBekreftetOpplysninger
+        harBekreftetOpplysninger = melding.harBekreftetOpplysninger,
+        k9FormatSøknad = melding.k9FormatSøknad
     )
 
     override fun toString(): String {
