@@ -65,7 +65,7 @@ internal class PreprosseseringV1Service(
             pdf = soknadOppsummeringPdf,
             correlationId = correlationId,
             aktørId = søkerAktørId,
-            dokumentbeskrivelse = "Søknad om omsorgspenger"
+            dokumentbeskrivelse = "Søknad om ekstra omsorgsdager"
         )
         logger.info("Mellomlagring av Oppsummerings-PDF OK")
 
