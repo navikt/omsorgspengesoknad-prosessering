@@ -10,7 +10,7 @@ val kotlinxCoroutinesVersion = ext.get("kotlinxCoroutinesVersion").toString()
 val openhtmltopdfVersion = "1.0.8"
 val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
 val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
-val handlebarsVersion = "4.1.2"
+val handlebarsVersion = "4.2.0"
 
 val mainClass = "no.nav.helse.OmsorgspengesoknadProsesseringKt"
 
