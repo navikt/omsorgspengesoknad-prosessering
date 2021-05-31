@@ -139,8 +139,7 @@ fun KafkaProducer<String, TopicEntry<MeldingV1>>.leggTilMottak(soknad: MeldingV1
             TopicEntry(
                 metadata = Metadata(
                     version = 1,
-                    correlationId = UUID.randomUUID().toString(),
-                    requestId = UUID.randomUUID().toString()
+                    correlationId = UUID.randomUUID().toString()
                 ),
                 data = soknad
             )
