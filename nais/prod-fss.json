@@ -9,9 +9,6 @@
   "ingresses": [
     "https://omsorgspengesoknad-prosessering.nais.adeo.no"
   ],
-  "vaultKvPath": "/kv/prod/fss/omsorgspengesoknad-prosessering/dusseldorf",
-  "azureadKvPath": "/azuread/data/prod/creds/omsorgspengesoknad-prosessering",
-  "serviceuserKvPath": "/serviceuser/data/prod/srvomsorgspeng-prs",
   "env": {
     "K9_JOARK_BASE_URL": "https://k9-joark.nais.adeo.no",
     "K9_DOKUMENT_BASE_URL": "https://k9-dokument.nais.adeo.no",
