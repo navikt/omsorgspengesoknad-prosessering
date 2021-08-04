@@ -1,18 +1,15 @@
 package no.nav.helse
 
-import io.ktor.config.ApplicationConfig
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.config.*
 import no.nav.helse.dusseldorf.ktor.core.getOptionalString
 import no.nav.helse.dusseldorf.ktor.core.getRequiredList
 import no.nav.helse.dusseldorf.ktor.core.getRequiredString
 import no.nav.helse.kafka.KafkaConfig
-import java.lang.IllegalArgumentException
 import java.net.URI
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
-@KtorExperimentalAPI
 data class Configuration(private val config : ApplicationConfig) {
 
     fun getAktoerRegisterBaseUrl() = URI(config.getRequiredString("nav.aktoer_register_base_url", secret = false))
