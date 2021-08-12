@@ -15,8 +15,7 @@ import no.nav.helse.SøknadUtils.Companion.melding
 import no.nav.helse.SøknadUtils.Companion.søker
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.helse.k9.assertUtvidetAntallDagerFormat
-import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
-import no.nav.helse.prosessering.v1.asynkron.TopicEntry
+import no.nav.helse.prosessering.v1.asynkron.deserialiserTilPreprosessertMelding
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.slf4j.Logger
@@ -154,7 +153,7 @@ class OmsorgspengesoknadProsesseringTest {
 
         wireMockServer.stubJournalfor(201) // Simulerer journalføring fungerer igjen
         restartEngine()
-       cleanupKonsumer
+        cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
     }
@@ -182,7 +181,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-       cleanupKonsumer
+        cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
     }
@@ -199,7 +198,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-       cleanupKonsumer
+        cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
     }
@@ -214,7 +213,7 @@ class OmsorgspengesoknadProsesseringTest {
         wireMockServer.stubAktoerRegisterGetAktoerIdNotFound(gyldigFodselsnummerC)
 
         kafkaTestProducer.leggTilMottak(melding)
-       cleanupKonsumer
+        cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
     }
@@ -231,10 +230,10 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val preprossesertMelding: TopicEntry<PreprossesertMeldingV1> =
-            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
-        assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", preprossesertMelding.data.barn.navn)
-       cleanupKonsumer
+        val preprossesertMelding =
+            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
+        assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", preprossesertMelding.barn.navn)
+        cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
     }
@@ -254,10 +253,10 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val preprosessertMelding: TopicEntry<PreprossesertMeldingV1> =
-            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
-        assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", preprosessertMelding.data.barn.navn)
-       cleanupKonsumer
+        val preprosessertMelding =
+            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
+        assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", preprosessertMelding.barn.navn)
+        cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
     }
@@ -278,12 +277,12 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val preprosessertMelding: TopicEntry<PreprossesertMeldingV1> =
-            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
+        val preprosessertMelding =
+            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
 
-        assertEquals(forventetFodselsNummer, preprosessertMelding.data.barn.norskIdentifikator)
+        assertEquals(forventetFodselsNummer, preprosessertMelding.barn.norskIdentifikator)
 
-       cleanupKonsumer
+        cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
     }
@@ -305,11 +304,11 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val preprossesertMelding: TopicEntry<PreprossesertMeldingV1> =
-            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
-        assertEquals(5, preprossesertMelding.data.dokumentUrls.size)
+        val preprossesertMelding =
+            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
+        assertEquals(5, preprossesertMelding.dokumentUrls.size)
         // 2 legeerklæringsvedlegg, 2, to samværsavtalevedlegg, og 1 søknadPdf.
-       cleanupKonsumer
+        cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
     }
@@ -332,12 +331,12 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val preprosessertMelding: TopicEntry<PreprossesertMeldingV1> =
-            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
+        val preprosessertMelding =
+            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
 
-        assertEquals(forventetFodselsNummer, preprosessertMelding.data.barn.norskIdentifikator)
+        assertEquals(forventetFodselsNummer, preprosessertMelding.barn.norskIdentifikator)
 
-       cleanupKonsumer
+        cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
     }
@@ -350,7 +349,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-       cleanupKonsumer
+        cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
     }

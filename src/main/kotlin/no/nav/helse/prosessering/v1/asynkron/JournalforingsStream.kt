@@ -9,11 +9,8 @@ import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
-import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
-import org.apache.kafka.streams.kstream.Consumed
-import org.apache.kafka.streams.kstream.Produced
 import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 
@@ -39,48 +36,46 @@ internal class JournalforingsStream(
 
         private fun topology(joarkGateway: JoarkGateway, gittDato: ZonedDateTime): Topology {
             val builder = StreamsBuilder()
-            val fraPreprossesert: Topic<TopicEntry<PreprossesertMeldingV1>> = Topics.PREPROSSESERT
-            val tilCleanup: Topic<TopicEntry<Cleanup>> = Topics.CLEANUP
+            val fraPreprossesert = Topics.PREPROSSESERT
+            val tilCleanup = Topics.CLEANUP
 
             val mapValues = builder
-                .stream<String, TopicEntry<PreprossesertMeldingV1>>(
-                    fraPreprossesert.name,
-                    Consumed.with(fraPreprossesert.keySerde, fraPreprossesert.valueSerde)
-                )
-                .filter { _, entry -> entry.data.mottatt.erEtter(gittDato) }
+                .stream(fraPreprossesert.name, fraPreprossesert.consumed)
+                .filter { _, entry -> entry.deserialiserTilPreprosessertMelding().mottatt.erEtter(gittDato) }
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
-
-                        val dokumenter = entry.data.dokumentUrls
+                        val preprosessertEttersending = entry.deserialiserTilPreprosessertMelding()
+                        val dokumenter = preprosessertEttersending.dokumentUrls
                         logger.info("Journalfører dokumenter: {}", dokumenter)
+
                         val journaPostId = joarkGateway.journalfør(
-                            mottatt = entry.data.mottatt,
-                            aktørId = AktørId(entry.data.søker.aktørId),
-                            norskIdent = entry.data.søker.fødselsnummer,
+                            mottatt = preprosessertEttersending.mottatt,
+                            aktørId = AktørId(preprosessertEttersending.søker.aktørId),
+                            norskIdent = preprosessertEttersending.søker.fødselsnummer,
                             correlationId = CorrelationId(entry.metadata.correlationId),
                             dokumenter = dokumenter,
                             navn = Navn(
-                                fornavn = entry.data.søker.fornavn,
-                                mellomnavn = entry.data.søker.mellomnavn,
-                                etternavn = entry.data.søker.etternavn
+                                fornavn = preprosessertEttersending.søker.fornavn,
+                                mellomnavn = preprosessertEttersending.søker.mellomnavn,
+                                etternavn = preprosessertEttersending.søker.etternavn
                             )
                         )
                         logger.info("Dokumenter journalført med ID = ${journaPostId.journalpostId}.")
                         val journalfort = Journalfort(
                             journalpostId = journaPostId.journalpostId,
-                            søknad = entry.data.k9FormatSøknad
+                            søknad = preprosessertEttersending.k9FormatSøknad
                         )
 
                         Cleanup(
                             metadata = entry.metadata,
-                            melding = entry.data,
+                            melding = preprosessertEttersending,
                             journalførtMelding = journalfort
-                        )
+                        ).serialiserTilData()
                     }
                 }
             mapValues
-                .to(tilCleanup.name, Produced.with(tilCleanup.keySerde, tilCleanup.valueSerde))
+                .to(tilCleanup.name, tilCleanup.produced)
             return builder.build()
         }
     }
