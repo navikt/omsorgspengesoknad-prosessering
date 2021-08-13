@@ -15,8 +15,8 @@ import no.nav.helse.SøknadUtils.Companion.melding
 import no.nav.helse.SøknadUtils.Companion.søker
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.helse.k9.assertUtvidetAntallDagerFormat
-import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
-import no.nav.helse.prosessering.v1.asynkron.TopicEntry
+import no.nav.helse.prosessering.v1.MeldingV1
+import no.nav.helse.prosessering.v1.asynkron.deserialiserTilPreprosessertMelding
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.slf4j.Logger
@@ -52,6 +52,7 @@ class OmsorgspengesoknadProsesseringTest {
 
         private val cleanupKonsumer = kafkaEnvironment.cleanupKonsumer()
         private val preprossesertKonsumer = kafkaEnvironment.preprossesertKonsumer()
+        private val k9DittnavVarselKonsumer = kafkaEnvironment.k9DittnavVarselKonsumer()
 
         // Se https://github.com/navikt/dusseldorf-ktor#f%C3%B8dselsnummer
         private val gyldigFodselsnummerA = "02119970078"
@@ -137,6 +138,9 @@ class OmsorgspengesoknadProsesseringTest {
         cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
+
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+            .assertGyldigK9Beskjed(melding)
     }
 
     @Test
@@ -154,9 +158,12 @@ class OmsorgspengesoknadProsesseringTest {
 
         wireMockServer.stubJournalfor(201) // Simulerer journalføring fungerer igjen
         restartEngine()
-       cleanupKonsumer
+        cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
+
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+            .assertGyldigK9Beskjed(melding)
     }
 
     private fun readyGir200HealthGir503() {
@@ -182,9 +189,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-       cleanupKonsumer
-            .hentCleanupMelding(melding.søknadId)
-            .assertUtvidetAntallDagerFormat()
+        assertInnsending(melding)
     }
 
     @Test
@@ -199,9 +204,7 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-       cleanupKonsumer
-            .hentCleanupMelding(melding.søknadId)
-            .assertUtvidetAntallDagerFormat()
+        assertInnsending(melding)
     }
 
     @Test
@@ -214,9 +217,7 @@ class OmsorgspengesoknadProsesseringTest {
         wireMockServer.stubAktoerRegisterGetAktoerIdNotFound(gyldigFodselsnummerC)
 
         kafkaTestProducer.leggTilMottak(melding)
-       cleanupKonsumer
-            .hentCleanupMelding(melding.søknadId)
-            .assertUtvidetAntallDagerFormat()
+        assertInnsending(melding)
     }
 
     @Test
@@ -231,12 +232,11 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val preprossesertMelding: TopicEntry<PreprossesertMeldingV1> =
-            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
-        assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", preprossesertMelding.data.barn.navn)
-       cleanupKonsumer
-            .hentCleanupMelding(melding.søknadId)
-            .assertUtvidetAntallDagerFormat()
+        val preprossesertMelding =
+            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
+        assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", preprossesertMelding.barn.navn)
+
+        assertInnsending(melding)
     }
 
     @Test
@@ -254,12 +254,11 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val preprosessertMelding: TopicEntry<PreprossesertMeldingV1> =
-            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
-        assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", preprosessertMelding.data.barn.navn)
-       cleanupKonsumer
-            .hentCleanupMelding(melding.søknadId)
-            .assertUtvidetAntallDagerFormat()
+        val preprosessertMelding =
+            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
+        assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", preprosessertMelding.barn.navn)
+
+        assertInnsending(melding)
     }
 
     @Test
@@ -278,14 +277,12 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val preprosessertMelding: TopicEntry<PreprossesertMeldingV1> =
-            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
+        val preprosessertMelding =
+            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
 
-        assertEquals(forventetFodselsNummer, preprosessertMelding.data.barn.norskIdentifikator)
+        assertEquals(forventetFodselsNummer, preprosessertMelding.barn.norskIdentifikator)
 
-       cleanupKonsumer
-            .hentCleanupMelding(melding.søknadId)
-            .assertUtvidetAntallDagerFormat()
+        assertInnsending(melding)
     }
 
     @Test
@@ -305,13 +302,11 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val preprossesertMelding: TopicEntry<PreprossesertMeldingV1> =
-            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
-        assertEquals(5, preprossesertMelding.data.dokumentUrls.size)
+        val preprossesertMelding =
+            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
+        assertEquals(5, preprossesertMelding.dokumentUrls.size)
         // 2 legeerklæringsvedlegg, 2, to samværsavtalevedlegg, og 1 søknadPdf.
-       cleanupKonsumer
-            .hentCleanupMelding(melding.søknadId)
-            .assertUtvidetAntallDagerFormat()
+        assertInnsending(melding)
     }
 
     @Test
@@ -332,14 +327,10 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val preprosessertMelding: TopicEntry<PreprossesertMeldingV1> =
-            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId)
+        val preprosessertMelding = preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
+        assertEquals(forventetFodselsNummer, preprosessertMelding.barn.norskIdentifikator)
 
-        assertEquals(forventetFodselsNummer, preprosessertMelding.data.barn.norskIdentifikator)
-
-       cleanupKonsumer
-            .hentCleanupMelding(melding.søknadId)
-            .assertUtvidetAntallDagerFormat()
+        assertInnsending(melding)
     }
 
     @Test
@@ -350,9 +341,16 @@ class OmsorgspengesoknadProsesseringTest {
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-       cleanupKonsumer
+        assertInnsending(melding)
+    }
+
+    private fun assertInnsending(melding: MeldingV1){
+        cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
+
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+            .assertGyldigK9Beskjed(melding)
     }
 
     private fun ventPaaAtRetryMekanismeIStreamProsessering() = runBlocking { delay(Duration.ofSeconds(30)) }
