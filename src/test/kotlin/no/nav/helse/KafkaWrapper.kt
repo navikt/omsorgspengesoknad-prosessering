@@ -6,7 +6,9 @@ import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.asynkron.Data
 import no.nav.helse.prosessering.v1.asynkron.TopicEntry
+import no.nav.helse.prosessering.v1.asynkron.Topics
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP
+import no.nav.helse.prosessering.v1.asynkron.Topics.K9_DITTNAV_VARSEL
 import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT
 import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSSESERT
 import no.nav.helse.prosessering.v1.asynkron.omsorgspengesoknadKonfigurertMapper
@@ -35,7 +37,8 @@ object KafkaWrapper {
             topicNames = listOf(
                 MOTTATT.name,
                 PREPROSSESERT.name,
-                CLEANUP.name
+                CLEANUP.name,
+                K9_DITTNAV_VARSEL.name
             )
         )
         return kafkaEnvironment
@@ -88,6 +91,16 @@ fun KafkaEnvironment.preprossesertKonsumer(): KafkaConsumer<String, TopicEntry> 
     return consumer
 }
 
+fun KafkaEnvironment.k9DittnavVarselKonsumer(): KafkaConsumer<String, String> {
+    val consumer = KafkaConsumer(
+        testConsumerProperties("K9DittnavVarselKonsumer"),
+        StringDeserializer(),
+        StringDeserializer()
+    )
+    consumer.subscribe(listOf(Topics.K9_DITTNAV_VARSEL.name))
+    return consumer
+}
+
 fun KafkaEnvironment.meldingsProducer() = KafkaProducer(
     testProducerProperties("OmsorgspengesoknadProsesseringTestProducer"),
     MOTTATT.keySerializer,
@@ -111,6 +124,25 @@ fun KafkaConsumer<String, TopicEntry>.hentPreprossesertMelding(
         }
     }
     throw IllegalStateException("Fant ikke opprettet oppgave for søknad $soknadId etter $maxWaitInSeconds sekunder.")
+}
+
+fun KafkaConsumer<String, String>.hentK9Beskjed(
+    soknadId: String,
+    maxWaitInSeconds: Long = 20
+): String {
+    val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
+    while (System.currentTimeMillis() < end) {
+        seekToBeginning(assignment())
+        val entries = poll(Duration.ofSeconds(5))
+            .records(Topics.K9_DITTNAV_VARSEL.name)
+            .filter { it.key() == soknadId }
+
+        if (entries.isNotEmpty()) {
+            assertEquals(1, entries.size)
+            return entries.first().value()
+        }
+    }
+    throw IllegalStateException("Fant ikke opprettet K9Beskjed for søknad $soknadId etter $maxWaitInSeconds sekunder.")
 }
 
 fun KafkaConsumer<String, String>.hentCleanupMelding(

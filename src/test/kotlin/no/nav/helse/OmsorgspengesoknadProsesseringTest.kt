@@ -51,6 +51,7 @@ class OmsorgspengesoknadProsesseringTest {
 
         private val cleanupKonsumer = kafkaEnvironment.cleanupKonsumer()
         private val preprossesertKonsumer = kafkaEnvironment.preprossesertKonsumer()
+        private val k9DittnavVarselKonsumer = kafkaEnvironment.k9DittnavVarselKonsumer()
 
         // Se https://github.com/navikt/dusseldorf-ktor#f%C3%B8dselsnummer
         private val gyldigFodselsnummerA = "02119970078"
@@ -136,6 +137,9 @@ class OmsorgspengesoknadProsesseringTest {
         cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
+
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+            .assertGyldigK9Beskjed(melding)
     }
 
     @Test
@@ -156,6 +160,9 @@ class OmsorgspengesoknadProsesseringTest {
         cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
+
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+            .assertGyldigK9Beskjed(melding)
     }
 
     private fun readyGir200HealthGir503() {
@@ -184,6 +191,9 @@ class OmsorgspengesoknadProsesseringTest {
         cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
+
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+            .assertGyldigK9Beskjed(melding)
     }
 
     @Test
@@ -201,6 +211,9 @@ class OmsorgspengesoknadProsesseringTest {
         cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
+
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+            .assertGyldigK9Beskjed(melding)
     }
 
     @Test
@@ -216,6 +229,9 @@ class OmsorgspengesoknadProsesseringTest {
         cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
+
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+            .assertGyldigK9Beskjed(melding)
     }
 
     @Test
@@ -236,6 +252,9 @@ class OmsorgspengesoknadProsesseringTest {
         cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
+
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+            .assertGyldigK9Beskjed(melding)
     }
 
     @Test
@@ -259,6 +278,9 @@ class OmsorgspengesoknadProsesseringTest {
         cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
+
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+            .assertGyldigK9Beskjed(melding)
     }
 
     @Test
@@ -285,6 +307,9 @@ class OmsorgspengesoknadProsesseringTest {
         cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
+
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+            .assertGyldigK9Beskjed(melding)
     }
 
     @Test
@@ -311,6 +336,9 @@ class OmsorgspengesoknadProsesseringTest {
         cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
+
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+            .assertGyldigK9Beskjed(melding)
     }
 
     @Test
@@ -339,6 +367,9 @@ class OmsorgspengesoknadProsesseringTest {
         cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
+
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+            .assertGyldigK9Beskjed(melding)
     }
 
     @Test
@@ -352,6 +383,9 @@ class OmsorgspengesoknadProsesseringTest {
         cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
+
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+            .assertGyldigK9Beskjed(melding)
     }
 
     private fun ventPaaAtRetryMekanismeIStreamProsessering() = runBlocking { delay(Duration.ofSeconds(30)) }

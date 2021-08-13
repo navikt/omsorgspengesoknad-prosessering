@@ -8,6 +8,7 @@ import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
 import no.nav.helse.kafka.ManagedStreamReady
+import no.nav.helse.prosessering.v1.tilK9Beskjed
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
 import org.slf4j.LoggerFactory
@@ -35,6 +36,7 @@ internal class CleanupStream(
         private fun topology(dokumentService: DokumentService, gittDato: ZonedDateTime): Topology {
             val builder = StreamsBuilder()
             val fraCleanup = Topics.CLEANUP
+            val tilK9DittnavVarsel = Topics.K9_DITTNAV_VARSEL
 
             builder
                 .stream(fraCleanup.name, fraCleanup.consumed)
@@ -50,10 +52,12 @@ internal class CleanupStream(
                             correlationId = CorrelationId(entry.metadata.correlationId)
                         )
                         logger.info("Dokumenter slettet.")
-                        logger.info("Videresender journalført melding")
-                        cleanup.journalførtMelding.serialiserTilData()
+                        val k9Beskjed = cleanup.tilK9Beskjed()
+                        logger.info("Sender K9Beskjed viderer til ${tilK9DittnavVarsel.name}")
+                        k9Beskjed.serialiserTilData()
                     }
                 }
+                .to(tilK9DittnavVarsel.name, tilK9DittnavVarsel.produced)
             return builder.build()
         }
     }
