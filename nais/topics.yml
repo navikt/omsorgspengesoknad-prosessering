@@ -27,6 +27,32 @@ spec:
 apiVersion: kafka.nais.io/v1
 kind: Topic
 metadata:
+  name: privat-omsorgspengesoknad-mottatt-v2
+  namespace: dusseldorf
+  labels:
+    team: dusseldorf
+spec:
+  pool: {{kafka-pool}}
+  config: # optional; all fields are optional too; defaults shown
+    cleanupPolicy: delete  # delete, compact
+    minimumInSyncReplicas: 1
+    partitions: 1
+    replication: 3  # see min/max requirements
+    retentionBytes: -1  # -1 means unlimited
+    retentionHours: 730
+  acl:
+    - team: dusseldorf
+      application: omsorgspenger-api
+      access: write
+    - team: dusseldorf
+      application: omsorgspengesoknad-prosessering
+      access: read
+
+---
+
+apiVersion: kafka.nais.io/v1
+kind: Topic
+metadata:
   name: privat-omsorgspengesoknad-preprosessert
   namespace: dusseldorf
   labels:
