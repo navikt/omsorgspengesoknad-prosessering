@@ -8,11 +8,9 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.kittinunf.fuel.coroutines.awaitStringResponseResult
 import com.github.kittinunf.fuel.httpPost
-import io.ktor.http.HttpHeaders
-import io.ktor.http.Url
+import io.ktor.http.*
 import no.nav.helse.CorrelationId
 import no.nav.helse.HttpError
-import no.nav.helse.aktoer.AktørId
 import no.nav.helse.dusseldorf.ktor.client.buildURL
 import no.nav.helse.dusseldorf.ktor.health.HealthCheck
 import no.nav.helse.dusseldorf.ktor.health.Healthy
@@ -57,7 +55,6 @@ class JoarkGateway(
     }
 
     suspend fun journalfør(
-        aktørId: AktørId,
         norskIdent: String,
         mottatt: ZonedDateTime,
         dokumenter: List<List<URI>>,
@@ -68,7 +65,6 @@ class JoarkGateway(
         val authorizationHeader = cachedAccessTokenClient.getAccessToken(journalforeScopes).asAuthoriationHeader()
 
         val joarkRequest = JoarkRequest(
-            aktoerId = aktørId.id,
             norskIdent = norskIdent,
             mottatt = mottatt,
             dokumenter = dokumenter,
@@ -115,7 +111,6 @@ class JoarkGateway(
 }
 
 private data class JoarkRequest(
-    @JsonProperty("aktoer_id") val aktoerId: String,
     @JsonProperty("norsk_ident") val norskIdent: String,
     @JsonProperty("soker_navn") val søkerNavn: Navn,
     val mottatt: ZonedDateTime,
