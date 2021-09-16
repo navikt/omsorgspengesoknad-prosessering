@@ -1,7 +1,6 @@
 package no.nav.helse.prosessering.v1.asynkron
 
 import no.nav.helse.CorrelationId
-import no.nav.helse.aktoer.AktørId
 import no.nav.helse.erEtter
 import no.nav.helse.joark.JoarkGateway
 import no.nav.helse.joark.Navn
@@ -51,7 +50,6 @@ internal class JournalforingsStream(
 
                         val journaPostId = joarkGateway.journalfør(
                             mottatt = preprosessertEttersending.mottatt,
-                            aktørId = AktørId(preprosessertEttersending.søker.aktørId),
                             norskIdent = preprosessertEttersending.søker.fødselsnummer,
                             correlationId = CorrelationId(entry.metadata.correlationId),
                             dokumenter = dokumenter,

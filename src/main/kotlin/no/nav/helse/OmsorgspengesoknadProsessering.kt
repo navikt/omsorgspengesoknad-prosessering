@@ -14,8 +14,8 @@ import no.nav.helse.aktoer.AktoerGateway
 import no.nav.helse.aktoer.AktoerService
 import no.nav.helse.auth.AccessTokenClientResolver
 import no.nav.helse.barn.BarnOppslag
-import no.nav.helse.dokument.DokumentGateway
-import no.nav.helse.dokument.DokumentService
+import no.nav.helse.dokument.K9MellomlagringGateway
+import no.nav.helse.dokument.K9MellomlagringService
 import no.nav.helse.dusseldorf.ktor.auth.clients
 import no.nav.helse.dusseldorf.ktor.client.HttpRequestHealthCheck
 import no.nav.helse.dusseldorf.ktor.client.HttpRequestHealthConfig
@@ -64,13 +64,12 @@ fun Application.omsorgspengesoknadProsessering() {
 
     val aktoerService = AktoerService(aktoerGateway)
 
-    val dokumentGateway = DokumentGateway(
-        baseUrl = configuration.getK9DokumentBaseUrl(),
-        accessTokenClient = accessTokenClientResolver.dokumentAccessTokenClient(),
-        lagreDokumentScopes = configuration.getLagreDokumentScopes(),
-        sletteDokumentScopes = configuration.getSletteDokumentScopes()
+    val k9MellomlagringGateway = K9MellomlagringGateway(
+        baseUrl = configuration.getK9MellomlagringBaseUrl(),
+        accessTokenClient = accessTokenClientResolver.azureV2AccessTokenClient(),
+        k9MellomlagringScopes = configuration.getK9MellomlagringScopes(),
     )
-    val dokumentService = DokumentService(dokumentGateway)
+    val k9MellomlagringService = K9MellomlagringService(k9MellomlagringGateway)
 
     val tpsProxyV1Gateway = TpsProxyV1Gateway(
         baseUrl = configuration.getTpsProxyV1Url(),
@@ -80,12 +79,12 @@ fun Application.omsorgspengesoknadProsessering() {
     val preprosseseringV1Service = PreprosseseringV1Service(
         aktoerService = aktoerService,
         pdfV1Generator = PdfV1Generator(),
-        dokumentService = dokumentService,
+        k9MellomlagringService = k9MellomlagringService,
         barnOppslag = BarnOppslag(tpsProxyV1Gateway)
     )
     val joarkGateway = JoarkGateway(
         baseUrl = configuration.getk9JoarkBaseUrl(),
-        accessTokenClient = accessTokenClientResolver.joarkAccessTokenClient(),
+        accessTokenClient = accessTokenClientResolver.azureV2AccessTokenClient(),
         journalforeScopes = configuration.getJournalforeScopes()
     )
 
@@ -93,7 +92,7 @@ fun Application.omsorgspengesoknadProsessering() {
         kafkaConfig = configuration.getKafkaConfig(),
         preprosseseringV1Service = preprosseseringV1Service,
         joarkGateway = joarkGateway,
-        dokumentService = dokumentService,
+        dokumentService = k9MellomlagringService,
         datoMottattEtter = configuration.soknadDatoMottattEtter(),
         datoMottattEtterCleanup = configuration.soknadDatoMottattEtterCleanup()
     )
@@ -119,12 +118,12 @@ fun Application.omsorgspengesoknadProsessering() {
         HealthRoute(
             healthService = HealthService(
                 healthChecks = mutableSetOf(
-                    dokumentGateway,
+                    k9MellomlagringGateway,
                     joarkGateway,
                     aktoerGateway,
                     HttpRequestHealthCheck(
                         mapOf(
-                            Url.healthURL(configuration.getK9DokumentBaseUrl()) to HttpRequestHealthConfig(
+                            Url.healthURL(configuration.getK9MellomlagringBaseUrl()) to HttpRequestHealthConfig(
                                 expectedStatus = HttpStatusCode.OK
                             ),
                             Url.healthURL(configuration.getk9JoarkBaseUrl()) to HttpRequestHealthConfig(

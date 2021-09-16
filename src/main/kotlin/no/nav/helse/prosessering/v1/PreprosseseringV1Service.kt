@@ -6,7 +6,10 @@ import no.nav.helse.aktoer.AktørId
 import no.nav.helse.aktoer.Fodselsnummer
 import no.nav.helse.aktoer.NorskIdent
 import no.nav.helse.barn.BarnOppslag
-import no.nav.helse.dokument.DokumentService
+import no.nav.helse.dokument.Dokument
+import no.nav.helse.dokument.DokumentEier
+import no.nav.helse.dokument.K9MellomlagringService
+import no.nav.helse.dokument.Søknadsformat
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.SoknadId
 import no.nav.helse.tpsproxy.Ident
@@ -16,7 +19,7 @@ import org.slf4j.LoggerFactory
 internal class PreprosseseringV1Service(
     private val aktoerService: AktoerService,
     private val pdfV1Generator: PdfV1Generator,
-    private val dokumentService: DokumentService,
+    private val k9MellomlagringService: K9MellomlagringService,
     private val barnOppslag: BarnOppslag
 ) {
 
@@ -58,40 +61,45 @@ internal class PreprosseseringV1Service(
 
         logger.info("Genererer Oppsummerings-PDF av søknaden.")
         val soknadOppsummeringPdf = pdfV1Generator.generateSoknadOppsummeringPdf(melding, barnetsIdent, barnetsNavn)
-        logger.info("Generering av Oppsummerings-PDF OK.")
+
+        val dokumentEier = DokumentEier(melding.søker.fødselsnummer)
 
         logger.info("Mellomlagrer Oppsummerings-PDF.")
-        val soknadOppsummeringPdfUrl = dokumentService.lagreSoknadsOppsummeringPdf(
-            pdf = soknadOppsummeringPdf,
-            correlationId = correlationId,
-            aktørId = søkerAktørId,
-            dokumentbeskrivelse = "Søknad om ekstra omsorgsdager"
-        )
-        logger.info("Mellomlagring av Oppsummerings-PDF OK")
-
-        logger.info("Mellomlagrer Oppsummerings-JSON")
-
-        val soknadJsonUrl = dokumentService.lagreSoknadsMelding(
-            k9FormatSøknad = melding.k9FormatSøknad,
-            aktørId = søkerAktørId,
+        val oppsummeringPdfUrl = k9MellomlagringService.lagreDokument(
+            dokument = Dokument(
+                eier = dokumentEier,
+                content = soknadOppsummeringPdf,
+                contentType = "application/pdf",
+                title = "Søknad om ekstra omsorgsdager"
+            ),
             correlationId = correlationId
         )
-        logger.info("Mellomlagrer Oppsummerings-JSON OK.")
+
+        logger.info("Mellomlagrer Oppsummerings-JSON")
+        val søknadJsonUrl = k9MellomlagringService.lagreDokument(
+            dokument = Dokument(
+                eier = dokumentEier,
+                content = Søknadsformat.somJson(melding.k9FormatSøknad),
+                contentType = "application/json",
+                title = "Søknad om omsorgspenger som JSON"
+            ),
+            correlationId = correlationId
+        )
 
         val komplettDokumentUrls = mutableListOf(
             listOf(
-                soknadOppsummeringPdfUrl,
-                soknadJsonUrl
+                oppsummeringPdfUrl,
+                søknadJsonUrl
             )
         )
 
-        if (!melding.samværsavtale.isNullOrEmpty()) {
-            melding.samværsavtale.forEach { komplettDokumentUrls.add(listOf(it)) }
+        melding.samværsavtale?.let { liste ->
+            liste.forEach { komplettDokumentUrls.add(listOf(it)) }
         }
+
         melding.legeerklæring.forEach { komplettDokumentUrls.add(listOf(it)) }
 
-        logger.info("Totalt ${komplettDokumentUrls.size} dokumentbolker.")
-
+        logger.info("Totalt ${komplettDokumentUrls.size} dokumentbolker med totalt ${komplettDokumentUrls.flatten().size} dokumenter.")
 
         val preprossesertMeldingV1 = PreprossesertMeldingV1(
             melding = melding,
@@ -101,6 +109,7 @@ internal class PreprosseseringV1Service(
             barnetsNavn = barnetsNavn,
             barnetsNorskeIdent = barnetsIdent
         )
+
         melding.reportMetrics()
         preprossesertMeldingV1.reportMetrics()
         return preprossesertMeldingV1
