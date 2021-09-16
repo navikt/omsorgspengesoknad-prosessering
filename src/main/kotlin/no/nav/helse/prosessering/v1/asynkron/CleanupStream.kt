@@ -1,8 +1,8 @@
 package no.nav.helse.prosessering.v1.asynkron
 
 import no.nav.helse.CorrelationId
-import no.nav.helse.aktoer.AktørId
-import no.nav.helse.dokument.DokumentService
+import no.nav.helse.dokument.DokumentEier
+import no.nav.helse.dokument.K9MellomlagringService
 import no.nav.helse.erEtter
 import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
@@ -16,7 +16,7 @@ import java.time.ZonedDateTime
 
 internal class CleanupStream(
     kafkaConfig: KafkaConfig,
-    dokumentService: DokumentService,
+    dokumentService: K9MellomlagringService,
     søknadMottattEtter: ZonedDateTime
 ) {
     private val stream = ManagedKafkaStreams(
@@ -33,7 +33,7 @@ internal class CleanupStream(
         private const val NAME = "CleanupV1"
         private val logger = LoggerFactory.getLogger("no.nav.$NAME.topology")
 
-        private fun topology(dokumentService: DokumentService, gittDato: ZonedDateTime): Topology {
+        private fun topology(dokumentService: K9MellomlagringService, gittDato: ZonedDateTime): Topology {
             val builder = StreamsBuilder()
             val fraCleanup = Topics.CLEANUP
             val tilK9DittnavVarsel = Topics.K9_DITTNAV_VARSEL
@@ -48,7 +48,7 @@ internal class CleanupStream(
                         val cleanup = entry.deserialiserTilCleanup()
                         dokumentService.slettDokumeter(
                             urlBolks = cleanup.melding.dokumentUrls,
-                            aktørId = AktørId(cleanup.melding.søker.aktørId),
+                            dokumentEier = DokumentEier(cleanup.melding.søker.fødselsnummer),
                             correlationId = CorrelationId(entry.metadata.correlationId)
                         )
                         logger.info("Dokumenter slettet.")

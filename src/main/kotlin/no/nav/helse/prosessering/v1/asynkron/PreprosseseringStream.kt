@@ -33,7 +33,7 @@ internal class PreprosseseringStream(
 
         private fun topology(preprosseseringV1Service: PreprosseseringV1Service, gittDato: ZonedDateTime): Topology {
             val builder = StreamsBuilder()
-            val fromMottatt = Topics.MOTTATT
+            val fromMottatt = Topics.MOTTATT_V2
             val tilPreprossesert = Topics.PREPROSSESERT
 
             builder

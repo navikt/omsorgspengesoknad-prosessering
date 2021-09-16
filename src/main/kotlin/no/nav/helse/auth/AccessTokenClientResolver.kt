@@ -6,15 +6,12 @@ import no.nav.helse.dusseldorf.ktor.auth.PrivateKeyClient
 import no.nav.helse.dusseldorf.oauth2.client.DirectKeyId
 import no.nav.helse.dusseldorf.oauth2.client.FromJwk
 import no.nav.helse.dusseldorf.oauth2.client.SignedJwtAccessTokenClient
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 internal class AccessTokenClientResolver(
     clients : Map<String, Client>
 ) {
 
     companion object {
-        private val logger: Logger = LoggerFactory.getLogger(AccessTokenClientResolver::class.java)
         private const val NAIS_STS_ALIAS = "nais-sts"
         private const val AZURE_V2_ALIAS = "azure-v2"
     }
@@ -40,8 +37,7 @@ internal class AccessTokenClientResolver(
         keyIdProvider = DirectKeyId(azureV2Client.certificateHexThumbprint)
     )
 
-    internal fun dokumentAccessTokenClient() = azureV2AccessTokenClient
-    internal fun joarkAccessTokenClient() = azureV2AccessTokenClient
+    internal fun azureV2AccessTokenClient() = azureV2AccessTokenClient
     internal fun aktoerRegisterAccessTokenClient() = naisStsAccessTokenClient
     internal fun tpsProxyAccessTokenClient() = naisStsAccessTokenClient
 }
