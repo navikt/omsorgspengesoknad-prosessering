@@ -25,11 +25,6 @@ data class Cleanup(val metadata: Metadata, val melding: PreprossesertMeldingV1, 
 data class Journalfort(val journalpostId: String, val søknad: Søknad)
 
 internal object Topics {
-    val MOTTATT = Topic(
-        name = "dusseldorf.privat-omsorgspengesoknad-mottatt",
-        serDes = SerDes()
-    )
-
     val MOTTATT_V2 = Topic(
         name = "dusseldorf.privat-omsorgspengesoknad-mottatt-v2",
         serDes = SerDes()
