@@ -8,7 +8,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.MeldingV1
-import no.nav.helse.prosessering.v1.PreprossesertMeldingV1
+import no.nav.helse.prosessering.v1.PreprosessertMeldingV1
 import no.nav.k9.søknad.Søknad
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serdes
@@ -20,7 +20,7 @@ import org.json.JSONObject
 
 data class Data(val rawJson: String)
 
-data class Cleanup(val metadata: Metadata, val melding: PreprossesertMeldingV1, val journalførtMelding: Journalfort)
+data class Cleanup(val metadata: Metadata, val melding: PreprosessertMeldingV1, val journalførtMelding: Journalfort)
 
 data class Journalfort(val journalpostId: String, val søknad: Søknad)
 
@@ -30,7 +30,7 @@ internal object Topics {
         serDes = SerDes()
     )
 
-    val PREPROSSESERT = Topic(
+    val PREPROSESSERT = Topic(
         name = "dusseldorf.privat-omsorgspengesoknad-preprosessert",
         serDes = SerDes()
     )
@@ -59,7 +59,7 @@ class SerDes : Serializer<TopicEntry>, Deserializer<TopicEntry> {
 
 internal fun TopicEntry.deserialiserTilCleanup(): Cleanup  = omsorgspengesoknadKonfigurertMapper().readValue(data.rawJson)
 internal fun TopicEntry.deserialiserTilMelding(): MeldingV1 = omsorgspengesoknadKonfigurertMapper().readValue(data.rawJson)
-internal fun TopicEntry.deserialiserTilPreprosessertMelding(): PreprossesertMeldingV1  = omsorgspengesoknadKonfigurertMapper().readValue(data.rawJson)
+internal fun TopicEntry.deserialiserTilPreprosessertMelding(): PreprosessertMeldingV1  = omsorgspengesoknadKonfigurertMapper().readValue(data.rawJson)
 internal fun Any.serialiserTilData() = Data(omsorgspengesoknadKonfigurertMapper().writeValueAsString(this))
 
 data class TopicEntry(val rawJson: String) {

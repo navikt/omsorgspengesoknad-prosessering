@@ -12,8 +12,6 @@ import java.time.temporal.ChronoUnit
 
 data class Configuration(private val config : ApplicationConfig) {
 
-    fun getAktoerRegisterBaseUrl() = URI(config.getRequiredString("nav.aktoer_register_base_url", secret = false))
-    fun getTpsProxyV1Url() = URI(config.getRequiredString("nav.tps_proxy_v1_base_url", secret = false))
     fun getk9JoarkBaseUrl() = URI(config.getRequiredString("nav.K9_JOARK_BASE_URL", secret = false))
     fun getK9MellomlagringBaseUrl() = URI(config.getRequiredString("nav.k9_mellomlagring_base_url", secret = false))
 

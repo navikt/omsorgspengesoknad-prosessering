@@ -10,7 +10,7 @@ import no.nav.helse.prosessering.v1.asynkron.Topics
 import no.nav.helse.prosessering.v1.asynkron.Topics.CLEANUP
 import no.nav.helse.prosessering.v1.asynkron.Topics.K9_DITTNAV_VARSEL
 import no.nav.helse.prosessering.v1.asynkron.Topics.MOTTATT_V2
-import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSSESERT
+import no.nav.helse.prosessering.v1.asynkron.Topics.PREPROSESSERT
 import no.nav.helse.prosessering.v1.asynkron.omsorgspengesoknadKonfigurertMapper
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -36,7 +36,7 @@ object KafkaWrapper {
             withSecurity = true,
             topicNames = listOf(
                 MOTTATT_V2.name,
-                PREPROSSESERT.name,
+                PREPROSESSERT.name,
                 CLEANUP.name,
                 K9_DITTNAV_VARSEL.name
             )
@@ -81,13 +81,13 @@ fun KafkaEnvironment.cleanupKonsumer(): KafkaConsumer<String, String> {
     return consumer
 }
 
-fun KafkaEnvironment.preprossesertKonsumer(): KafkaConsumer<String, TopicEntry> {
+fun KafkaEnvironment.preprosessertKonsumer(): KafkaConsumer<String, TopicEntry> {
     val consumer = KafkaConsumer(
-        testConsumerProperties("OmsorgspengesøknadPreprossesertKonsumer"),
+        testConsumerProperties("OmsorgspengesøknadPreprosessertKonsumer"),
         StringDeserializer(),
-        PREPROSSESERT.serDes
+        PREPROSESSERT.serDes
     )
-    consumer.subscribe(listOf(PREPROSSESERT.name))
+    consumer.subscribe(listOf(PREPROSESSERT.name))
     return consumer
 }
 
@@ -107,7 +107,7 @@ fun KafkaEnvironment.meldingsProducer() = KafkaProducer(
     MOTTATT_V2.serDes
 )
 
-fun KafkaConsumer<String, TopicEntry>.hentPreprossesertMelding(
+fun KafkaConsumer<String, TopicEntry>.hentPreprosessertMelding(
     soknadId: String,
     maxWaitInSeconds: Long = 20
 ): TopicEntry {
@@ -115,7 +115,7 @@ fun KafkaConsumer<String, TopicEntry>.hentPreprossesertMelding(
     while (System.currentTimeMillis() < end) {
         seekToBeginning(assignment())
         val entries = poll(Duration.ofSeconds(1))
-            .records(PREPROSSESERT.name)
+            .records(PREPROSESSERT.name)
             .filter { it.key() == soknadId }
 
         if (entries.isNotEmpty()) {

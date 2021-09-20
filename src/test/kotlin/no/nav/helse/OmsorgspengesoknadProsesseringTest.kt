@@ -18,7 +18,6 @@ import no.nav.helse.k9.assertUtvidetAntallDagerFormat
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.asynkron.deserialiserTilPreprosessertMelding
 import org.junit.AfterClass
-import org.junit.BeforeClass
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -36,28 +35,22 @@ class OmsorgspengesoknadProsesseringTest {
         private val logger: Logger = LoggerFactory.getLogger(OmsorgspengesoknadProsesseringTest::class.java)
 
         private val wireMockServer: WireMockServer = WireMockBuilder()
-            .withNaisStsSupport()
             .withAzureSupport()
-            .navnOppslagConfig()
             .build()
             .stubK9DokumentHealth()
             .stubOmsorgspengerJoarkHealth()
             .stubJournalfor()
             .stubLagreDokument()
             .stubSlettDokument()
-            .stubAktørRegister("29099012345", "123456")
 
         private val kafkaEnvironment = KafkaWrapper.bootstrap()
         private val kafkaTestProducer = kafkaEnvironment.meldingsProducer()
 
         private val cleanupKonsumer = kafkaEnvironment.cleanupKonsumer()
-        private val preprossesertKonsumer = kafkaEnvironment.preprossesertKonsumer()
+        private val preprosessertKonsumer = kafkaEnvironment.preprosessertKonsumer()
         private val k9DittnavVarselKonsumer = kafkaEnvironment.k9DittnavVarselKonsumer()
 
         // Se https://github.com/navikt/dusseldorf-ktor#f%C3%B8dselsnummer
-        private val gyldigFodselsnummerA = "02119970078"
-        private val gyldigFodselsnummerB = "19066672169"
-        private val gyldigFodselsnummerC = "20037473937"
         private val dNummerA = "55125314561"
 
         private var engine = newEngine(kafkaEnvironment).apply {
@@ -87,13 +80,6 @@ class OmsorgspengesoknadProsesseringTest {
             CollectorRegistry.defaultRegistry.clear()
             engine = newEngine(kafkaEnvironment)
             engine.start(wait = true)
-        }
-
-        @BeforeClass
-        @JvmStatic
-        fun buildUp() {
-            wireMockServer.stubAktørRegister(gyldigFodselsnummerA, "666666666")
-            wireMockServer.stubAktørRegister(gyldigFodselsnummerB, "777777777")
         }
 
         @AfterClass
@@ -208,69 +194,13 @@ class OmsorgspengesoknadProsesseringTest {
     }
 
     @Test
-    fun `Melding lagt til prosessering selv om oppslag paa aktør ID for barn feiler`() {
-        val søknadId = UUID.randomUUID().toString()
-        val melding = melding.copy(
-            søknadId = søknadId
-        )
-
-        wireMockServer.stubAktoerRegisterGetAktoerIdNotFound(gyldigFodselsnummerC)
-
-        kafkaTestProducer.leggTilMottak(melding)
-        assertInnsending(melding)
-    }
-
-    @Test
-    fun `Bruk barnets fødselsnummer til å slå opp i tps-proxy dersom navnet mangler`() {
-        wireMockServer.stubTpsProxyGetNavn("KLØKTIG", "BLUNKENDE", "SUPERKONSOLL")
-        val søknadId = UUID.randomUUID().toString()
-        val melding = melding.copy(
-            søknadId = søknadId,
-            barn = barn.copy(
-                navn = null
-            )
-        )
-
-        kafkaTestProducer.leggTilMottak(melding)
-        val preprossesertMelding =
-            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
-        assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", preprossesertMelding.barn.navn)
-
-        assertInnsending(melding)
-    }
-
-    @Test
-    fun `Bruk barnets aktørId til å slå opp i tps-proxy dersom navnet mangler`() {
-        wireMockServer.stubAktørRegister(dNummerA, "56789")
-        wireMockServer.stubTpsProxyGetNavn("KLØKTIG", "BLUNKENDE", "SUPERKONSOLL")
-
-        val søknadId = UUID.randomUUID().toString()
-        val melding = melding.copy(
-            søknadId = søknadId,
-            barn = barn.copy(
-                navn = null,
-                aktørId = "56789"
-            )
-        )
-
-        kafkaTestProducer.leggTilMottak(melding)
-        val preprosessertMelding =
-            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
-        assertEquals("KLØKTIG BLUNKENDE SUPERKONSOLL", preprosessertMelding.barn.navn)
-
-        assertInnsending(melding)
-    }
-
-    @Test
     fun `Forvent barnets fødselsnummer dersom den er satt i melding`() {
-        wireMockServer.stubAktørRegister(gyldigFodselsnummerB, "56789")
-
-        val forventetFodselsNummer: String = gyldigFodselsnummerB
+        val forventetFodselsNummer: String = "19066672169"
         val søknadId = UUID.randomUUID().toString()
         val melding = melding.copy(
             søknadId = søknadId,
             barn = barn.copy(
-                navn = null,
+                navn = "Barn Barnesen",
                 norskIdentifikator = forventetFodselsNummer,
                 aktørId = "56789"
             )
@@ -278,7 +208,7 @@ class OmsorgspengesoknadProsesseringTest {
 
         kafkaTestProducer.leggTilMottak(melding)
         val preprosessertMelding =
-            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
+            preprosessertKonsumer.hentPreprosessertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
 
         assertEquals(forventetFodselsNummer, preprosessertMelding.barn.norskIdentifikator)
 
@@ -287,49 +217,18 @@ class OmsorgspengesoknadProsesseringTest {
 
     @Test
     fun `Forvent 2 legeerklæringer og 2 samværsavtaler dersom den er satt i melding`() {
-        wireMockServer.stubAktørRegister(gyldigFodselsnummerB, "56789")
-
         val søknadId = UUID.randomUUID().toString()
         val melding = melding.copy(
             søknadId = søknadId,
-            barn = barn.copy(
-                navn = null,
-                fødselsdato = null,
-                aktørId = "56789"
-            ),
             legeerklæring = listOf(URI("http://localhost:8080/vedlegg/1"), URI("http://localhost:8080/vedlegg/2")),
             samværsavtale = listOf(URI("http://localhost:8080/vedlegg/3"), URI("http://localhost:8080/vedlegg/4"))
         )
 
         kafkaTestProducer.leggTilMottak(melding)
-        val preprossesertMelding =
-            preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
-        assertEquals(5, preprossesertMelding.dokumentUrls.size)
+        val preprosessertMelding =
+            preprosessertKonsumer.hentPreprosessertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
+        assertEquals(5, preprosessertMelding.dokumentUrls.size)
         // 2 legeerklæringsvedlegg, 2, to samværsavtalevedlegg, og 1 søknadPdf.
-        assertInnsending(melding)
-    }
-
-    @Test
-    fun `Forvent barnets fødselsnummer blir slått opp dersom den ikke er satt i melding`() {
-        val forventetFodselsNummer = gyldigFodselsnummerB
-
-        val søknadId = UUID.randomUUID().toString()
-        val melding = melding.copy(
-            søker = søker.copy(
-                fødselsnummer = gyldigFodselsnummerA
-            ),
-            søknadId = søknadId,
-            barn = barn.copy(
-                navn = "Ole Dole Doffen",
-                norskIdentifikator = null,
-                aktørId = "777777777"
-            )
-        )
-
-        kafkaTestProducer.leggTilMottak(melding)
-        val preprosessertMelding = preprossesertKonsumer.hentPreprossesertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
-        assertEquals(forventetFodselsNummer, preprosessertMelding.barn.norskIdentifikator)
-
         assertInnsending(melding)
     }
 

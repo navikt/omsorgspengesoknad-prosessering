@@ -10,10 +10,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.hotspot.DefaultExports
-import no.nav.helse.aktoer.AktoerGateway
-import no.nav.helse.aktoer.AktoerService
 import no.nav.helse.auth.AccessTokenClientResolver
-import no.nav.helse.barn.BarnOppslag
 import no.nav.helse.dokument.K9MellomlagringGateway
 import no.nav.helse.dokument.K9MellomlagringService
 import no.nav.helse.dusseldorf.ktor.auth.clients
@@ -28,9 +25,8 @@ import no.nav.helse.dusseldorf.ktor.jackson.dusseldorfConfigured
 import no.nav.helse.dusseldorf.ktor.metrics.MetricsRoute
 import no.nav.helse.joark.JoarkGateway
 import no.nav.helse.prosessering.v1.PdfV1Generator
-import no.nav.helse.prosessering.v1.PreprosseseringV1Service
+import no.nav.helse.prosessering.v1.PreprosesseringV1Service
 import no.nav.helse.prosessering.v1.asynkron.AsynkronProsesseringV1Service
-import no.nav.helse.tpsproxy.TpsProxyV1Gateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.URI
@@ -57,13 +53,6 @@ fun Application.omsorgspengesoknadProsessering() {
 
     val accessTokenClientResolver = AccessTokenClientResolver(environment.config.clients())
 
-    val aktoerGateway = AktoerGateway(
-        baseUrl = configuration.getAktoerRegisterBaseUrl(),
-        accessTokenClient = accessTokenClientResolver.aktoerRegisterAccessTokenClient()
-    )
-
-    val aktoerService = AktoerService(aktoerGateway)
-
     val k9MellomlagringGateway = K9MellomlagringGateway(
         baseUrl = configuration.getK9MellomlagringBaseUrl(),
         accessTokenClient = accessTokenClientResolver.azureV2AccessTokenClient(),
@@ -71,16 +60,9 @@ fun Application.omsorgspengesoknadProsessering() {
     )
     val k9MellomlagringService = K9MellomlagringService(k9MellomlagringGateway)
 
-    val tpsProxyV1Gateway = TpsProxyV1Gateway(
-        baseUrl = configuration.getTpsProxyV1Url(),
-        accessTokenClient = accessTokenClientResolver.tpsProxyAccessTokenClient()
-    )
-
-    val preprosseseringV1Service = PreprosseseringV1Service(
-        aktoerService = aktoerService,
+    val preprosesseringV1Service = PreprosesseringV1Service(
         pdfV1Generator = PdfV1Generator(),
-        k9MellomlagringService = k9MellomlagringService,
-        barnOppslag = BarnOppslag(tpsProxyV1Gateway)
+        k9MellomlagringService = k9MellomlagringService
     )
     val joarkGateway = JoarkGateway(
         baseUrl = configuration.getk9JoarkBaseUrl(),
@@ -90,7 +72,7 @@ fun Application.omsorgspengesoknadProsessering() {
 
     val asynkronProsesseringV1Service = AsynkronProsesseringV1Service(
         kafkaConfig = configuration.getKafkaConfig(),
-        preprosseseringV1Service = preprosseseringV1Service,
+        preprosesseringV1Service = preprosesseringV1Service,
         joarkGateway = joarkGateway,
         dokumentService = k9MellomlagringService,
         datoMottattEtter = configuration.soknadDatoMottattEtter(),
@@ -120,7 +102,6 @@ fun Application.omsorgspengesoknadProsessering() {
                 healthChecks = mutableSetOf(
                     k9MellomlagringGateway,
                     joarkGateway,
-                    aktoerGateway,
                     HttpRequestHealthCheck(
                         mapOf(
                             Url.healthURL(configuration.getK9MellomlagringBaseUrl()) to HttpRequestHealthConfig(
