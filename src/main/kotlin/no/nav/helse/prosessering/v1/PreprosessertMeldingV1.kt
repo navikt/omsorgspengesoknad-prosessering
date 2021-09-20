@@ -1,6 +1,5 @@
 package no.nav.helse.prosessering.v1
 
-import no.nav.helse.felles.AktørId
 import no.nav.k9.søknad.Søknad
 import java.net.URI
 import java.time.ZonedDateTime
@@ -12,7 +11,7 @@ data class PreprosessertMeldingV1(
     val dokumentUrls: List<List<URI>>,
     val kroniskEllerFunksjonshemming: Boolean,
     val barn: Barn,
-    val søker: PreprossesertSøker,
+    val søker: Søker,
     val relasjonTilBarnet: SøkerBarnRelasjon? = null,
     val sammeAdresse: Boolean = false,
     val harBekreftetOpplysninger: Boolean,
@@ -21,15 +20,14 @@ data class PreprosessertMeldingV1(
 ) {
     internal constructor(
         melding: MeldingV1,
-        dokumentUrls: List<List<URI>>,
-        søkerAktørId: AktørId
+        dokumentUrls: List<List<URI>>
     ) : this(
         språk = melding.språk,
         soknadId = melding.søknadId,
         mottatt = melding.mottatt,
         dokumentUrls = dokumentUrls,
         kroniskEllerFunksjonshemming = melding.kroniskEllerFunksjonshemming,
-        søker = PreprossesertSøker(melding.søker, søkerAktørId),
+        søker = melding.søker,
         sammeAdresse = melding.sammeAdresse,
         barn = melding.barn,
         relasjonTilBarnet = melding.relasjonTilBarnet,
@@ -40,27 +38,6 @@ data class PreprosessertMeldingV1(
 
     override fun toString(): String {
         return "PreprosessertMeldingV1(soknadId='$soknadId', mottatt=$mottatt)"
-    }
-
-}
-
-data class PreprossesertSøker(
-    val fødselsnummer: String,
-    val fornavn: String,
-    val mellomnavn: String?,
-    val etternavn: String,
-    val aktørId: String
-) {
-    internal constructor(søker: Søker, aktørId: AktørId) : this(
-        fødselsnummer = søker.fødselsnummer,
-        fornavn = søker.fornavn,
-        mellomnavn = søker.mellomnavn,
-        etternavn = søker.etternavn,
-        aktørId = aktørId.id
-    )
-
-    override fun toString(): String {
-        return "PreprossesertSøker()"
     }
 
 }

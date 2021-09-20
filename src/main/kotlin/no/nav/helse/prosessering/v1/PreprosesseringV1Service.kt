@@ -4,7 +4,6 @@ import no.nav.helse.dokument.Dokument
 import no.nav.helse.dokument.DokumentEier
 import no.nav.helse.dokument.K9MellomlagringService
 import no.nav.helse.dokument.Søknadsformat
-import no.nav.helse.felles.AktørId
 import no.nav.helse.felles.CorrelationId
 import no.nav.helse.prosessering.Metadata
 import org.slf4j.LoggerFactory
@@ -67,8 +66,7 @@ internal class PreprosesseringV1Service(
 
         val preprosessertMeldingV1 = PreprosessertMeldingV1(
             melding = melding,
-            dokumentUrls = komplettDokumentUrls.toList(),
-            søkerAktørId = AktørId(melding.søker.aktørId)
+            dokumentUrls = komplettDokumentUrls.toList()
         )
 
         melding.reportMetrics()
