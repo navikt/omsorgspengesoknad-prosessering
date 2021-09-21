@@ -1,7 +1,7 @@
 package no.nav.helse
 
 import com.github.tomakehurst.wiremock.WireMockServer
-import io.ktor.server.testing.withApplication
+import io.ktor.server.testing.*
 import no.nav.helse.dusseldorf.testsupport.asArguments
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import org.slf4j.Logger
@@ -17,17 +17,13 @@ class OmsorgspengesoknadProsesseringWithMocks {
 
             val wireMockServer: WireMockServer = WireMockBuilder()
                 .withPort(8091)
-                .withNaisStsSupport()
                 .withAzureSupport()
-                .navnOppslagConfig()
                 .build()
                 .stubK9DokumentHealth()
                 .stubOmsorgspengerJoarkHealth()
                 .stubJournalfor()
                 .stubLagreDokument()
                 .stubSlettDokument()
-                .stubTpsProxyGetNavn("Ole", "Dole", "Klok")
-                .stubAktørRegister("29099012345", "123456")
 
             val kafkaEnvironment = KafkaWrapper.bootstrap()
 

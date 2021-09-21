@@ -15,12 +15,6 @@ private val barnetsAlderHistogram = Histogram.build()
     .help("Alderen på barnet det søkes for")
     .register()
 
-private val idTypePaaBarnCounter = Counter.build()
-    .name("id_type_paa_barn_counter")
-    .help("Teller for hva slags ID-Type som er benyttet for å identifisere barnet")
-    .labelNames("id_type")
-    .register()
-
 private val jaNeiCounter = Counter.build()
     .name("ja_nei_counter")
     .help("Teller for svar på ja/nei spørsmål i søknaden")
@@ -51,8 +45,8 @@ private val relasjonPåSammeAdresse = Counter.build()
     .labelNames("relasjon", "sammeAdresse")
     .register()
 
-internal fun PreprossesertMeldingV1.reportMetrics() {
-    val barnetsFodselsdato = barn.fødselsDato ?: barn.fodseldato()
+internal fun PreprosessertMeldingV1.reportMetrics() {
+    val barnetsFodselsdato = barn.fødselsdato
     if (barnetsFodselsdato != null) {
         val barnetsAlder = barnetsFodselsdato.aarSiden()
         barnetsAlderHistogram.observe(barnetsAlder)
@@ -60,7 +54,6 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
             barnetsAlderIUkerCounter.labels(barnetsFodselsdato.ukerSiden()).inc()
         }
     }
-    idTypePaaBarnCounter.labels(barn.idType()).inc()
 
     if (relasjonTilBarnet != null) {
         søkersRelasjonTilBarnetCounter.labels(relasjonTilBarnet.utskriftsvennlig).inc()
@@ -71,15 +64,8 @@ internal fun PreprossesertMeldingV1.reportMetrics() {
 }
 
 internal fun Double.erUnderEttAar() = 0.0 == this
-private fun PreprossesertBarn.idType(): String {
-    return when {
-        norskIdentifikator != null -> "fødselsnummer"
-        else -> "ingen_id"
-    }
-}
 
-internal fun PreprossesertBarn.fodseldato(): LocalDate? {
-    if (norskIdentifikator == null) return null
+internal fun Barn.fodseldato(): LocalDate? {
     return try {
         val dag = norskIdentifikator.substring(0, 2).toInt()
         val maned = norskIdentifikator.substring(2, 4).toInt()

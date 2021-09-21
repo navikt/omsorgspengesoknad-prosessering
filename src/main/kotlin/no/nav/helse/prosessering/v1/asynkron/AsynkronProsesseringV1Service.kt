@@ -3,14 +3,14 @@ package no.nav.helse.prosessering.v1.asynkron
 import no.nav.helse.dokument.K9MellomlagringService
 import no.nav.helse.joark.JoarkGateway
 import no.nav.helse.kafka.KafkaConfig
-import no.nav.helse.prosessering.v1.PreprosseseringV1Service
+import no.nav.helse.prosessering.v1.PreprosesseringV1Service
 
 import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 
 internal class AsynkronProsesseringV1Service(
     kafkaConfig: KafkaConfig,
-    preprosseseringV1Service: PreprosseseringV1Service,
+    preprosesseringV1Service: PreprosesseringV1Service,
     joarkGateway: JoarkGateway,
     dokumentService: K9MellomlagringService,
     datoMottattEtter: ZonedDateTime,
@@ -21,9 +21,9 @@ internal class AsynkronProsesseringV1Service(
         private val logger = LoggerFactory.getLogger(AsynkronProsesseringV1Service::class.java)
     }
 
-    private val preprosseseringStream = PreprosseseringStream(
+    private val preprosesseringStream = PreprosesseringStream(
         kafkaConfig = kafkaConfig,
-        preprosseseringV1Service = preprosseseringV1Service,
+        preprosesseringV1Service = preprosesseringV1Service,
         søknadMottattEtter = datoMottattEtter
     )
 
@@ -41,20 +41,20 @@ internal class AsynkronProsesseringV1Service(
     )
 
     private val healthChecks = setOf(
-        preprosseseringStream.healthy,
+        preprosesseringStream.healthy,
         journalforingsStream.healthy,
         cleanupStream.healthy
     )
 
     private val isReadyChecks = setOf(
-        preprosseseringStream.ready,
+        preprosesseringStream.ready,
         journalforingsStream.ready,
         cleanupStream.ready
     )
 
     internal fun stop() {
         logger.info("Stopper streams.")
-        preprosseseringStream.stop()
+        preprosesseringStream.stop()
         journalforingsStream.stop()
         cleanupStream.stop()
         logger.info("Alle streams stoppet.")

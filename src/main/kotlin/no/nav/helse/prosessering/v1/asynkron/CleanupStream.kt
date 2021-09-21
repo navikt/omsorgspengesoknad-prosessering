@@ -1,9 +1,10 @@
 package no.nav.helse.prosessering.v1.asynkron
 
-import no.nav.helse.CorrelationId
 import no.nav.helse.dokument.DokumentEier
 import no.nav.helse.dokument.K9MellomlagringService
 import no.nav.helse.erEtter
+import no.nav.helse.felles.CorrelationId
+import no.nav.helse.formaterStatuslogging
 import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
@@ -44,14 +45,16 @@ internal class CleanupStream(
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
-                        logger.info("Sletter dokumenter.")
                         val cleanup = entry.deserialiserTilCleanup()
+                        logger.info(formaterStatuslogging(cleanup.melding.soknadId, "kjører cleanup"))
+
+                        logger.info("Sletter dokumenter.")
                         dokumentService.slettDokumeter(
                             urlBolks = cleanup.melding.dokumentUrls,
                             dokumentEier = DokumentEier(cleanup.melding.søker.fødselsnummer),
                             correlationId = CorrelationId(entry.metadata.correlationId)
                         )
-                        logger.info("Dokumenter slettet.")
+
                         val k9Beskjed = cleanup.tilK9Beskjed()
                         logger.info("Sender K9Beskjed viderer til ${tilK9DittnavVarsel.name}")
                         k9Beskjed.serialiserTilData()

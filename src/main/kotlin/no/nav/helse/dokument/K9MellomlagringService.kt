@@ -1,7 +1,7 @@
 package no.nav.helse.dokument
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import no.nav.helse.CorrelationId
+import no.nav.helse.felles.CorrelationId
 import java.net.URI
 
 class K9MellomlagringService(

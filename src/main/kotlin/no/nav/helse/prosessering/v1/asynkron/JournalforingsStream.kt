@@ -1,9 +1,9 @@
 package no.nav.helse.prosessering.v1.asynkron
 
-import no.nav.helse.CorrelationId
 import no.nav.helse.erEtter
+import no.nav.helse.felles.CorrelationId
+import no.nav.helse.formaterStatuslogging
 import no.nav.helse.joark.JoarkGateway
-import no.nav.helse.joark.Navn
 import no.nav.helse.kafka.KafkaConfig
 import no.nav.helse.kafka.ManagedKafkaStreams
 import no.nav.helse.kafka.ManagedStreamHealthy
@@ -35,30 +35,27 @@ internal class JournalforingsStream(
 
         private fun topology(joarkGateway: JoarkGateway, gittDato: ZonedDateTime): Topology {
             val builder = StreamsBuilder()
-            val fraPreprossesert = Topics.PREPROSSESERT
+            val fraPreprosessert = Topics.PREPROSESSERT
             val tilCleanup = Topics.CLEANUP
 
             val mapValues = builder
-                .stream(fraPreprossesert.name, fraPreprossesert.consumed)
+                .stream(fraPreprosessert.name, fraPreprosessert.consumed)
                 .filter { _, entry -> entry.deserialiserTilPreprosessertMelding().mottatt.erEtter(gittDato) }
                 .filter { _, entry -> 1 == entry.metadata.version }
                 .mapValues { soknadId, entry ->
                     process(NAME, soknadId, entry) {
+                        logger.info(formaterStatuslogging(soknadId, "journalføres"))
+
                         val preprosessertEttersending = entry.deserialiserTilPreprosessertMelding()
                         val dokumenter = preprosessertEttersending.dokumentUrls
+
                         logger.info("Journalfører dokumenter: {}", dokumenter)
 
                         val journaPostId = joarkGateway.journalfør(
-                            mottatt = preprosessertEttersending.mottatt,
-                            norskIdent = preprosessertEttersending.søker.fødselsnummer,
-                            correlationId = CorrelationId(entry.metadata.correlationId),
-                            dokumenter = dokumenter,
-                            navn = Navn(
-                                fornavn = preprosessertEttersending.søker.fornavn,
-                                mellomnavn = preprosessertEttersending.søker.mellomnavn,
-                                etternavn = preprosessertEttersending.søker.etternavn
-                            )
+                            preprosessertMeldingV1 = preprosessertEttersending,
+                            correlationId = CorrelationId(entry.metadata.correlationId)
                         )
+
                         logger.info("Dokumenter journalført med ID = ${journaPostId.journalpostId}.")
                         val journalfort = Journalfort(
                             journalpostId = journaPostId.journalpostId,

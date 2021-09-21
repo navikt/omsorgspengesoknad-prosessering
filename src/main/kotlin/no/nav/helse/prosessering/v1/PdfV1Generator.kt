@@ -8,7 +8,6 @@ import com.github.jknack.handlebars.io.ClassPathTemplateLoader
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import com.openhtmltopdf.util.XRLog
-import no.nav.helse.aktoer.NorskIdent
 import no.nav.helse.dusseldorf.ktor.core.fromResources
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -57,9 +56,7 @@ internal class PdfV1Generator {
     }
 
     internal fun generateSoknadOppsummeringPdf(
-        melding: MeldingV1,
-        barnetsIdent: NorskIdent?,
-        barnetsNavn: String?
+        melding: MeldingV1
     ): ByteArray {
         XRLog.listRegisteredLoggers().forEach { logger -> XRLog.setLevel(logger, Level.WARNING) }
         soknadTemplate.apply(
@@ -74,8 +71,8 @@ internal class PdfV1Generator {
                             "fødselsnummer" to melding.søker.fødselsnummer
                         ),
                         "barn" to mapOf(
-                            "navn" to barnetsNavn?.capitalizeName(),
-                            "id" to barnetsIdent?.getValue(),
+                            "navn" to melding.barn.navn.capitalizeName(),
+                            "id" to melding.barn.norskIdentifikator,
                             "fødselsdato" to melding.barn.fødselsdato
                         ),
                         "relasjonTilBarnet" to melding.relasjonTilBarnet?.utskriftsvennlig,
