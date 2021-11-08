@@ -1,8 +1,8 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val dusseldorfKtorVersion = "2.1.6.0-1516d10"
-val k9FormatVersion = "5.4.28"
+val dusseldorfKtorVersion = "3.1.6.4-e07c5ec"
+val k9FormatVersion = "5.5.9"
 val ktorVersion = ext.get("ktorVersion").toString()
 val slf4jVersion = ext.get("slf4jVersion").toString()
 val kotlinxCoroutinesVersion = ext.get("kotlinxCoroutinesVersion").toString()
@@ -10,7 +10,7 @@ val kotlinxCoroutinesVersion = ext.get("kotlinxCoroutinesVersion").toString()
 val openhtmltopdfVersion = "1.0.10"
 val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
 val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
-val handlebarsVersion = "4.2.1"
+val handlebarsVersion = "4.3.0"
 val fuelVersion = "2.3.1"
 
 val mainClass = "no.nav.helse.OmsorgspengesoknadProsesseringKt"
@@ -22,7 +22,7 @@ plugins {
 
 buildscript {
     // Henter ut diverse dependency versjoner, i.e. ktorVersion.
-    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/1516d1006074d9459dbeaa4b355f619ee04a4b77/gradle/dusseldorf-ktor.gradle.kts")
+    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/e07c5ecf831928eb250c946e753aff2a3b798295/gradle/dusseldorf-ktor.gradle.kts")
 }
 
 dependencies {
@@ -55,6 +55,8 @@ dependencies {
     // Kafka
     implementation("org.apache.kafka:kafka-streams:$kafkaVersion")
 
+    implementation(kotlin("stdlib-jdk8"))
+
     // Test
     testImplementation ( "org.apache.kafka:kafka-clients:$kafkaVersion")
     testImplementation ( "no.nav:kafka-embedded-env:$kafkaEmbeddedEnvVersion")
@@ -63,7 +65,7 @@ dependencies {
         exclude(group = "org.eclipse.jetty")
     }
     testImplementation("org.skyscreamer:jsonassert:1.5.0")
-    implementation(kotlin("stdlib-jdk8"))
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 }
 
 repositories {
@@ -80,9 +82,6 @@ repositories {
 
     mavenCentral()
     maven("https://jitpack.io")
-
-    maven("https://dl.bintray.com/kotlin/ktor")
-    maven("https://kotlin.bintray.com/kotlinx")
     maven("https://packages.confluent.io/maven/")
 }
 
@@ -94,7 +93,7 @@ java {
 
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "11"
 }
 
 tasks.withType<ShadowJar> {
@@ -111,4 +110,8 @@ tasks.withType<ShadowJar> {
 
 tasks.withType<Wrapper> {
     gradleVersion = "7.2"
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
