@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val dusseldorfKtorVersion = "3.1.6.4-e07c5ec"
+val dusseldorfKtorVersion = "3.1.6.5-50b2e34"
 val k9FormatVersion = "5.5.9"
 val ktorVersion = ext.get("ktorVersion").toString()
 val slf4jVersion = ext.get("slf4jVersion").toString()
@@ -16,13 +16,13 @@ val fuelVersion = "2.3.1"
 val mainClass = "no.nav.helse.OmsorgspengesoknadProsesseringKt"
 
 plugins {
-    kotlin("jvm") version "1.5.31"
+    kotlin("jvm") version "1.6.0"
     id("com.github.johnrengelman.shadow") version "7.1.0"
 }
 
 buildscript {
     // Henter ut diverse dependency versjoner, i.e. ktorVersion.
-    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/e07c5ecf831928eb250c946e753aff2a3b798295/gradle/dusseldorf-ktor.gradle.kts")
+    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/50b2e34c6cc6123209d6d8c6e7421104c4d42cf1/gradle/dusseldorf-ktor.gradle.kts")
 }
 
 dependencies {
