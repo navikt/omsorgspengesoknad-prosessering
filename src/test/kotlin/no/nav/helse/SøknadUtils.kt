@@ -48,7 +48,7 @@ class SøknadUtils {
                 NorskIdentitetsnummer.of("26104500284")
             ),
             OmsorgspengerKroniskSyktBarn(
-                no.nav.k9.søknad.felles.personopplysninger.Barn(NorskIdentitetsnummer.of("02119970078"), null),
+                no.nav.k9.søknad.felles.personopplysninger.Barn().medNorskIdentitetsnummer(NorskIdentitetsnummer.of("02119970078")),
                 true
             )
         )
