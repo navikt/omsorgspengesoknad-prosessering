@@ -62,8 +62,8 @@ class SøknadUtils {
             barn = barn,
             sammeAdresse = true,
             relasjonTilBarnet = SøkerBarnRelasjon.FAR,
-            legeerklæring = listOf(),
-            samværsavtale = listOf(),
+            samværsavtaleVedleggId = listOf("1234"),
+            legeerklæringVedleggId= listOf("5678"),
             harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true,
             k9FormatSøknad = k9Format

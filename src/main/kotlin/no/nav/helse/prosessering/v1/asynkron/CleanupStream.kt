@@ -50,7 +50,7 @@ internal class CleanupStream(
 
                         logger.info("Sletter dokumenter.")
                         dokumentService.slettDokumeter(
-                            urlBolks = cleanup.melding.dokumentUrls,
+                            vedleggIdBolks = cleanup.melding.vedleggId,
                             dokumentEier = DokumentEier(cleanup.melding.søker.fødselsnummer),
                             correlationId = CorrelationId(entry.metadata.correlationId)
                         )

@@ -19,12 +19,12 @@ class K9MellomlagringService(
     }
 
     internal suspend fun slettDokumeter(
-        urlBolks: List<List<URI>>,
+        vedleggIdBolks: List<List<String>>,
         dokumentEier: DokumentEier,
         correlationId : CorrelationId
     ) {
         k9MellomlagringGateway.slettDokmenter(
-            urls = urlBolks.flatten(),
+            vedleggId = vedleggIdBolks.flatten(),
             dokumentEier = dokumentEier,
             correlationId = correlationId
         )
