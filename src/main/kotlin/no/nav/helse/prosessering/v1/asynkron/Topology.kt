@@ -4,7 +4,6 @@ import io.prometheus.client.Counter
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.slf4j.MDCContext
 import no.nav.helse.dusseldorf.ktor.core.Retry
-import org.slf4j.LoggerFactory
 import java.time.Duration
 
 private object StreamCounter {
@@ -39,7 +38,6 @@ internal fun process(
             ) { block() }
         } catch (cause: Throwable) {
             StreamCounter.feil(name)
-            LoggerFactory.getLogger(StreamCounter::class.java).error("Feilet: {}", cause)
             throw cause
         }
         StreamCounter.ok(name)
