@@ -18,8 +18,8 @@ class Søknadsformat {
             k9FormatSøknad: Søknad
         ): ByteArray {
             val node = objectMapper.valueToTree<ObjectNode>(k9FormatSøknad)
-            node.remove("legeerklæring")
-            node.remove("samværsavtale")
+            node.remove("legeerklæringVedleggId")
+            node.remove("samværsavtaleVedleggId")
             return objectMapper.writeValueAsBytes(node)
         }
 

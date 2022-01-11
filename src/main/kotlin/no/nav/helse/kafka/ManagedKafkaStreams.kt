@@ -7,6 +7,7 @@ import no.nav.helse.dusseldorf.ktor.health.Result
 import no.nav.helse.dusseldorf.ktor.health.UnHealthy
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.Topology
+import org.apache.kafka.streams.errors.StreamsUncaughtExceptionHandler
 import org.slf4j.LoggerFactory
 import java.time.Duration
 import java.time.LocalDateTime
@@ -22,23 +23,26 @@ internal class ManagedKafkaStreams(
 
     private companion object {
         private val streamStatus = Gauge
-            .build("stream_status",
-                "Indikerer streamens status. 0 er Running, 1 er stopped.")
+            .build(
+                "stream_status",
+                "Indikerer streamens status. 0 er Running, 1 er stopped."
+            )
             .labelNames("stream")
             .register()
     }
 
-    private fun safeStoppedIn() : Duration {
+    private fun safeStoppedIn(): Duration {
         val stoppedAt = stopped ?: LocalDateTime.now().minus(
             unreadyAfterStreamStoppedIn.seconds,
             ChronoUnit.SECONDS
         ).minusSeconds(1)
         return Duration.between(stoppedAt, LocalDateTime.now())
     }
+
     private fun Duration.hasReachedUnready() = compareTo(unreadyAfterStreamStoppedIn) >= 0
 
-    private fun result(notRunningBlock: (Duration) -> Result) : Result {
-        return when(kafkaStreams.state()) {
+    private fun result(notRunningBlock: (Duration) -> Result): Result {
+        return when (kafkaStreams.state()) {
             KafkaStreams.State.PENDING_SHUTDOWN, KafkaStreams.State.NOT_RUNNING -> {
                 notRunningBlock(safeStoppedIn())
             }
@@ -48,18 +52,23 @@ internal class ManagedKafkaStreams(
             else -> UnHealthy(name, "Stream befinner seg i state '${kafkaStreams.state().name}'.")
         }
     }
+
     internal fun ready() = result { stoppedIn ->
         if (stoppedIn.hasReachedUnready()) {
             UnHealthy(name, "Stream har vært stoppet i ${stoppedIn.toMinutes()} minutter.")
-        } else Healthy(name, "Stream har vært stoppet i ${stoppedIn.toMinutes()} minutter. Unready først etter ${unreadyAfterStreamStoppedIn.toMinutes()} minutter.")
+        } else Healthy(
+            name,
+            "Stream har vært stoppet i ${stoppedIn.toMinutes()} minutter. Unready først etter ${unreadyAfterStreamStoppedIn.toMinutes()} minutter."
+        )
     }
+
     internal fun healthy() = result { stoppedIn ->
         UnHealthy(name, "Stream har vært stoppet i ${stoppedIn.toMinutes()} minutter.")
     }
 
     private val log = LoggerFactory.getLogger("no.nav.$name.stream")
     private var kafkaStreams = managed(KafkaStreams(topology, properties))
-    private var stopped : LocalDateTime? = null
+    private var stopped: LocalDateTime? = null
 
     init {
         if (unreadyAfterStreamStoppedIn.toMinutes() < 1) throw IllegalStateException("unreadyAfterStreamStoppedIn må være over 1 minutt.")
@@ -86,7 +95,7 @@ internal class ManagedKafkaStreams(
         }
     }
 
-    private fun managed(streams: KafkaStreams) : KafkaStreams{
+    private fun managed(streams: KafkaStreams): KafkaStreams {
         streams.setStateListener { newState, oldState ->
             log.info("Stream endret state fra $oldState til $newState")
             if (newState == KafkaStreams.State.ERROR) {
@@ -94,7 +103,7 @@ internal class ManagedKafkaStreams(
             }
         }
 
-        streams.setUncaughtExceptionHandler { _, _ -> stop(becauseOfError = true) }
+        streams.setUncaughtExceptionHandler { _ -> StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT }
 
         Runtime.getRuntime().addShutdownHook(Thread {
             stop(becauseOfError = false)
