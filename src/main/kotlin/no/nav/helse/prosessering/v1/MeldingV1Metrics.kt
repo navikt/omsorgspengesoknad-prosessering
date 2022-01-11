@@ -10,5 +10,5 @@ private val opplastedeVedleggHistogram = Histogram.build()
 
 internal fun MeldingV1.reportMetrics() {
 
-    opplastedeVedleggHistogram.observe(legeerklæring.size.toDouble() + (samværsavtale?.size?.toDouble() ?: 0.0))
+    opplastedeVedleggHistogram.observe(legeerklæringVedleggId.size.toDouble() + (samværsavtaleVedleggId.size.toDouble()))
 }

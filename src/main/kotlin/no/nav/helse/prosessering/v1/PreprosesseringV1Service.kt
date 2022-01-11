@@ -71,12 +71,6 @@ internal class PreprosesseringV1Service(
             }
         }
 
-        melding.samværsavtale?.let { liste ->
-            liste.forEach { komplettDokumentId.add(listOf(it.dokumentId())) }
-        }
-
-        melding.legeerklæring.forEach { komplettDokumentId.add(listOf(it.dokumentId())) }
-
         logger.info("Totalt ${komplettDokumentId.size} dokumentbolker med totalt ${komplettDokumentId.flatten().size} dokumenter.")
 
         val preprosessertMeldingV1 = PreprosessertMeldingV1(
