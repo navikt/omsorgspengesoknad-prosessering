@@ -19,8 +19,7 @@ data class MeldingV1(
     val samværsavtaleVedleggId: List<String> = listOf(),
     val harBekreftetOpplysninger: Boolean,
     val harForståttRettigheterOgPlikter: Boolean,
-    val k9FormatSøknad: Søknad,
-    val testfelt: String
+    val k9FormatSøknad: Søknad
 ) {
     override fun toString(): String {
         return "MeldingV1(søknadId='$søknadId', mottatt=$mottatt)"

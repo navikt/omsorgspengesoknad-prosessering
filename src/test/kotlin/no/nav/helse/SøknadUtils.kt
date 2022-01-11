@@ -66,8 +66,7 @@ class SøknadUtils {
             legeerklæringVedleggId = listOf("5678"),
             harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true,
-            k9FormatSøknad = k9Format,
-            testfelt = ""
+            k9FormatSøknad = k9Format
         )
     }
 }

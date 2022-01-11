@@ -38,8 +38,7 @@ class PdfV1GeneratorTest {
             relasjonTilBarnet = SøkerBarnRelasjon.MOR,
             harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true,
-            k9FormatSøknad = SøknadUtils.k9Format,
-            testfelt = ""
+            k9FormatSøknad = SøknadUtils.k9Format
         )
     }
 
