@@ -17,7 +17,7 @@ data class MeldingV1(
     val relasjonTilBarnet: SøkerBarnRelasjon? = null,
     val sammeAdresse: Boolean = false,
     var legeerklæring: List<URI> = listOf(),
-    var samværsavtale: List<URI> = listOf(),
+    var samværsavtale: List<URI>? = listOf(),
     val legeerklæringVedleggId: List<String> = listOf(),
     val samværsavtaleVedleggId: List<String> = listOf(),
     val harBekreftetOpplysninger: Boolean,
