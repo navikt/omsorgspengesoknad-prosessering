@@ -20,7 +20,6 @@ import no.nav.helse.prosessering.v1.asynkron.deserialiserTilPreprosessertMelding
 import org.junit.AfterClass
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.net.URI
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -220,15 +219,15 @@ class OmsorgspengesoknadProsesseringTest {
         val søknadId = UUID.randomUUID().toString()
         val melding = melding.copy(
             søknadId = søknadId,
-            legeerklæring = listOf(URI("http://localhost:8080/vedlegg/1"), URI("http://localhost:8080/vedlegg/2")),
-            samværsavtale = listOf(URI("http://localhost:8080/vedlegg/3"), URI("http://localhost:8080/vedlegg/4"))
+            legeerklæringVedleggId = listOf("1234", "5678"),
+            samværsavtaleVedleggId = listOf("9876", "5432")
         )
 
         kafkaTestProducer.leggTilMottak(melding)
         val preprosessertMelding =
             preprosessertKonsumer.hentPreprosessertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
-        assertEquals(5, preprosessertMelding.dokumentUrls.size)
-        // 2 legeerklæringsvedlegg, 2, to samværsavtalevedlegg, og 1 søknadPdf.
+        assertEquals(6, preprosessertMelding.dokumentId.flatten().size)
+        // 2 legeerklæringsvedlegg, 2 samværsavtalevedlegg, 1 søknadPdf og 1 søknadJson.
         assertInnsending(melding)
     }
 

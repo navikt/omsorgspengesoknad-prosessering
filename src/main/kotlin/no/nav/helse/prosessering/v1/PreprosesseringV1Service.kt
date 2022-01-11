@@ -7,6 +7,7 @@ import no.nav.helse.dokument.Søknadsformat
 import no.nav.helse.felles.CorrelationId
 import no.nav.helse.prosessering.Metadata
 import org.slf4j.LoggerFactory
+import java.net.URI
 
 internal class PreprosesseringV1Service(
     private val pdfV1Generator: PdfV1Generator,
@@ -21,14 +22,14 @@ internal class PreprosesseringV1Service(
         melding: MeldingV1,
         metadata: Metadata
     ): PreprosessertMeldingV1 {
-        logger.info("Genererer Oppsummerings-PDF av søknaden.")
-        val soknadOppsummeringPdf = pdfV1Generator.generateSoknadOppsummeringPdf(melding)
-
         val dokumentEier = DokumentEier(melding.søker.fødselsnummer)
         val correlationId = CorrelationId(metadata.correlationId)
 
+        logger.info("Genererer Oppsummerings-PDF av søknaden.")
+        val soknadOppsummeringPdf = pdfV1Generator.generateSoknadOppsummeringPdf(melding)
+
         logger.info("Mellomlagrer Oppsummerings-PDF.")
-        val oppsummeringPdfUrl = k9MellomlagringService.lagreDokument(
+        val oppsummeringPdfDokumentId = k9MellomlagringService.lagreDokument(
             dokument = Dokument(
                 eier = dokumentEier,
                 content = soknadOppsummeringPdf,
@@ -36,10 +37,10 @@ internal class PreprosesseringV1Service(
                 title = "Søknad om ekstra omsorgsdager"
             ),
             correlationId = correlationId
-        )
+        ).dokumentId()
 
         logger.info("Mellomlagrer Oppsummerings-JSON")
-        val søknadJsonUrl = k9MellomlagringService.lagreDokument(
+        val søknadJsonDokumentId = k9MellomlagringService.lagreDokument(
             dokument = Dokument(
                 eier = dokumentEier,
                 content = Søknadsformat.somJson(melding.k9FormatSøknad),
@@ -47,26 +48,40 @@ internal class PreprosesseringV1Service(
                 title = "Søknad om omsorgspenger som JSON"
             ),
             correlationId = correlationId
-        )
+        ).dokumentId()
 
-        val komplettDokumentUrls = mutableListOf(
+        val komplettDokumentId = mutableListOf(
             listOf(
-                oppsummeringPdfUrl,
-                søknadJsonUrl
+                oppsummeringPdfDokumentId,
+                søknadJsonDokumentId
             )
         )
 
-        melding.samværsavtale?.let { liste ->
-            liste.forEach { komplettDokumentUrls.add(listOf(it)) }
+        if(melding.legeerklæringVedleggId.isNotEmpty()){
+            logger.info("Legger til vedleggId's for legeerklæring fra melding.")
+            melding.legeerklæringVedleggId.forEach { vedleggId ->
+                komplettDokumentId.add(listOf(vedleggId))
+            }
         }
 
-        melding.legeerklæring.forEach { komplettDokumentUrls.add(listOf(it)) }
+        if(melding.samværsavtaleVedleggId.isNotEmpty()){
+            logger.info("Legger til vedleggId's for samværsavtale fra melding.")
+            melding.samværsavtaleVedleggId.forEach { vedleggId ->
+                komplettDokumentId.add(listOf(vedleggId))
+            }
+        }
 
-        logger.info("Totalt ${komplettDokumentUrls.size} dokumentbolker med totalt ${komplettDokumentUrls.flatten().size} dokumenter.")
+        melding.samværsavtale?.let { liste ->
+            liste.forEach { komplettDokumentId.add(listOf(it.dokumentId())) }
+        }
+
+        melding.legeerklæring.forEach { komplettDokumentId.add(listOf(it.dokumentId())) }
+
+        logger.info("Totalt ${komplettDokumentId.size} dokumentbolker med totalt ${komplettDokumentId.flatten().size} dokumenter.")
 
         val preprosessertMeldingV1 = PreprosessertMeldingV1(
             melding = melding,
-            dokumentUrls = komplettDokumentUrls.toList()
+            dokumentId = komplettDokumentId.toList()
         )
 
         melding.reportMetrics()
@@ -74,3 +89,5 @@ internal class PreprosesseringV1Service(
         return preprosessertMeldingV1
     }
 }
+
+fun URI.dokumentId(): String = this.toString().substringAfterLast("/")
