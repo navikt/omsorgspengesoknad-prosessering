@@ -143,4 +143,4 @@ private fun String.sprakTilTekst() = when (this.lowercase()) {
     else -> this
 }
 
-private fun MeldingV1.harIkkeLastetOppLegeerklæring() : Boolean = !legeerklæring.isNotEmpty()
+private fun MeldingV1.harIkkeLastetOppLegeerklæring() : Boolean = !legeerklæringVedleggId.isNotEmpty()
