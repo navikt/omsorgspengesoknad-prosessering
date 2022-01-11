@@ -66,11 +66,11 @@ class SøknadUtils {
             legeerklæringVedleggId = listOf("5678"),
             harForståttRettigheterOgPlikter = true,
             harBekreftetOpplysninger = true,
-            k9FormatSøknad = k9Format
+            k9FormatSøknad = k9Format,
+            testfelt = ""
         )
     }
 }
-
 
 val objectMapper: ObjectMapper = jacksonObjectMapper().dusseldorfConfigured()
     .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
