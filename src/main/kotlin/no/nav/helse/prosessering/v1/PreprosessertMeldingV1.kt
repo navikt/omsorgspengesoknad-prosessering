@@ -7,7 +7,7 @@ data class PreprosessertMeldingV1(
     val soknadId: String,
     val mottatt: ZonedDateTime,
     val språk: String?,
-    val vedleggId: List<List<String>>,
+    val dokumentId: List<List<String>>,
     val kroniskEllerFunksjonshemming: Boolean,
     val barn: Barn,
     val søker: Søker,
@@ -19,12 +19,12 @@ data class PreprosessertMeldingV1(
 ) {
     internal constructor(
         melding: MeldingV1,
-        vedleggId: List<List<String>>
+        dokumentId: List<List<String>>
     ) : this(
         språk = melding.språk,
         soknadId = melding.søknadId,
         mottatt = melding.mottatt,
-        vedleggId = vedleggId,
+        dokumentId = dokumentId,
         kroniskEllerFunksjonshemming = melding.kroniskEllerFunksjonshemming,
         søker = melding.søker,
         sammeAdresse = melding.sammeAdresse,

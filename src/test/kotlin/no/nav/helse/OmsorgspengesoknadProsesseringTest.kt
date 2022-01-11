@@ -219,14 +219,14 @@ class OmsorgspengesoknadProsesseringTest {
         val søknadId = UUID.randomUUID().toString()
         val melding = melding.copy(
             søknadId = søknadId,
-            legeerklæringVedleggId = listOf("1234", "5678"),
-            samværsavtaleVedleggId = listOf("9876", "5432")
+            legeerklæring = listOf("1234", "5678"),
+            samværsavtale = listOf("9876", "5432")
         )
 
         kafkaTestProducer.leggTilMottak(melding)
         val preprosessertMelding =
             preprosessertKonsumer.hentPreprosessertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
-        assertEquals(6, preprosessertMelding.vedleggId.flatten().size)
+        assertEquals(6, preprosessertMelding.dokumentId.flatten().size)
         // 2 legeerklæringsvedlegg, 2 samværsavtalevedlegg, 1 søknadPdf og 1 søknadJson.
         assertInnsending(melding)
     }

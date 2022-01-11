@@ -65,7 +65,7 @@ class JoarkGateway(
         val joarkRequest = JoarkRequest(
             norskIdent = preprosessertMeldingV1.søker.fødselsnummer,
             mottatt = preprosessertMeldingV1.mottatt,
-            dokumentId = preprosessertMeldingV1.vedleggId,
+            dokumentId = preprosessertMeldingV1.dokumentId,
             søkerNavn = Navn(
                 fornavn = søker.fornavn,
                 mellomnavn = søker.mellomnavn,

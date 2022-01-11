@@ -90,7 +90,7 @@ class K9MellomlagringGateway(
     }
 
     internal suspend fun slettDokmenter(
-        vedleggId: List<String>,
+        dokumentId: List<String>,
         dokumentEier: DokumentEier,
         correlationId: CorrelationId
     ) {
@@ -98,11 +98,11 @@ class K9MellomlagringGateway(
 
         coroutineScope {
             val deferred = mutableListOf<Deferred<Unit>>()
-            vedleggId.forEach { vedleggId ->
+            dokumentId.forEach { dokumentId ->
                 deferred.add(async {
                     val url = Url.buildURL(
                         baseUrl = completeUrl,
-                        pathParts = listOf(vedleggId)
+                        pathParts = listOf(dokumentId)
                     )
                     requestSlettDokument(
                         url = url,

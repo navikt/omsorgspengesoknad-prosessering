@@ -29,7 +29,7 @@ internal class PreprosesseringV1Service(
         val soknadOppsummeringPdf = pdfV1Generator.generateSoknadOppsummeringPdf(melding)
 
         logger.info("Mellomlagrer Oppsummerings-PDF.")
-        val oppsummeringPdfVedleggId = k9MellomlagringService.lagreDokument(
+        val oppsummeringPdfDokumentId = k9MellomlagringService.lagreDokument(
             dokument = Dokument(
                 eier = dokumentEier,
                 content = soknadOppsummeringPdf,
@@ -37,10 +37,10 @@ internal class PreprosesseringV1Service(
                 title = "Søknad om ekstra omsorgsdager"
             ),
             correlationId = correlationId
-        ).vedleggId()
+        ).dokumentId()
 
         logger.info("Mellomlagrer Oppsummerings-JSON")
-        val søknadJsonVedleggId = k9MellomlagringService.lagreDokument(
+        val søknadJsonDokumentId = k9MellomlagringService.lagreDokument(
             dokument = Dokument(
                 eier = dokumentEier,
                 content = Søknadsformat.somJson(melding.k9FormatSøknad),
@@ -48,40 +48,40 @@ internal class PreprosesseringV1Service(
                 title = "Søknad om omsorgspenger som JSON"
             ),
             correlationId = correlationId
-        ).vedleggId()
+        ).dokumentId()
 
-        val komplettVedleggId = mutableListOf(
+        val komplettDokumentId = mutableListOf(
             listOf(
-                oppsummeringPdfVedleggId,
-                søknadJsonVedleggId
+                oppsummeringPdfDokumentId,
+                søknadJsonDokumentId
             )
         )
 
-        if(melding.legeerklæringVedleggId.isNotEmpty()){
-            logger.info("Legger til vedleggId's for legeerklæring fra melding.")
-            melding.legeerklæringVedleggId.forEach { vedleggId ->
-                komplettVedleggId.add(listOf(vedleggId))
+        if(melding.legeerklæring.isNotEmpty()){
+            logger.info("Legger til dokumentId's for legeerklæring fra melding.")
+            melding.legeerklæring.forEach { vedlegg ->
+                if(vedlegg.contains("/")){
+                    logger.info("Mapper om url til dokumentId")
+                    komplettDokumentId.add(listOf(vedlegg.dokumentId()))
+                } else komplettDokumentId.add(listOf(vedlegg))
             }
         }
 
-        if(melding.samværsavtaleVedleggId.isNotEmpty()){
-            logger.info("Legger til vedleggId's for samværsavtale fra melding.")
-            melding.samværsavtaleVedleggId.forEach { vedleggId ->
-                komplettVedleggId.add(listOf(vedleggId))
+        if(melding.samværsavtale.isNotEmpty()){
+            logger.info("Legger til dokumentId's for samværsavtale fra melding.")
+            melding.samværsavtale.forEach { vedlegg ->
+                if(vedlegg.contains("/")){
+                    logger.info("Mapper om url til dokumentId")
+                    komplettDokumentId.add(listOf(vedlegg.dokumentId()))
+                } else komplettDokumentId.add(listOf(vedlegg))
             }
         }
 
-        melding.samværsavtale?.let { liste ->
-            liste.forEach { komplettVedleggId.add(listOf(it.vedleggId())) }
-        }
-
-        melding.legeerklæring.forEach { komplettVedleggId.add(listOf(it.vedleggId())) }
-
-        logger.info("Totalt ${komplettVedleggId.size} dokumentbolker med totalt ${komplettVedleggId.flatten().size} dokumenter.")
+        logger.info("Totalt ${komplettDokumentId.size} dokumentbolker med totalt ${komplettDokumentId.flatten().size} dokumenter.")
 
         val preprosessertMeldingV1 = PreprosessertMeldingV1(
             melding = melding,
-            vedleggId = komplettVedleggId.toList()
+            dokumentId = komplettDokumentId.toList()
         )
 
         melding.reportMetrics()
@@ -90,4 +90,5 @@ internal class PreprosesseringV1Service(
     }
 }
 
-fun URI.vedleggId(): String = this.toString().substringAfterLast("/")
+fun URI.dokumentId(): String = this.toString().substringAfterLast("/")
+fun String.dokumentId(): String = this.toString().substringAfterLast("/")
