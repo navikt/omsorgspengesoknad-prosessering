@@ -104,7 +104,7 @@ internal class ManagedKafkaStreams(
         }
 
         //streams.setUncaughtExceptionHandler { _, _ -> stop(becauseOfError = true) }
-        streams.setUncaughtExceptionHandler { _ -> StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.REPLACE_THREAD }
+        streams.setUncaughtExceptionHandler { _ -> StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_CLIENT }
 
         Runtime.getRuntime().addShutdownHook(Thread {
             stop(becauseOfError = false)
