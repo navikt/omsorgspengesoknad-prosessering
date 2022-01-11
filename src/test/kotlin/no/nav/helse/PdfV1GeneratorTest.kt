@@ -2,6 +2,7 @@ package no.nav.helse
 
 import no.nav.helse.prosessering.v1.*
 import java.io.File
+import java.net.URI
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import kotlin.test.Test
@@ -14,7 +15,7 @@ class PdfV1GeneratorTest {
 
     private fun fullGyldigMelding(
         soknadsId: String,
-        legeerklæring: List<String> = listOf()
+        legeerklæring: List<URI> = listOf()
     ): MeldingV1 {
         return MeldingV1(
             språk = "nb",
@@ -51,7 +52,7 @@ class PdfV1GeneratorTest {
         if (writeBytes) File(pdfPath(soknadId = id)).writeBytes(pdf)
 
         id = "2-full-søknad-legeerklæring-lastet-opp"
-        pdf = generator.generateSoknadOppsummeringPdf(melding = fullGyldigMelding(soknadsId = id, legeerklæring = listOf("vedlegg")))
+        pdf = generator.generateSoknadOppsummeringPdf(melding = fullGyldigMelding(soknadsId = id, legeerklæring = listOf(URI("vedlegg"))))
         if (writeBytes) File(pdfPath(soknadId = id)).writeBytes(pdf)
 
     }

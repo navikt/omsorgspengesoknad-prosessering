@@ -219,8 +219,8 @@ class OmsorgspengesoknadProsesseringTest {
         val søknadId = UUID.randomUUID().toString()
         val melding = melding.copy(
             søknadId = søknadId,
-            legeerklæring = listOf("1234", "5678"),
-            samværsavtale = listOf("9876", "5432")
+            legeerklæringVedleggId = listOf("1234", "5678"),
+            samværsavtaleVedleggId = listOf("9876", "5432")
         )
 
         kafkaTestProducer.leggTilMottak(melding)

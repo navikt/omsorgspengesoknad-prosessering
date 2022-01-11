@@ -57,25 +57,25 @@ internal class PreprosesseringV1Service(
             )
         )
 
-        if(melding.legeerklæring.isNotEmpty()){
-            logger.info("Legger til dokumentId's for legeerklæring fra melding.")
-            melding.legeerklæring.forEach { vedlegg ->
-                if(vedlegg.contains("/")){
-                    logger.info("Mapper om url til dokumentId")
-                    komplettDokumentId.add(listOf(vedlegg.dokumentId()))
-                } else komplettDokumentId.add(listOf(vedlegg))
+        if(melding.legeerklæringVedleggId.isNotEmpty()){
+            logger.info("Legger til vedleggId's for legeerklæring fra melding.")
+            melding.legeerklæringVedleggId.forEach { vedleggId ->
+                komplettDokumentId.add(listOf(vedleggId))
             }
         }
 
-        if(melding.samværsavtale.isNotEmpty()){
-            logger.info("Legger til dokumentId's for samværsavtale fra melding.")
-            melding.samværsavtale.forEach { vedlegg ->
-                if(vedlegg.contains("/")){
-                    logger.info("Mapper om url til dokumentId")
-                    komplettDokumentId.add(listOf(vedlegg.dokumentId()))
-                } else komplettDokumentId.add(listOf(vedlegg))
+        if(melding.samværsavtaleVedleggId.isNotEmpty()){
+            logger.info("Legger til vedleggId's for samværsavtale fra melding.")
+            melding.samværsavtaleVedleggId.forEach { vedleggId ->
+                komplettDokumentId.add(listOf(vedleggId))
             }
         }
+
+        melding.samværsavtale?.let { liste ->
+            liste.forEach { komplettDokumentId.add(listOf(it.dokumentId())) }
+        }
+
+        melding.legeerklæring.forEach { komplettDokumentId.add(listOf(it.dokumentId())) }
 
         logger.info("Totalt ${komplettDokumentId.size} dokumentbolker med totalt ${komplettDokumentId.flatten().size} dokumenter.")
 
@@ -91,4 +91,3 @@ internal class PreprosesseringV1Service(
 }
 
 fun URI.dokumentId(): String = this.toString().substringAfterLast("/")
-fun String.dokumentId(): String = this.toString().substringAfterLast("/")
