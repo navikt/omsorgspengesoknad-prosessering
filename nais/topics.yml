@@ -19,6 +19,9 @@ spec:
       application: omsorgspenger-api
       access: write
     - team: dusseldorf
+      application: k9-brukerdialog-api
+      access: write
+    - team: dusseldorf
       application: omsorgspengesoknad-prosessering
       access: read
 
