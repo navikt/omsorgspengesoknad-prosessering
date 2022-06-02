@@ -1,5 +1,5 @@
-FROM navikt/java:17
-
-COPY docker-init-scripts/import-serviceuser-credentials.sh /init-scripts/20-import-serviceuser-credentials.sh
+FROM gcr.io/distroless/java17
 
 COPY build/libs/app.jar ./
+
+CMD ["app.jar"]
