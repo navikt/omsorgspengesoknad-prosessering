@@ -128,7 +128,7 @@ fun KafkaConsumer<String, TopicEntry>.hentPreprosessertMelding(
 
 fun KafkaConsumer<String, String>.hentK9Beskjed(
     soknadId: String,
-    maxWaitInSeconds: Long = 20
+    maxWaitInSeconds: Long = 40
 ): String {
     val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
     while (System.currentTimeMillis() < end) {

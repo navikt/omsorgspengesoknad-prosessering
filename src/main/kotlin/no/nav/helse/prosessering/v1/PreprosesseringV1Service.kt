@@ -6,7 +6,6 @@ import no.nav.helse.dokument.K9MellomlagringService
 import no.nav.helse.dokument.Søknadsformat
 import no.nav.helse.felles.CorrelationId
 import no.nav.helse.prosessering.Metadata
-import no.nav.helse.prosessering.v1.PreprossesertMeldingV1Metrics.reportMetrics
 import org.slf4j.LoggerFactory
 import java.net.URI
 

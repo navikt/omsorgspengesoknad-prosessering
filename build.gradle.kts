@@ -32,7 +32,6 @@ dependencies {
     implementation ( "no.nav.helse:dusseldorf-ktor-metrics:$dusseldorfKtorVersion")
     implementation ( "no.nav.helse:dusseldorf-ktor-health:$dusseldorfKtorVersion")
     implementation ( "no.nav.helse:dusseldorf-ktor-auth:$dusseldorfKtorVersion")
-    implementation ( "no.nav.k9:soknad-omsorgspenger:$k9FormatVersion")
     implementation("com.github.kittinunf.fuel:fuel:$fuelVersion")
     implementation("com.github.kittinunf.fuel:fuel-coroutines:$fuelVersion"){
         exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-core")
@@ -54,8 +53,6 @@ dependencies {
 
     // Kafka
     implementation("org.apache.kafka:kafka-streams:$kafkaVersion")
-
-    implementation(kotlin("stdlib-jdk8"))
 
     // Test
     testImplementation ( "org.apache.kafka:kafka-clients:$kafkaVersion")
