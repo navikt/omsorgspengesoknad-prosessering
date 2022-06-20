@@ -2,6 +2,10 @@ package no.nav.helse
 
 import io.prometheus.client.CollectorRegistry
 import no.nav.helse.prosessering.v1.*
+import no.nav.helse.prosessering.v1.PreprossesertMeldingV1Metrics.aarSiden
+import no.nav.helse.prosessering.v1.PreprossesertMeldingV1Metrics.erUnderEttAar
+import no.nav.helse.prosessering.v1.PreprossesertMeldingV1Metrics.fodseldato
+import no.nav.helse.prosessering.v1.PreprossesertMeldingV1Metrics.ukerSiden
 import org.junit.Before
 import java.time.LocalDate
 import java.time.ZoneId
