@@ -15,12 +15,6 @@ val barnetsAlderHistogram = Histogram.build()
     .help("Alderen på barnet det søkes for")
     .register()
 
-val jaNeiCounter = Counter.build()
-    .name("ja_nei_counter")
-    .help("Teller for svar på ja/nei spørsmål i søknaden")
-    .labelNames("spm", "svar")
-    .register()
-
 val barnetsAlderIUkerCounter = Counter.build()
     .name("barnets_alder_i_uker")
     .help("Teller for barn under 1 år, hvor mange uker de er.")
