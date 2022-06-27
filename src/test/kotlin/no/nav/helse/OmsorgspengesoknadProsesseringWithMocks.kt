@@ -42,7 +42,7 @@ class OmsorgspengesoknadProsesseringWithMocks {
                 }
             })
 
-            withApplication { no.nav.helse.main(testArgs) }
+            testApplication { no.nav.helse.main(testArgs) }
         }
     }
 }

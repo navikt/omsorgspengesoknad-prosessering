@@ -147,7 +147,7 @@ fun KafkaConsumer<String, String>.hentK9Beskjed(
 
 fun KafkaConsumer<String, String>.hentCleanupMelding(
     soknadId: String,
-    maxWaitInSeconds: Long = 20
+    maxWaitInSeconds: Long = 60
 ): String {
     val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
     while (System.currentTimeMillis() < end) {
