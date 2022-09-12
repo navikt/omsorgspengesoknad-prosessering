@@ -8,7 +8,7 @@
   "minReplicas": "1",
   "maxReplicas": "1",
   "ingresses": [
-    "https://omsorgspengesoknad-prosessering.nais.preprod.local"
+    "https://omsorgspengesoknad-prosessering.dev.intern.nav.no"
   ],
   "env": {
     "K9_JOARK_BASE_URL": "http://k9-joark",
