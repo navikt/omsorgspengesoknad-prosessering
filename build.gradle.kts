@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val dusseldorfKtorVersion = "3.1.6.7-f2a96e8"
-val k9FormatVersion = "6.0.1"
+val k9FormatVersion = "6.1.5"
 val ktorVersion = ext.get("ktorVersion").toString()
 val slf4jVersion = ext.get("slf4jVersion").toString()
 val kotlinxCoroutinesVersion = ext.get("kotlinxCoroutinesVersion").toString()
@@ -109,7 +109,7 @@ tasks.withType<ShadowJar> {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "7.4.2"
+    gradleVersion = "7.5.1"
 }
 
 tasks.withType<Test> {

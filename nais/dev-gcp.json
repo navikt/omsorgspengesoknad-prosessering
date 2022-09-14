@@ -7,9 +7,6 @@
   "kafka-pool" : "nav-dev",
   "minReplicas": "1",
   "maxReplicas": "1",
-  "ingresses": [
-    "https://omsorgspengesoknad-prosessering.nais.preprod.local"
-  ],
   "env": {
     "K9_JOARK_BASE_URL": "http://k9-joark",
     "JOURNALFORE_SCOPES": "1234a099-cf84-485f-8959-982cf9f37aed/.default",
