@@ -2,7 +2,7 @@ package no.nav.helse
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.typesafe.config.ConfigFactory
-import io.ktor.config.*
+import io.ktor.server.config.*
 import io.ktor.http.*
 import io.ktor.server.engine.*
 import io.ktor.server.testing.*
@@ -242,7 +242,7 @@ class OmsorgspengesoknadProsesseringTest {
         assertInnsending(melding)
     }
 
-    private fun assertInnsending(melding: MeldingV1){
+    private fun assertInnsending(melding: MeldingV1) {
         cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
