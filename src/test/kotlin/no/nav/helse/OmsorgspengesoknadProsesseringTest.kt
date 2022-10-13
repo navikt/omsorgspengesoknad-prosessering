@@ -18,6 +18,7 @@ import no.nav.helse.k9.assertUtvidetAntallDagerFormat
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.asynkron.deserialiserTilPreprosessertMelding
 import org.junit.AfterClass
+import org.junit.jupiter.api.Disabled
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
@@ -27,6 +28,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 
+@Disabled
 class OmsorgspengesoknadProsesseringTest {
 
     private companion object {
