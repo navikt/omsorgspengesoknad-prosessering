@@ -74,5 +74,3 @@ class SøknadUtils {
 val objectMapper: ObjectMapper = jacksonObjectMapper().dusseldorfConfigured()
     .setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
     .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
-
-fun Any.somJson() = objectMapper.writeValueAsString(this)

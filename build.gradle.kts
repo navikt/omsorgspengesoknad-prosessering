@@ -1,14 +1,15 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val dusseldorfKtorVersion = "3.1.6.7-f2a96e8"
-val k9FormatVersion = "6.1.5"
+val dusseldorfKtorVersion = "3.2.1.1-2d23a3e"
+val k9FormatVersion = "6.1.6"
 val ktorVersion = ext.get("ktorVersion").toString()
 val slf4jVersion = ext.get("slf4jVersion").toString()
 val kotlinxCoroutinesVersion = ext.get("kotlinxCoroutinesVersion").toString()
 
 val openhtmltopdfVersion = "1.0.10"
 val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
+val kafkaTestcontainerVersion = "1.17.5"
 val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
 val handlebarsVersion = "4.3.0"
 val fuelVersion = "2.3.1"
@@ -16,13 +17,13 @@ val fuelVersion = "2.3.1"
 val mainClass = "no.nav.helse.OmsorgspengesoknadProsesseringKt"
 
 plugins {
-    kotlin("jvm") version "1.6.21"
+    kotlin("jvm") version "1.7.10"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 buildscript {
     // Henter ut diverse dependency versjoner, i.e. ktorVersion.
-    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/f2a96e854a9b6dbd8d9b010a6860c63d7ca8a48c/gradle/dusseldorf-ktor.gradle.kts")
+    apply("https://raw.githubusercontent.com/navikt/dusseldorf-ktor/2d23a3ece2f179e3c6e3859212aad7cb0a69e1a4/gradle/dusseldorf-ktor.gradle.kts")
 }
 
 dependencies {
@@ -58,14 +59,14 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
     // Test
-    testImplementation ( "org.apache.kafka:kafka-clients:$kafkaVersion")
-    testImplementation ( "no.nav:kafka-embedded-env:$kafkaEmbeddedEnvVersion")
-    testImplementation ( "no.nav.helse:dusseldorf-test-support:$dusseldorfKtorVersion")
-    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") {
+    testImplementation("org.apache.kafka:kafka-clients:$kafkaVersion")
+    testImplementation("org.testcontainers:kafka:$kafkaTestcontainerVersion")
+    testImplementation("no.nav.helse:dusseldorf-test-support:$dusseldorfKtorVersion")
+    testImplementation("org.skyscreamer:jsonassert:1.5.1")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("io.ktor:ktor-server-test-host-jvm:$ktorVersion") {
         exclude(group = "org.eclipse.jetty")
     }
-    testImplementation("org.skyscreamer:jsonassert:1.5.0")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 }
 
 repositories {

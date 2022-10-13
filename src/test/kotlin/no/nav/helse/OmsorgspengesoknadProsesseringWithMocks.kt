@@ -1,6 +1,8 @@
 package no.nav.helse
 
 import com.github.tomakehurst.wiremock.WireMockServer
+import com.typesafe.config.ConfigFactory
+import io.ktor.server.config.*
 import io.ktor.server.testing.*
 import no.nav.helse.dusseldorf.testsupport.asArguments
 import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
@@ -25,24 +27,31 @@ class OmsorgspengesoknadProsesseringWithMocks {
                 .stubLagreDokument()
                 .stubSlettDokument()
 
-            val kafkaEnvironment = KafkaWrapper.bootstrap()
+            val kafkaContainer = KafkaWrapper.bootstrap()
+            wireMockServer.start()
 
-            val testArgs = TestConfiguration.asMap(
+            val env = TestConfiguration.asMap(
                 wireMockServer = wireMockServer,
-                kafkaEnvironment = kafkaEnvironment,
+                kafkaContainer = kafkaContainer,
                 port = 8092
-            ).asArguments()
+            )
 
             Runtime.getRuntime().addShutdownHook(object : Thread() {
                 override fun run() {
                     logger.info("Tearing down")
                     wireMockServer.stop()
-                    kafkaEnvironment.tearDown()
+                    kafkaContainer.stop()
                     logger.info("Tear down complete")
                 }
             })
 
-            withApplication { no.nav.helse.main(testArgs) }
+
+            testApplication {
+                environment {
+                    config = HoconApplicationConfig(ConfigFactory.parseMap(env))
+                }
+                application { omsorgspengesoknadProsessering() }
+            }
         }
     }
 }
