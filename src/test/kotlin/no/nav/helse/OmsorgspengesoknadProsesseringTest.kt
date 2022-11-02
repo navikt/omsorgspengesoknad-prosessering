@@ -145,7 +145,7 @@ class OmsorgspengesoknadProsesseringTest {
         wireMockServer.stubJournalfor(201) // Simulerer journalføring fungerer igjen
         restartEngine()
         cleanupKonsumer
-            .hentCleanupMelding(melding.søknadId)
+            .hentCleanupMelding(melding.søknadId, maxWaitInSeconds = 60)
             .assertUtvidetAntallDagerFormat()
 
         k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId, maxWaitInSeconds = 60)
