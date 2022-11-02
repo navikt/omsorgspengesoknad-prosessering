@@ -28,7 +28,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 
-@Disabled
 class OmsorgspengesoknadProsesseringTest {
 
     private companion object {
@@ -149,7 +148,7 @@ class OmsorgspengesoknadProsesseringTest {
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
 
-        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId, maxWaitInSeconds = 60)
             .assertGyldigK9Beskjed(melding)
     }
 

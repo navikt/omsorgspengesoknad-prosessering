@@ -41,8 +41,8 @@ internal class KafkaConfig(
 
 private fun Properties.medProcessingGuarantee(exactlyOnce: Boolean) {
     if (exactlyOnce) {
-        logger.info("$PROCESSING_GUARANTEE_CONFIG=$EXACTLY_ONCE")
-        put(PROCESSING_GUARANTEE_CONFIG, EXACTLY_ONCE)
+        logger.info("$PROCESSING_GUARANTEE_CONFIG=$EXACTLY_ONCE_V2")
+        put(PROCESSING_GUARANTEE_CONFIG, EXACTLY_ONCE_V2)
         put(REPLICATION_FACTOR_CONFIG, "3")
     } else {
         logger.info("$PROCESSING_GUARANTEE_CONFIG=$AT_LEAST_ONCE")
