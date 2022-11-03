@@ -65,7 +65,7 @@ dependencies {
         exclude("javax.el", "javax.el-api")
     }
     testImplementation("no.nav.helse:dusseldorf-test-support:$dusseldorfKtorVersion")
-    testImplementation("org.skyscreamer:jsonassert:1.5.0")
+    testImplementation("org.skyscreamer:jsonassert:1.5.1")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("io.ktor:ktor-server-test-host-jvm:$ktorVersion") {
         exclude(group = "org.eclipse.jetty")
