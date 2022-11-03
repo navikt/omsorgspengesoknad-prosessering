@@ -145,10 +145,10 @@ class OmsorgspengesoknadProsesseringTest {
         wireMockServer.stubJournalfor(201) // Simulerer journalføring fungerer igjen
         restartEngine()
         cleanupKonsumer
-            .hentCleanupMelding(melding.søknadId, maxWaitInSeconds = 60)
+            .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()
 
-        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId, maxWaitInSeconds = 60)
+        k9DittnavVarselKonsumer.hentK9Beskjed(melding.søknadId)
             .assertGyldigK9Beskjed(melding)
     }
 
