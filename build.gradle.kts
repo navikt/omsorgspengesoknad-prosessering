@@ -10,8 +10,9 @@ val kotlinxCoroutinesVersion = ext.get("kotlinxCoroutinesVersion").toString()
 val openhtmltopdfVersion = "1.0.10"
 val kafkaEmbeddedEnvVersion = ext.get("kafkaEmbeddedEnvVersion").toString()
 val kafkaVersion = ext.get("kafkaVersion").toString() // Alligned med version fra kafka-embedded-env
-val handlebarsVersion = "4.3.0"
+val handlebarsVersion = "4.3.1"
 val fuelVersion = "2.3.1"
+val jsonAssertVersion = "1.5.0"
 
 val mainClass = "no.nav.helse.OmsorgspengesoknadProsesseringKt"
 
@@ -65,7 +66,7 @@ dependencies {
         exclude("javax.el", "javax.el-api")
     }
     testImplementation("no.nav.helse:dusseldorf-test-support:$dusseldorfKtorVersion")
-    testImplementation("org.skyscreamer:jsonassert:1.5.0")
+    testImplementation("org.skyscreamer:jsonassert:$jsonAssertVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("io.ktor:ktor-server-test-host-jvm:$ktorVersion") {
         exclude(group = "org.eclipse.jetty")
