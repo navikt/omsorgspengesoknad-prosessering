@@ -179,6 +179,3 @@ fun KafkaProducer<String, TopicEntry>.leggTilMottak(soknad: MeldingV1) {
         )
     ).get()
 }
-
-fun KafkaEnvironment.username() = username
-fun KafkaEnvironment.password() = password
