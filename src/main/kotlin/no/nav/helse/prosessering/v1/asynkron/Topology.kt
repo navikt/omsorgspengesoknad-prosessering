@@ -12,6 +12,7 @@ private object StreamCounter {
         .help("Teller for status av prosessering av meldinger på streams.")
         .labelNames("stream", "status")
         .register()
+
     internal fun ok(name: String) = counter.labels(name, "OK").inc()
     internal fun feil(name: String) = counter.labels(name, "FEIL").inc()
 }

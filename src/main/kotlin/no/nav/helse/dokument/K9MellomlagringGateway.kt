@@ -31,7 +31,7 @@ import java.time.Duration
 class K9MellomlagringGateway(
     private val accessTokenClient: AccessTokenClient,
     private val k9MellomlagringScopes: Set<String>,
-    baseUrl : URI
+    baseUrl: URI
 ) : HealthCheck {
 
     private companion object {
@@ -40,7 +40,7 @@ class K9MellomlagringGateway(
         private val logger: Logger = LoggerFactory.getLogger(K9MellomlagringGateway::class.java)
     }
 
-    private val completeUrl = Url.buildURL(baseUrl,listOf("v1", "dokument"))
+    private val completeUrl = Url.buildURL(baseUrl, listOf("v1", "dokument"))
     private val objectMapper = configuredObjectMapper()
     private val cachedAccessTokenClient = CachedAccessTokenClient(accessTokenClient)
 
@@ -50,14 +50,16 @@ class K9MellomlagringGateway(
         val combined = checkGetLagreDokumentAccessToken.result().toMutableMap()
         combined.putAll(checkGetSletteDokumentAccessToken.result())
         combined["name"] = "K9MellomlagringGateway"
-        return if (checkGetLagreDokumentAccessToken is UnHealthy || checkGetSletteDokumentAccessToken is UnHealthy) UnHealthy(combined)
+        return if (checkGetLagreDokumentAccessToken is UnHealthy || checkGetSletteDokumentAccessToken is UnHealthy) UnHealthy(
+            combined
+        )
         else Healthy(combined)
     }
 
     private fun checkGetAccessToken(
         operation: String,
         scopes: Set<String>
-    ) : Result {
+    ): Result {
         return try {
             accessTokenClient.getAccessToken(scopes)
             Healthy(mapOf(operation to "Henting av access token OK"))
@@ -71,7 +73,7 @@ class K9MellomlagringGateway(
     internal suspend fun lagreDokmenter(
         dokumenter: Set<Dokument>,
         correlationId: CorrelationId
-    ) : List<URI> {
+    ): List<URI> {
         val authorizationHeader = cachedAccessTokenClient.getAccessToken(k9MellomlagringScopes).asAuthoriationHeader()
 
         return coroutineScope {
@@ -156,7 +158,7 @@ class K9MellomlagringGateway(
         dokument: Dokument,
         correlationId: CorrelationId,
         authorizationHeader: String
-    ) : URI {
+    ): URI {
 
         val body = objectMapper.writeValueAsBytes(dokument)
         val contentStream = { ByteArrayInputStream(body) }
@@ -184,7 +186,11 @@ class K9MellomlagringGateway(
             result.fold(
                 { URI(response.header(HttpHeaders.Location).first()) },
                 { error ->
-                    logger.error("Error response = '${error.response.body().asString("text/plain")}' fra '${request.url}'")
+                    logger.error(
+                        "Error response = '${
+                            error.response.body().asString("text/plain")
+                        }' fra '${request.url}'"
+                    )
                     logger.error(error.toString())
                     throw HttpError(response.statusCode, "Feil ved lagring av dokument.")
                 }
@@ -192,7 +198,7 @@ class K9MellomlagringGateway(
         }
     }
 
-    private fun configuredObjectMapper() : ObjectMapper {
+    private fun configuredObjectMapper(): ObjectMapper {
         val objectMapper = jacksonObjectMapper()
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         return objectMapper

@@ -2,7 +2,7 @@ package no.nav.helse
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.typesafe.config.ConfigFactory
-import io.ktor.config.*
+import io.ktor.server.config.*
 import io.ktor.http.*
 import io.ktor.server.engine.*
 import io.ktor.server.testing.*
@@ -18,6 +18,7 @@ import no.nav.helse.k9.assertUtvidetAntallDagerFormat
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.asynkron.deserialiserTilPreprosessertMelding
 import org.junit.AfterClass
+import org.junit.jupiter.api.Disabled
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
@@ -242,7 +243,7 @@ class OmsorgspengesoknadProsesseringTest {
         assertInnsending(melding)
     }
 
-    private fun assertInnsending(melding: MeldingV1){
+    private fun assertInnsending(melding: MeldingV1) {
         cleanupKonsumer
             .hentCleanupMelding(melding.søknadId)
             .assertUtvidetAntallDagerFormat()

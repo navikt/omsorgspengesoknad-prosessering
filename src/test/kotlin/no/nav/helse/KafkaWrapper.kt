@@ -109,7 +109,7 @@ fun KafkaEnvironment.meldingsProducer() = KafkaProducer(
 
 fun KafkaConsumer<String, TopicEntry>.hentPreprosessertMelding(
     soknadId: String,
-    maxWaitInSeconds: Long = 20
+    maxWaitInSeconds: Long = 60
 ): TopicEntry {
     val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
     while (System.currentTimeMillis() < end) {
@@ -128,7 +128,7 @@ fun KafkaConsumer<String, TopicEntry>.hentPreprosessertMelding(
 
 fun KafkaConsumer<String, String>.hentK9Beskjed(
     soknadId: String,
-    maxWaitInSeconds: Long = 20
+    maxWaitInSeconds: Long = 60
 ): String {
     val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
     while (System.currentTimeMillis() < end) {
@@ -147,7 +147,7 @@ fun KafkaConsumer<String, String>.hentK9Beskjed(
 
 fun KafkaConsumer<String, String>.hentCleanupMelding(
     soknadId: String,
-    maxWaitInSeconds: Long = 20
+    maxWaitInSeconds: Long = 60
 ): String {
     val end = System.currentTimeMillis() + Duration.ofSeconds(maxWaitInSeconds).toMillis()
     while (System.currentTimeMillis() < end) {
@@ -179,6 +179,3 @@ fun KafkaProducer<String, TopicEntry>.leggTilMottak(soknad: MeldingV1) {
         )
     ).get()
 }
-
-fun KafkaEnvironment.username() = username
-fun KafkaEnvironment.password() = password

@@ -46,9 +46,11 @@ internal class ManagedKafkaStreams(
             KafkaStreams.State.PENDING_SHUTDOWN, KafkaStreams.State.NOT_RUNNING -> {
                 notRunningBlock(safeStoppedIn())
             }
+
             KafkaStreams.State.RUNNING, KafkaStreams.State.REBALANCING, KafkaStreams.State.CREATED -> {
                 Healthy(name, "Kjører som normalt i state ${kafkaStreams.state().name}.")
             }
+
             else -> UnHealthy(name, "Stream befinner seg i state '${kafkaStreams.state().name}'.")
         }
     }

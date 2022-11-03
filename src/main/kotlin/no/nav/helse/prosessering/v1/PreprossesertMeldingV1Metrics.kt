@@ -2,12 +2,11 @@ package no.nav.helse.prosessering.v1
 
 import io.prometheus.client.Counter
 import io.prometheus.client.Histogram
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.temporal.ChronoUnit
-import kotlin.math.absoluteValue
+import no.nav.helse.utils.aarSiden
+import no.nav.helse.utils.erUnderEttAar
+import no.nav.helse.utils.tilJaEllerNei
+import no.nav.helse.utils.ukerSiden
 
-private val ZONE_ID = ZoneId.of("Europe/Oslo")
 
 private val barnetsAlderHistogram = Histogram.build()
     .buckets(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0)
@@ -62,25 +61,3 @@ internal fun PreprosessertMeldingV1.reportMetrics() {
 
     sammeAdreseCounter.labels("sammeAdresse", sammeAdresse.tilJaEllerNei()).inc()
 }
-
-internal fun Double.erUnderEttAar() = 0.0 == this
-
-internal fun Barn.fodseldato(): LocalDate? {
-    return try {
-        val dag = norskIdentifikator.substring(0, 2).toInt()
-        val maned = norskIdentifikator.substring(2, 4).toInt()
-        val ar = "20${norskIdentifikator.substring(4, 6)}".toInt()
-        LocalDate.of(ar, maned, dag)
-    } catch (cause: Throwable) {
-        null
-    }
-}
-
-internal fun LocalDate.aarSiden(): Double {
-    val alder = ChronoUnit.YEARS.between(this, LocalDate.now(ZONE_ID))
-    if (alder in -18..-1) return 19.0
-    return alder.absoluteValue.toDouble()
-}
-
-internal fun LocalDate.ukerSiden() = ChronoUnit.WEEKS.between(this, LocalDate.now(ZONE_ID)).absoluteValue.toString()
-private fun Boolean.tilJaEllerNei(): String = if (this) "Ja" else "Nei"
