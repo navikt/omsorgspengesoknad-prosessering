@@ -50,7 +50,7 @@ jobs:
           cache: gradle
       - name: Build JAR
         run: ./gradlew shadowjar # Creates a combined JAR of project and runTime dependencies.
-      - uses: docker/login-action@v1
+      - uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
