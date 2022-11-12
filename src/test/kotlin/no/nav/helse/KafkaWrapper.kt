@@ -25,12 +25,12 @@ import java.util.*
 import kotlin.test.assertEquals
 
 private lateinit var kafkaContainer: KafkaContainer
-
+private const val confluentVersion = "7.2.1"
 
 object KafkaWrapper {
     fun bootstrap(): KafkaContainer {
         kafkaContainer = KafkaContainer(
-            DockerImageName.parse("confluentinc/cp-kafka:7.2.1")
+            DockerImageName.parse("confluentinc/cp-kafka:$confluentVersion")
         )
         kafkaContainer.start()
         kafkaContainer.createTopicsForTest()
@@ -39,6 +39,7 @@ object KafkaWrapper {
 }
 
 private fun KafkaContainer.createTopicsForTest() {
+    // Dette er en workaround for att testcontainers (pr. versjon 1.17.5) ikke håndterer autocreate topics
     AdminClient.create(testProducerProperties("admin")).createTopics(
         listOf(
             NewTopic(CLEANUP.name, 1, 1),
