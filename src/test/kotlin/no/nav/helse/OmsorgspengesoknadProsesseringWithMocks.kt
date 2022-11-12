@@ -29,7 +29,7 @@ class OmsorgspengesoknadProsesseringWithMocks {
 
             val testArgs = TestConfiguration.asMap(
                 wireMockServer = wireMockServer,
-                kafkaEnvironment = kafkaEnvironment,
+                kafkaContainer = kafkaEnvironment,
                 port = 8092
             ).asArguments()
 
@@ -37,7 +37,7 @@ class OmsorgspengesoknadProsesseringWithMocks {
                 override fun run() {
                     logger.info("Tearing down")
                     wireMockServer.stop()
-                    kafkaEnvironment.tearDown()
+                    kafkaEnvironment.stop()
                     logger.info("Tear down complete")
                 }
             })
