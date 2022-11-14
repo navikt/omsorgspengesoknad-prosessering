@@ -9,7 +9,6 @@ import io.ktor.server.testing.*
 import io.prometheus.client.CollectorRegistry
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.time.delay
-import no.nav.common.KafkaEnvironment
 import no.nav.helse.SøknadUtils.Companion.barn
 import no.nav.helse.SøknadUtils.Companion.melding
 import no.nav.helse.SøknadUtils.Companion.søker
@@ -17,15 +16,15 @@ import no.nav.helse.dusseldorf.testsupport.wiremock.WireMockBuilder
 import no.nav.helse.k9.assertUtvidetAntallDagerFormat
 import no.nav.helse.prosessering.v1.MeldingV1
 import no.nav.helse.prosessering.v1.asynkron.deserialiserTilPreprosessertMelding
-import org.junit.AfterClass
-import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.testcontainers.containers.KafkaContainer
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 
 class OmsorgspengesoknadProsesseringTest {
@@ -43,34 +42,34 @@ class OmsorgspengesoknadProsesseringTest {
             .stubLagreDokument()
             .stubSlettDokument()
 
-        private val kafkaEnvironment = KafkaWrapper.bootstrap()
-        private val kafkaTestProducer = kafkaEnvironment.meldingsProducer()
+        private val kafkaContainer = KafkaWrapper.bootstrap()
+        private val kafkaTestProducer = kafkaContainer.meldingsProducer()
 
-        private val cleanupKonsumer = kafkaEnvironment.cleanupKonsumer()
-        private val preprosessertKonsumer = kafkaEnvironment.preprosessertKonsumer()
-        private val k9DittnavVarselKonsumer = kafkaEnvironment.k9DittnavVarselKonsumer()
+        private val cleanupKonsumer = kafkaContainer.cleanupKonsumer()
+        private val preprosessertKonsumer = kafkaContainer.preprosessertKonsumer()
+        private val k9DittnavVarselKonsumer = kafkaContainer.k9DittnavVarselKonsumer()
 
         // Se https://github.com/navikt/dusseldorf-ktor#f%C3%B8dselsnummer
         private val dNummerA = "55125314561"
 
-        private var engine = newEngine(kafkaEnvironment).apply {
+        private var engine = newEngine(kafkaContainer).apply {
             start(wait = true)
         }
 
-        private fun getConfig(kafkaEnvironment: KafkaEnvironment?): ApplicationConfig {
+        private fun getConfig(kafkaContainer: KafkaContainer?): ApplicationConfig {
             val fileConfig = ConfigFactory.load()
             val testConfig = ConfigFactory.parseMap(
                 TestConfiguration.asMap(
                     wireMockServer = wireMockServer,
-                    kafkaEnvironment = kafkaEnvironment
+                    kafkaContainer = this.kafkaContainer
                 )
             )
             val mergedConfig = testConfig.withFallback(fileConfig)
             return HoconApplicationConfig(mergedConfig)
         }
 
-        private fun newEngine(kafkaEnvironment: KafkaEnvironment?) = TestApplicationEngine(createTestEnvironment {
-            config = getConfig(kafkaEnvironment)
+        private fun newEngine(kafkaContainer: KafkaContainer?) = TestApplicationEngine(createTestEnvironment {
+            config = getConfig(this@Companion.kafkaContainer)
         })
 
         private fun stopEngine() = engine.stop(5, 60, TimeUnit.SECONDS)
@@ -78,19 +77,18 @@ class OmsorgspengesoknadProsesseringTest {
         internal fun restartEngine() {
             stopEngine()
             CollectorRegistry.defaultRegistry.clear()
-            engine = newEngine(kafkaEnvironment)
+            engine = newEngine(kafkaContainer)
             engine.start(wait = true)
         }
 
-        @AfterClass
-        @JvmStatic
+        @AfterAll
         fun tearDown() {
             logger.info("Tearing down")
             wireMockServer.stop()
             cleanupKonsumer.close()
             kafkaTestProducer.close()
             stopEngine()
-            kafkaEnvironment.tearDown()
+            kafkaContainer.stop()
             logger.info("Tear down complete")
         }
     }
@@ -98,18 +96,16 @@ class OmsorgspengesoknadProsesseringTest {
     @Test
     fun `test isready, isalive, health og metrics`() {
         with(engine) {
-            handleRequest(HttpMethod.Get, "/isready") {}.apply {
-                assertEquals(HttpStatusCode.OK, response.status())
-                handleRequest(HttpMethod.Get, "/isalive") {}.apply {
-                    assertEquals(HttpStatusCode.OK, response.status())
-                    handleRequest(HttpMethod.Get, "/metrics") {}.apply {
-                        assertEquals(HttpStatusCode.OK, response.status())
-                        handleRequest(HttpMethod.Get, "/health") {}.apply {
-                            assertEquals(HttpStatusCode.OK, response.status())
-                        }
-                    }
-                }
+            val healthEndpoints = listOf("/isready", "/isalive", "/metrics", "/health")
+
+            val responses = healthEndpoints.map { endpoint ->
+                handleRequest(HttpMethod.Get, endpoint).response.status()
             }
+
+            for(statusCode in responses) {
+                Assertions.assertEquals(HttpStatusCode.OK, statusCode)
+            }
+
         }
     }
 
@@ -155,9 +151,9 @@ class OmsorgspengesoknadProsesseringTest {
     private fun readyGir200HealthGir503() {
         with(engine) {
             handleRequest(HttpMethod.Get, "/isready") {}.apply {
-                assertEquals(HttpStatusCode.OK, response.status())
+                Assertions.assertEquals(HttpStatusCode.OK, response.status())
                 handleRequest(HttpMethod.Get, "/health") {}.apply {
-                    assertEquals(HttpStatusCode.ServiceUnavailable, response.status())
+                    Assertions.assertEquals(HttpStatusCode.ServiceUnavailable, response.status())
                 }
             }
         }
@@ -210,7 +206,7 @@ class OmsorgspengesoknadProsesseringTest {
         val preprosessertMelding =
             preprosessertKonsumer.hentPreprosessertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
 
-        assertEquals(forventetFodselsNummer, preprosessertMelding.barn.norskIdentifikator)
+        Assertions.assertEquals(forventetFodselsNummer, preprosessertMelding.barn.norskIdentifikator)
 
         assertInnsending(melding)
     }
@@ -227,7 +223,7 @@ class OmsorgspengesoknadProsesseringTest {
         kafkaTestProducer.leggTilMottak(melding)
         val preprosessertMelding =
             preprosessertKonsumer.hentPreprosessertMelding(melding.søknadId).deserialiserTilPreprosessertMelding()
-        assertEquals(6, preprosessertMelding.dokumentId.flatten().size)
+        Assertions.assertEquals(6, preprosessertMelding.dokumentId.flatten().size)
         // 2 legeerklæringsvedlegg, 2 samværsavtalevedlegg, 1 søknadPdf og 1 søknadJson.
         assertInnsending(melding)
     }
