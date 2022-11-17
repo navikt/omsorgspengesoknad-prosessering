@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val dusseldorfKtorVersion = "3.2.1.2-ba1edd2"
 val ktorVersion = "2.1.2"
 val k9FormatVersion = "7.0.4"
-val slf4jVersion = "2.0.3"
+val slf4jVersion = "2.0.4"
 val kotlinxCoroutinesVersion = "1.6.4"
 
 val openhtmltopdfVersion = "1.0.10"
