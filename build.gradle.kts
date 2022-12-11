@@ -1,15 +1,15 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val dusseldorfKtorVersion = "3.2.1.2-ba1edd2"
-val ktorVersion = "2.1.2"
-val k9FormatVersion = "7.0.4"
-val slf4jVersion = "2.0.3"
+val dusseldorfKtorVersion = "3.2.2.1-4942135"
+val ktorVersion = "2.2.1"
+val k9FormatVersion = "8.0.0"
+val slf4jVersion = "2.0.5"
 val kotlinxCoroutinesVersion = "1.6.4"
 
 val openhtmltopdfVersion = "1.0.10"
-val kafkaTestcontainerVersion = "1.17.5"
-val kafkaVersion = "3.2.3"
+val kafkaTestcontainerVersion = "1.17.6"
+val kafkaVersion = "3.3.1"
 val handlebarsVersion = "4.3.1"
 val fuelVersion = "2.3.1"
 val jsonAssertVersion = "1.5.1"
