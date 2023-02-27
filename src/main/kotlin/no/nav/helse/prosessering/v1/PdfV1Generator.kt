@@ -9,6 +9,7 @@ import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
 import com.openhtmltopdf.util.XRLog
 import no.nav.helse.dusseldorf.ktor.core.fromResources
+import no.nav.helse.prosessering.Metadata
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.time.ZoneId
@@ -56,7 +57,8 @@ internal class PdfV1Generator {
     }
 
     internal fun generateSoknadOppsummeringPdf(
-        melding: MeldingV1
+        melding: MeldingV1,
+        metadata: Metadata
     ): ByteArray {
         XRLog.listRegisteredLoggers().forEach { logger -> XRLog.setLevel(logger, Level.WARNING) }
         soknadTemplate.apply(
@@ -64,6 +66,7 @@ internal class PdfV1Generator {
                 .newBuilder(
                     mapOf(
                         "soknad_id" to melding.søknadId,
+                        "soknadDialogCommitSha" to metadata.soknadDialogCommitSha,
                         "soknad_mottatt_dag" to melding.mottatt.withZoneSameInstant(ZONE_ID).norskDag(),
                         "soknad_mottatt" to DATE_TIME_FORMATTER.format(melding.mottatt),
                         "søker" to mapOf(

@@ -92,10 +92,7 @@
     </div>
 
     <!-- FOOTER -->
-    <p id="footer">
-        <span class="soknadsid">{{ soknad_id }}</span>
-        <span class="sidetall">side <span id="pagenumber"></span> av <span id="pagecount"></span></span>
-    </p>
+    {{> partial/footerPartial søknadId=soknad_id gitSha=soknadDialogCommitSha}}
 </body>
 
 </html>

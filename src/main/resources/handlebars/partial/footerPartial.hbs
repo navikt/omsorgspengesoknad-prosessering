@@ -1,0 +1,8 @@
+<p id="footer">
+    <hr/>
+    <span>Søknad ID: {{ søknadId }}</span>
+    <span class="sidetall">side <span id="pagenumber"></span> av <span id="pagecount"></span></span>
+    {{#if gitSha}}
+        <br/><span>Git SHA: {{ gitSha }}</span>
+    {{/if}}
+</p>

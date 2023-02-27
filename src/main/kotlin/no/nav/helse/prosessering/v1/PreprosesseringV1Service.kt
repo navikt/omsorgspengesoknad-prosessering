@@ -26,7 +26,7 @@ internal class PreprosesseringV1Service(
         val correlationId = CorrelationId(metadata.correlationId)
 
         logger.info("Genererer Oppsummerings-PDF av søknaden.")
-        val soknadOppsummeringPdf = pdfV1Generator.generateSoknadOppsummeringPdf(melding)
+        val soknadOppsummeringPdf = pdfV1Generator.generateSoknadOppsummeringPdf(melding, metadata)
 
         logger.info("Mellomlagrer Oppsummerings-PDF.")
         val oppsummeringPdfDokumentId = k9MellomlagringService.lagreDokument(

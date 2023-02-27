@@ -1,15 +1,23 @@
 package no.nav.helse
 
+
+import no.nav.helse.prosessering.Metadata
 import no.nav.helse.prosessering.v1.*
 import java.io.File
 import java.time.LocalDate
 import java.time.ZonedDateTime
+import java.util.UUID
 import kotlin.test.Test
 
 class PdfV1GeneratorTest {
 
     private companion object {
         private val generator = PdfV1Generator()
+        private val metadata = Metadata(
+            soknadDialogCommitSha = "abc-123",
+            version = 1,
+            correlationId = UUID.randomUUID().toString()
+        )
     }
 
     private fun fullGyldigMelding(
@@ -43,16 +51,17 @@ class PdfV1GeneratorTest {
     }
 
     private fun genererOppsummeringsPdfer(writeBytes: Boolean) {
-
         var id = "1-full-søknad"
         var pdf = generator.generateSoknadOppsummeringPdf(
-            melding = fullGyldigMelding(soknadsId = id)
+            melding = fullGyldigMelding(soknadsId = id),
+            metadata = metadata
         )
         if (writeBytes) File(pdfPath(soknadId = id)).writeBytes(pdf)
 
         id = "2-full-søknad-legeerklæring-lastet-opp"
         pdf = generator.generateSoknadOppsummeringPdf(
-            melding = fullGyldigMelding(soknadsId = id, legeerklæringVedleggId = listOf("123"))
+            melding = fullGyldigMelding(soknadsId = id, legeerklæringVedleggId = listOf("123")),
+            metadata = metadata
         )
         if (writeBytes) File(pdfPath(soknadId = id)).writeBytes(pdf)
 
