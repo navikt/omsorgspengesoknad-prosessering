@@ -83,7 +83,8 @@ data class TopicEntry(val rawJson: String) {
     private val dataJson = requireNotNull(entityJson.getJSONObject("data"))
     val metadata = Metadata(
         version = requireNotNull(metadataJson.getInt("version")),
-        correlationId = requireNotNull(metadataJson.getString("correlationId"))
+        correlationId = requireNotNull(metadataJson.getString("correlationId")),
+        soknadDialogCommitSha = metadataJson.optString("soknadDialogCommitSha")
     )
     val data = Data(dataJson.toString())
 }
