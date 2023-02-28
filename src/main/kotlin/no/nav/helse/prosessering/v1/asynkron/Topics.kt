@@ -69,7 +69,8 @@ data class TopicEntry(val rawJson: String) {
                 "metadata" to JSONObject(
                     mapOf(
                         "version" to metadata.version,
-                        "correlationId" to metadata.correlationId
+                        "correlationId" to metadata.correlationId,
+                        "soknadDialogCommitSha" to metadata.soknadDialogCommitSha
                     )
                 ),
                 "data" to JSONObject(data.rawJson)
