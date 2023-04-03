@@ -26,3 +26,4 @@ updates:
     registries:
       - k9-format
       - dusseldorf-ktor
+    open-pull-requests-limit: 15
